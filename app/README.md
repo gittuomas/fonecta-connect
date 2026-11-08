@@ -7,7 +7,7 @@ python -m pip install -r requirements.txt
 python app/app.py
 ```
 
-Open [Kahvila Kipinä](http://localhost:8000/w/FI-D0017/christmas) (requires the demo running locally). Approve, enter different opening hours, decline, or reply `UNDO`. The no-history customer receives suggestions without invented historical claims. The [message pack](../docs/customer-messages.md) contains the exact messages and phone screenshots.
+Open the [WhatsApp demo](http://localhost:8000/demo) (requires the app running locally). The link selects a mapped business in real sandbox mode, or Kahvila Kipinä in local demo mode. Approve, enter different opening hours, decline, or reply `UNDO`. To try Kipinä's no-history example, set `CONNECT_APPLY_MODE=demo` and restart the app. The [message pack](../docs/customer-messages.md) contains the exact messages and phone screenshots.
 
 ## How it works
 

@@ -126,6 +126,43 @@ class OwnerFlow(unittest.TestCase):
             self.assertIn(text,html)
         self.assertNotIn('Last year you were open:',html)
 
+    def test_demo_entry_opens_local_new_customer(self):
+        with urllib.request.urlopen(self.base + '/demo', timeout=10) as response:
+            self.assertTrue(response.url.endswith('/w/FI-D0017/christmas'))
+            self.assertIn('We suggest:', response.read().decode('utf-8'))
+
+    def test_demo_entry_selects_only_a_mapped_sandbox_business(self):
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+        opener = urllib.request.build_opener(NoRedirect)
+        for mapping, expected in (({'FI-D0001': 'real-cafe'}, 'FI-D0001'),
+                                  ({'FI-D0004': 'real-shop'}, 'FI-D0004')):
+            with self.subTest(mapping=mapping), \
+                    patch.object(self.s5.applier.primary, 'name', 'sandbox'), \
+                    patch.object(self.s5.applier.primary, 'mapping', mapping, create=True):
+                with self.assertRaises(urllib.error.HTTPError) as err:
+                    opener.open(self.base + '/demo', timeout=10)
+                self.assertEqual(err.exception.code, 303)
+                self.assertEqual(err.exception.headers['Location'], f'/w/{expected}/christmas')
+
+    def test_unmapped_business_offers_recovery_without_reading_or_writing(self):
+        with patch.object(self.s5.applier.primary, 'name', 'sandbox'), \
+                patch.object(self.s5.applier.primary, 'mapping', {'FI-D0001': 'real-cafe'}, create=True), \
+                patch.object(self.s5, 'snapshot', side_effect=AssertionError('must not read unmapped entity')):
+            with self.assertRaises(urllib.error.HTTPError) as err:
+                self.request('/w/FI-D0017/christmas')
+            self.assertEqual(err.exception.code, 404)
+            self.assertIn("href='/demo'", err.exception.read().decode('utf-8'))
+        self.assertEqual(self.s5.mock.module.STORE.update_log, [])
+
+    def test_demo_entry_rejects_mapping_without_a_supplied_business(self):
+        with patch.object(self.s5.applier.primary, 'name', 'sandbox'), \
+                patch.object(self.s5.applier.primary, 'mapping', {'UNKNOWN': 'real-cafe'}, create=True):
+            with self.assertRaises(urllib.error.HTTPError) as err:
+                self.request('/demo')
+            self.assertEqual(err.exception.code, 503)
+
     def test_existing_customer_keeps_own_history_message(self):
         # Test the C13 history wording independently of the separate Instagram demo,
         # whose owner-announced dates now deliberately supersede this holiday bundle.

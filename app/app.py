@@ -2387,8 +2387,25 @@ class App(BaseHTTPRequestHandler):
         parts = [p for p in urllib.parse.urlparse(self.path).path.split("/") if p]
         if not parts:
             return self.send(connect_index())
+        if parts == ["demo"]:
+            if S5.applier.primary.name == 'sandbox':
+                available = sorted(eid for eid in S5.applier.primary.mapping if eid in BL.ents)
+                if not available:
+                    return self.send(page('Demo unavailable', '<h1>No demo business is mapped</h1><p>Configure YEXT_SANDBOX_MIRROR with a supplied business ID, or restart with CONNECT_APPLY_MODE=demo for the local preview.</p>'), 503)
+                eid = 'FI-D0001' if 'FI-D0001' in available else available[0]
+            else:
+                eid = 'FI-D0017'
+            return self.redirect(f'/w/{eid}/christmas')
         if parts == ["setup"]:
             return self.send(setup_page())
+        if (parts[0] in ('w', 's', 'e', 'p', 'b', 'm', 'ig') and len(parts) >= 2
+                and parts[1] in BL.ents and S5.applier.primary.name == 'sandbox'
+                and parts[1] not in S5.applier.primary.mapping):
+            return self.send(page('Business unavailable in sandbox',
+                f"<h1>{h(BL.ents[parts[1]]['name'])} is a local demo business</h1>"
+                "<p>This server uses the real Yext sandbox, where this business is not mapped. No hours were changed.</p>"
+                "<p><a href='/demo'>Open the configured WhatsApp demo</a></p>"
+                "<p>For the local preview of this business, restart with CONNECT_APPLY_MODE=demo.</p>"), 404)
         if parts[0] == "m":
             c = self.case(parts)
             if c is None:
