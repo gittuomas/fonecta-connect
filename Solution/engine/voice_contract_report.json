@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "businesses_tested": 17,
+  "voice_rows": 93,
+  "rule_rows_for_review": 31,
+  "items_rendered_at_demo_clock": 49,
+  "canonical_suggestions_preserved": true,
+  "calls_made": 0,
+  "network_used": false,
+  "env_read": false,
+  "integration_setting": "Set SUGGESTIONS_PATH to the absolute engine/output/voice_suggestions.json path; not changed by this test."
+}

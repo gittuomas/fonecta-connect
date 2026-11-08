@@ -1,0 +1,18 @@
+{
+  "model_id": "cx_r02_c13_e01",
+  "frozen_by": "School of Business",
+  "created": "2026-11-07T13:51:51.561014+02:00",
+  "seed": 7,
+  "snapshot": "2026-11-06",
+  "blend": {
+    "classifier": 0.5,
+    "payoff": 0.5
+  },
+  "centre_mode": "override",
+  "terrace": "keep",
+  "school": "keep",
+  "weekly_spec_gate": "abstain",
+  "input_mode": "fixed public-data snapshot with exported learned representations",
+  "prediction_sha256": "32fc46fb0ed61b7483a0aa5283cf51ae7ec0fed453cb67b148ddfaf9a45b88b8",
+  "validation": "All seven model partitions reproduce the frozen reference CSV byte-for-byte; no labels at inference."
+}

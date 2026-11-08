@@ -1,0 +1,932 @@
+[
+  {
+    "suggestion_id": "FI-D0004|2026-12-31",
+    "entity_id": "FI-D0004",
+    "date": "2026-12-31",
+    "day_key": "NYE",
+    "action": "SUGGEST",
+    "shown_hours": "10:00-20:00",
+    "proposed_hours": "10:00-18:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 12.0,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 12.0,
+    "contact_by": "2026-12-10",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_CENTRE",
+        "detail": "Your shopping centre's entry for this holiday last season suggests 10:00-18:00, based on your past matching hours."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0004|2027-01-01",
+    "entity_id": "FI-D0004",
+    "date": "2027-01-01",
+    "day_key": "NEW_YEARS_DAY",
+    "action": "SUGGEST",
+    "shown_hours": "10:00-20:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 12.125,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 12.125,
+    "contact_by": "2026-12-11",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_CENTRE",
+        "detail": "Your shopping centre's entry for this holiday last season suggests closed, based on your past matching hours."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0004|2027-01-06",
+    "entity_id": "FI-D0004",
+    "date": "2027-01-06",
+    "day_key": "EPIPHANY",
+    "action": "SUGGEST",
+    "shown_hours": "10:00-20:00",
+    "proposed_hours": "12:00-18:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 8.714,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 8.714,
+    "contact_by": "2026-12-16",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_CENTRE",
+        "detail": "Your shopping centre's entry for this holiday last season suggests 12:00-18:00, based on your past matching hours."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0005|2026-12-21",
+    "entity_id": "FI-D0005",
+    "date": "2026-12-21",
+    "day_key": "SCHOOL_BREAK",
+    "action": "SUGGEST",
+    "shown_hours": "09:00-17:00",
+    "proposed_hours": "09:00-18:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 0.5,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 0.5,
+    "contact_by": "2026-11-30",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_SCHOOL",
+        "detail": "Your latest published open school-break entry gives 09:00-18:00."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "SMS",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0005|2026-12-22",
+    "entity_id": "FI-D0005",
+    "date": "2026-12-22",
+    "day_key": "SCHOOL_BREAK",
+    "action": "SUGGEST",
+    "shown_hours": "09:00-17:00",
+    "proposed_hours": "09:00-18:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 0.25,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 0.25,
+    "contact_by": "2026-12-01",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_SCHOOL",
+        "detail": "Your latest published open school-break entry gives 09:00-18:00."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "SMS",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0005|2027-01-04",
+    "entity_id": "FI-D0005",
+    "date": "2027-01-04",
+    "day_key": "SCHOOL_BREAK",
+    "action": "SUGGEST",
+    "shown_hours": "09:00-17:00",
+    "proposed_hours": "09:00-18:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 0.5,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 0.5,
+    "contact_by": "2026-12-14",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_SCHOOL",
+        "detail": "Your latest published open school-break entry gives 09:00-18:00."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "SMS",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-11-08",
+    "entity_id": "FI-D0006",
+    "date": "2026-11-08",
+    "day_key": "FATHERS_DAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 6.25,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 6.25,
+    "contact_by": "2026-10-18",
+    "contact_overdue_at_snapshot": true,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-11-27",
+    "entity_id": "FI-D0006",
+    "date": "2026-11-27",
+    "day_key": "BLACK_FRIDAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 9.25,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 9.25,
+    "contact_by": "2026-11-06",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-12-06",
+    "entity_id": "FI-D0006",
+    "date": "2026-12-06",
+    "day_key": "INDEPENDENCE_DAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 6.25,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 6.25,
+    "contact_by": "2026-11-15",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-12-23",
+    "entity_id": "FI-D0006",
+    "date": "2026-12-23",
+    "day_key": "DEC23",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.857,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.857,
+    "contact_by": "2026-12-02",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-12-24",
+    "entity_id": "FI-D0006",
+    "date": "2026-12-24",
+    "day_key": "XMAS_EVE",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 6.143,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 6.143,
+    "contact_by": "2026-12-03",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-12-25",
+    "entity_id": "FI-D0006",
+    "date": "2026-12-25",
+    "day_key": "XMAS_DAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 9.25,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 9.25,
+    "contact_by": "2026-12-04",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-12-26",
+    "entity_id": "FI-D0006",
+    "date": "2026-12-26",
+    "day_key": "BOXING_DAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 12.875,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 12.875,
+    "contact_by": "2026-12-05",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-12-28",
+    "entity_id": "FI-D0006",
+    "date": "2026-12-28",
+    "day_key": "INTERDAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 4.625,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 4.625,
+    "contact_by": "2026-12-07",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-12-29",
+    "entity_id": "FI-D0006",
+    "date": "2026-12-29",
+    "day_key": "INTERDAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 7.375,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 7.375,
+    "contact_by": "2026-12-08",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-12-30",
+    "entity_id": "FI-D0006",
+    "date": "2026-12-30",
+    "day_key": "INTERDAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.857,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.857,
+    "contact_by": "2026-12-09",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2026-12-31",
+    "entity_id": "FI-D0006",
+    "date": "2026-12-31",
+    "day_key": "NYE",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 6.143,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 6.143,
+    "contact_by": "2026-12-10",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2027-01-01",
+    "entity_id": "FI-D0006",
+    "date": "2027-01-01",
+    "day_key": "NEW_YEARS_DAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 9.25,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 9.25,
+    "contact_by": "2026-12-11",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2027-01-05",
+    "entity_id": "FI-D0006",
+    "date": "2027-01-05",
+    "day_key": "EPIPHANY_EVE",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 7.375,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 7.375,
+    "contact_by": "2026-12-15",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "FI-D0006|2027-01-06",
+    "entity_id": "FI-D0006",
+    "date": "2027-01-06",
+    "day_key": "EPIPHANY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.857,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.857,
+    "contact_by": "2026-12-16",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "STRUCTURAL_TERRACE",
+        "detail": "Your business is listed as a seasonal terrace, and no winter reopening is recorded."
+      }
+    ],
+    "language": "fi",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2026-11-08",
+    "entity_id": "SE-D0016",
+    "date": "2026-11-08",
+    "day_key": "FATHERS_DAY",
+    "action": "SUGGEST",
+    "shown_hours": "12:00-21:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.375,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.375,
+    "contact_by": "2026-10-18",
+    "contact_overdue_at_snapshot": true,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives closed for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2026-11-27",
+    "entity_id": "SE-D0016",
+    "date": "2026-11-27",
+    "day_key": "BLACK_FRIDAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "11:00-22:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 8.375,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 8.375,
+    "contact_by": "2026-11-06",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives 11:00-22:00 for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2026-12-13",
+    "entity_id": "SE-D0016",
+    "date": "2026-12-13",
+    "day_key": "LUCIA",
+    "action": "SUGGEST",
+    "shown_hours": "12:00-21:00",
+    "proposed_hours": "closed",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.375,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.375,
+    "contact_by": "2026-11-22",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives closed for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2026-12-23",
+    "entity_id": "SE-D0016",
+    "date": "2026-12-23",
+    "day_key": "DEC23",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "11:00-22:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.143,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.143,
+    "contact_by": "2026-12-02",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives 11:00-22:00 for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2026-12-26",
+    "entity_id": "SE-D0016",
+    "date": "2026-12-26",
+    "day_key": "BOXING_DAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "11:00-22:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 8.75,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 8.75,
+    "contact_by": "2026-12-05",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives 11:00-22:00 for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2026-12-28",
+    "entity_id": "SE-D0016",
+    "date": "2026-12-28",
+    "day_key": "INTERDAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "11:00-22:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.25,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.25,
+    "contact_by": "2026-12-07",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives 11:00-22:00 for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2026-12-29",
+    "entity_id": "SE-D0016",
+    "date": "2026-12-29",
+    "day_key": "INTERDAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "11:00-22:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.0,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.0,
+    "contact_by": "2026-12-08",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives 11:00-22:00 for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2026-12-30",
+    "entity_id": "SE-D0016",
+    "date": "2026-12-30",
+    "day_key": "INTERDAY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "11:00-22:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.143,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.143,
+    "contact_by": "2026-12-09",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives 11:00-22:00 for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2026-12-31",
+    "entity_id": "SE-D0016",
+    "date": "2026-12-31",
+    "day_key": "NYE",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "11:00-22:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.143,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.143,
+    "contact_by": "2026-12-10",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives 11:00-22:00 for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2027-01-05",
+    "entity_id": "SE-D0016",
+    "date": "2027-01-05",
+    "day_key": "EPIPHANY_EVE",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "11:00-22:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.0,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.0,
+    "contact_by": "2026-12-15",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives 11:00-22:00 for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  },
+  {
+    "suggestion_id": "SE-D0016|2027-01-06",
+    "entity_id": "SE-D0016",
+    "date": "2027-01-06",
+    "day_key": "EPIPHANY",
+    "action": "SUGGEST",
+    "shown_hours": "11:00-23:00",
+    "proposed_hours": "11:00-22:00",
+    "confidence": null,
+    "confidence_basis": "deterministic_rule_no_probability",
+    "expected_points": null,
+    "priority": 5.143,
+    "priority_basis": "public_same_weekday_search_views_8_week_mean",
+    "estimated_search_views": 5.143,
+    "contact_by": "2026-12-16",
+    "contact_overdue_at_snapshot": false,
+    "evidence": [
+      {
+        "source": "REVIEW_WEEKLY_HOURS",
+        "detail": "The latest review describing your weekly hours gives 11:00-22:00 for this weekday."
+      }
+    ],
+    "language": "sv",
+    "preferred_channel": "EMAIL",
+    "standing_permission": false,
+    "opted_out": false,
+    "contact_eligible": true,
+    "review_required": false,
+    "model_id": "cx_r02_c13_e01"
+  }
+]

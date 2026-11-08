@@ -1,0 +1,20 @@
+{
+  "friendly_name": "connect_hours_sandbox_en",
+  "language": "en",
+  "variables": {
+    "1": "Cinnamon Swirl Cafe",
+    "2": "Christmas is coming up. We suggest: Thu 24 Dec (Christmas Eve): closed.",
+    "3": "Shall we update your Christmas hours?",
+    "4": "a1b2c3d4"
+  },
+  "types": {
+    "twilio/quick-reply": {
+      "body": "Hi {{1}}! This is Fonecta Connect.\n\nHours proposal: {{2}}\n\nQuestion: {{3}}\nReference: {{4}}.\n\nThis demonstration updates the Yext sandbox only. We never ask for logins or passwords. Reply STOP to stop suggestions.",
+      "actions": [
+        {"title": "Yes, update all", "id": "YES {{4}}"},
+        {"title": "No, keep as it is", "id": "NO {{4}}"},
+        {"title": "Other hours", "id": "OTHER {{4}}"}
+      ]
+    }
+  }
+}

@@ -1,0 +1,2 @@
+# Browser demo timezone support on Windows. Other services have separate requirements.
+tzdata>=2024.1

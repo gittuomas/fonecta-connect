@@ -1,0 +1,20 @@
+{
+  "local_events.json": "43610c1cd5b938e0374685f824fa8f7c83fdfb2f4113c4e181ba368e80aea0e2",
+  "splits.csv": "6329d0a3442119c6eb863114daf9771e8acceb2da06c6b6cfea9bde5e2b22c69",
+  "categories.csv": "115f63abe76d4bce5127c544170bf72b761bacf87a8e8b225246788c98beb7e3",
+  "reviews.json": "8813addb68964e50efe8f8d76d57d094f25dbe5b4dbfda6be3747f4943747350",
+  "regular_hours_history.jsonl": "92f58082a946f356a1c878285e0408d7b89b363a6f9363dc61a68c4b7bd42bdd",
+  "analytics_daily.parquet": "a140886d9d55308bf37f8f2018c0e21e4cf3e64c1e8f28873056d6ed2f8b7f4a",
+  "peer_benchmarks.csv": "1eca59a5361dc5b1619095f376583b4826885ddf3026f3a16938fd9d84f2f5fe",
+  "publisher_suggestions.json": "245aace92412c9c9f1841c32304b632919759f7ddb879e943431f7127be31a77",
+  "school_breaks.csv": "423eafe4aa8853a62826a1d160a5da65303d8a255a0296c3ed17368902b460b9",
+  "weather_daily.csv": "be200cce59b399316eb0ece85ed292911553ccc42e348d664364d11a12c628a0",
+  "cities.csv": "7de263169b67724a0daf9913c1fcddb47de9c0b25cc84168a3aa5c959dbf6372",
+  "holiday_hours_history.jsonl": "877869dae0a1cab4200091caf290aa7a700c350c6b2797ab949c89e1281ce420",
+  "entities.json": "9b8646440129e1a8bced0d3f589f1b33c0dd51cdf4d49b8c6204af58cf91755c",
+  "customer_contacts.csv": "7ba38fb4542bd1cef84c380cc41b497ad64e99c3efb54b7c4d7dfdfda27e0a87",
+  "weather_normals.csv": "9b7e7e7d6ce88fcfe63740803721b9366415778a60a69f8a0f1bf8d3897cd73a",
+  "calendar_special_days.csv": "9c0d1882d66571b76fb2de2d43dd78da6da156601681655b885b5d2475e251db",
+  "pilot_decision_log_2025.csv": "cfcad33d24592145e8031f0e4c94e0aea430da1be4e6af3eafe3144d90768409",
+  "listings.json": "c06bc507f700974bc798c290a7b3b2d2816047f9fa60c78b93ce43f4febddde2"
+}

@@ -1,0 +1,11 @@
+{
+  "files": {
+    "payoff.txt": "d7c8a68077a43c9630029fc82f2c57ed171c63f021a5a652108932c90f503b8f",
+    "reference_predictions.csv": "46e47c3dc54f764e258c71612fda2f06c42a924d1d9b0cb85fc477f829b21b46",
+    "metadata.json": "17c49d0ac3c002bf3e9e5778e4ae65f1eb44acd419620ec12f92eeda13a7bdc8",
+    "classifier.txt": "31dc6841b7e7e06102c3398a44244a2f70f451583fea0a21f749d90aad94dcad",
+    "past_day_state.parquet": "e8ef1ada5b21a7f50171332e9f6acdffa3b413ab2dda43828f048e2600ef9bed"
+  },
+  "source": "fbf1679056bd9471ba45277878fb7132c6904845f8085fcbb58f923429b1900b",
+  "parity": true
+}

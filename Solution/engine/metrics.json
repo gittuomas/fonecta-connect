@@ -1,0 +1,39 @@
+{
+  "scope": "Grouped 2026 CV only, 663 businesses, sealed excluded. Evaluation labels accessed only through eda_labels; no production-time labels.",
+  "model_id": "cx_r02_c13_e01",
+  "seed": 7,
+  "baseline_id": "t0_baseline",
+  "model_score_three_seed_mean": 70.92333333333333,
+  "backtest_score_three_seed_mean": 67.31666666666666,
+  "model_metrics_seed7": {
+    "score": 70.96,
+    "rows": 9170,
+    "need": 4400,
+    "suggestions": 4012,
+    "precision_exact": 0.861,
+    "recall_exact": 0.788,
+    "harmful": 299,
+    "row_accuracy_pct": 86.8
+  },
+  "baseline_metrics": {
+    "score": 54.01,
+    "rows": 9170,
+    "need": 4400,
+    "suggestions": 2855,
+    "precision_exact": 0.907,
+    "recall_exact": 0.586,
+    "harmful": 185,
+    "row_accuracy_pct": 78.46
+  },
+  "search_views_definition": "Sum of expected_search_views on initially incorrect SUGGEST rows that are corrected to exact truth. Evaluation-weighted exposure proxy, not measured live traffic saved.",
+  "model_exact_corrections": 3448,
+  "model_search_views_on_exact_corrections": 40574.399999999994,
+  "baseline_exact_corrections": 2566,
+  "baseline_search_views_on_exact_corrections": 29609.1,
+  "additional_search_views_on_exact_corrections": 10965.299999999996,
+  "sealed_reported_by_claude": {
+    "dev2026_seed7": 73.85,
+    "backtest2025_seed7": 69.37,
+    "source": "collab/rounds/FINAL/DEBATE.md; not re-scored by Codex"
+  }
+}

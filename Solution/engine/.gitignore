@@ -1,0 +1,8 @@
+__pycache__/
+*.log
+release/
+verified_output/
+output/*
+!output/*.json
+!output/predictions_2026.csv
+.venv/

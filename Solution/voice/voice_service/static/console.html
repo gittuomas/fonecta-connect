@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connect Voice Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@elevenlabs/client@1.29.0/dist/lib.iife.js"></script>
+<style>
+:root{
+  --bg:#f4f2ee; --panel:#ffffff; --ink:#1b1d21; --muted:#6b6f78; --line:#e3dfd8;
+  --accent:#0f6b5c; --accent-soft:#e2f1ee; --warn:#a35d00; --warn-soft:#fbefdc;
+  --bad:#a1262c; --bad-soft:#f8e3e3; --ok:#1d7a3a; --ok-soft:#e1f3e6;
+  --phone:#121417; --phone-ink:#f2f3f5; --bubble-ai:#23272d; --bubble-me:#0f6b5c;
+  --mono:"IBM Plex Mono",ui-monospace,monospace; --sans:"IBM Plex Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box} html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 var(--sans)}
+header{display:flex;align-items:center;gap:16px;padding:14px 24px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.2px}
+header .sub{color:var(--muted)}
+header .clock{margin-left:auto;font-family:var(--mono);font-size:12.5px;background:var(--bg);padding:6px 10px;border-radius:6px}
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:20px;padding:20px 24px;height:calc(100% - 57px)}
+.col{display:flex;flex-direction:column;gap:16px;min-height:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;min-height:0}
+.panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:0;padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.panel h2 .grow{flex:1}
+.scroll{overflow:auto;padding:12px 16px}
+#queue{flex:1.1} #log{flex:1}
+.card{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:grid;grid-template-columns:1fr auto;gap:6px 12px}
+.card.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.card .name{font-weight:600}
+.card .meta{color:var(--muted);font-size:12.5px}
+.items{grid-column:1/3;display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 9px;background:#faf9f7;white-space:nowrap}
+.chip b{font-weight:600}
+.badge{font-size:11.5px;font-weight:700;letter-spacing:.4px;border-radius:6px;padding:3px 8px;align-self:start;justify-self:end}
+.badge.CALL{background:var(--ok-soft);color:var(--ok)} .badge.SCHEDULE{background:var(--warn-soft);color:var(--warn)}
+.badge.NO_CALL{background:var(--bad-soft);color:var(--bad)}
+.checks{grid-column:1/3;display:none;font-size:12.5px;margin:4px 0 0;padding:0;list-style:none}
+.card.open .checks{display:block}
+.checks li{padding:2px 0;color:var(--muted)} .checks li.ok::before{content:"✓ ";color:var(--ok);font-weight:700}
+.checks li.no::before{content:"✗ ";color:var(--bad);font-weight:700}
+.actions{grid-column:1/3;display:flex;gap:8px;align-items:center}
+button{font:inherit;border-radius:8px;border:1px solid var(--line);background:#fff;padding:6px 12px;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.link{border:none;background:none;color:var(--muted);padding:6px 4px;text-decoration:underline}
+.ev{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.ev:last-child{border-bottom:none}
+.ev time{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding-top:2px}
+.ev .k{font-weight:600}
+.ev .d{color:var(--muted);font-size:12.5px;white-space:pre-wrap}
+.ev.write .k{color:var(--accent)} .ev.decision .k{color:var(--ok)} .ev.warn .k{color:var(--bad)}
+.pubs{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.pubs span{font-size:11.5px;background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:1px 6px}
+.empty{color:var(--muted);font-size:13px;padding:8px 0}
+/* phone */
+.phone{background:var(--phone);border-radius:42px;padding:14px;height:100%;max-height:820px;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(20,20,20,.18)}
+.screen{flex:1;border-radius:30px;background:linear-gradient(180deg,#1b1f24,#121417);color:var(--phone-ink);display:flex;flex-direction:column;overflow:hidden;position:relative}
+.notch{width:110px;height:26px;background:#000;border-radius:0 0 16px 16px;margin:0 auto}
+.idle,.ring,.incall{flex:1;display:none;flex-direction:column;align-items:center}
+.state-idle .idle,.state-ring .ring,.state-call .incall{display:flex}
+.idle{justify-content:center;color:#8a9099;gap:6px;text-align:center;padding:24px}
+.idle .big{font-size:42px;font-weight:300;color:#d7dade;font-family:var(--mono)}
+.avatar{width:84px;height:84px;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-weight:700;font-size:28px;color:#fff;margin-top:70px}
+.ring .who{font-size:22px;font-weight:600;margin-top:16px} .ring .what{color:#9aa1aa;margin-top:4px}
+.ring .avatar{animation:pulse 1.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(15,107,92,.7)}70%{box-shadow:0 0 0 26px rgba(15,107,92,0)}100%{box-shadow:0 0 0 0 rgba(15,107,92,0)}}
+.ringbtns{margin-top:auto;margin-bottom:56px;display:flex;gap:64px}
+.round{width:66px;height:66px;border-radius:50%;border:none;color:#fff;font-size:13px;font-weight:600}
+.round.go{background:#1f9d55} .round.stop{background:#d23b3b}
+.incall{align-items:stretch;min-height:0}
+.callhead{display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid #262a30}
+.callhead .avatar{width:38px;height:38px;font-size:14px;margin:0;animation:none}
+.callhead .t{font-family:var(--mono);color:#9aa1aa;font-size:12px}
+.callhead .mode{margin-left:auto;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:#9aa1aa;display:flex;gap:6px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;background:#555}
+.mode.speaking .dot{background:#3fd08a;animation:blink .8s infinite} .mode.listening .dot{background:#6aa8ff}
+@keyframes blink{50%{opacity:.3}}
+.sheet{margin:10px 12px 0;background:#1d2127;border:1px solid #2b3037;border-radius:12px;padding:8px 10px}
+.sheet .row{display:grid;grid-template-columns:1fr auto;gap:6px;font-size:12px;padding:4px 0;border-bottom:1px solid #2b3037}
+.sheet .row:last-child{border-bottom:none}
+.sheet .row .st{font-weight:600;font-size:11px;letter-spacing:.3px}
+.st.pending{color:#9aa1aa} .st.ACCEPTED,.st.EDITED{color:#3fd08a} .st.REJECTED{color:#f0a35e}
+.bubbles{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.b{max-width:86%;padding:8px 11px;border-radius:14px;font-size:13px;line-height:1.4}
+.b.ai{background:var(--bubble-ai);align-self:flex-start;border-bottom-left-radius:4px}
+.b.me{background:var(--bubble-me);align-self:flex-end;border-bottom-right-radius:4px}
+.b.tool{align-self:center;background:none;color:#7f8790;font-family:var(--mono);font-size:11px;padding:2px}
+.callfoot{padding:10px 12px 18px;display:flex;gap:8px;align-items:center}
+.callfoot input{flex:1;border-radius:18px;border:1px solid #2f343b;background:#1b1f24;color:#fff;padding:8px 12px;font:inherit;display:none}
+.textmode .callfoot input{display:block}
+.callfoot .round{width:52px;height:52px;margin-left:auto}
+.tm{color:#9aa1aa;font-size:12px;display:flex;gap:6px;align-items:center;margin-top:8px}
+.err{color:#ff9a9a;font-size:12px;padding:0 14px}
+.micbar{height:4px;margin:0 14px 6px;background:#262a30;border-radius:2px;overflow:hidden}
+.micbar div{height:100%;width:0;background:#3fd08a;transition:width .08s}
+.textmode .micbar{display:none}
+@media (max-width: 980px){.wrap{grid-template-columns:1fr;height:auto}.phone{height:720px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Connect Voice</h1><span class="sub">escalation console: unanswered suggestions become a phone call</span>
+  <span class="clock" id="clock">…</span>
+</header>
+<div class="wrap">
+  <div class="col">
+    <section class="panel" id="queue">
+      <h2><span class="grow">Open suggestions waiting for the owner</span><button class="link" id="reset">Reset demo</button></h2>
+      <div class="scroll" id="cards"><div class="empty">Loading…</div></div>
+    </section>
+    <section class="panel" id="log">
+      <h2><span class="grow">Call log and audit trail</span><span id="callid" style="font-family:var(--mono);text-transform:none;letter-spacing:0"></span></h2>
+      <div class="scroll" id="events"><div class="empty">No call yet. Pick a business above and press Call now.</div></div>
+    </section>
+  </div>
+  <div class="phone" id="phone">
+    <div class="screen state-idle" id="screen">
+      <div class="notch"></div>
+      <div class="idle"><div class="big" id="phoneclock">10:30</div><div>Owner's phone</div><div style="font-size:12px">Calls from Connect ring here</div>
+        <label class="tm"><input type="checkbox" id="textmode"> type instead of speaking (no microphone)</label></div>
+      <div class="ring"><div class="avatar">C</div><div class="who" id="ringwho">Connect</div><div class="what">incoming call</div>
+        <div class="ringbtns"><button class="round stop" id="decline">Decline</button><button class="round go" id="answer">Answer</button></div></div>
+      <div class="incall">
+        <div class="callhead"><div class="avatar">C</div><div><div id="callwho" style="font-weight:600">Connect</div><div class="t" id="timer">00:00</div></div>
+          <div class="mode" id="mode"><span class="dot"></span><span id="modetxt">connecting</span></div></div>
+        <div class="sheet" id="sheet"></div>
+        <div class="bubbles" id="bubbles"></div>
+        <div class="micbar" title="your microphone level"><div id="mic"></div></div>
+        <div class="err" id="err"></div>
+        <div class="callfoot"><input id="say" placeholder="Type what the owner says, Enter to send"><button class="round stop" id="hangup">End</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const api = (p, o={}) => fetch(p, {headers:{'Content-Type':'application/json'}, ...o}).then(r => r.json());
+let cfg = {}, activeCall = null, conv = null, t0 = 0, timerId = null, pollId = null, seen = 0, answering = false, firstAt = null;
+const params = new URLSearchParams(location.search);
+const fmtH = h => !h ? '' : h === 'closed' ? 'closed' : h.split(',').map(x => x.replace('-', '–')).join(', ');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+async function init(){
+  cfg = await api('/voice/config');
+  const d = new Date(cfg.now);
+  $('#clock').textContent = 'Demo clock: ' + d.toLocaleString('en-GB', {weekday:'short', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit', timeZone:'Europe/Helsinki'}) + ' Helsinki';
+  $('#phoneclock').textContent = d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', timeZone:'Europe/Helsinki'});
+  await loadCards();
+  setInterval(pollRinging, 1500);
+  if(params.get('text') === '1') $('#textmode').checked = true;
+  if(params.get('autocall')) escalate(params.get('autocall'), true);
+}
+
+async function loadCards(){
+  if(conv || answering) return;
+  const rows = await api('/voice/bundles');
+  $('#cards').innerHTML = rows.map(b => b.error ? `<div class="card"><div class="name">${esc(b.key)}</div><div class="meta">${esc(b.error)}</div></div>` : `
+    <div class="card" data-key="${esc(b.key)}">
+      <div><div class="name">${esc(b.business_name)} <span class="meta">${esc(b.city)}</span></div>
+      <div class="meta">Owner ${esc(b.owner_first_name)}. ${esc(textLine(b))} Writes to ${esc(b.write_target)}.</div></div>
+      <span class="badge ${b.policy.decision}">${b.policy.decision.replace('_',' ')}</span>
+      <div class="items">${b.items.length ? b.items.map(i => `<span class="chip"><b>${esc(i.day_name_en)}</b> ${esc(i.date.slice(5).split('-').reverse().join('.'))}: ${esc(fmtH(i.shown_hours))} → ${esc(fmtH(i.proposed_hours))}</span>`).join('') : '<span class="meta">Nothing to suggest in the next weeks.</span>'}${b.flags ? `<span class="chip">${b.flags} flag(s) for a human</span>` : ''}</div>
+      <ul class="checks">${b.policy.checks.map(c => `<li class="${c.ok?'ok':'no'}">${esc(c.detail)}</li>`).join('')}</ul>
+      <div class="actions"><button class="primary" data-call="${esc(b.key)}" ${b.policy.decision==='CALL'?'':'disabled'}>Call now</button>
+        <button class="link" data-why>Why?</button>${b.policy.decision!=='CALL' && b.items.length ? `<button class="link" data-force="${esc(b.key)}">call anyway (demo)</button>`:''}</div>
+    </div>`).join('');
+  document.querySelectorAll('[data-why]').forEach(b => b.onclick = e => e.target.closest('.card').classList.toggle('open'));
+  document.querySelectorAll('[data-call]').forEach(b => b.onclick = () => escalate(b.dataset.call, false));
+  document.querySelectorAll('[data-force]').forEach(b => b.onclick = () => escalate(b.dataset.force, true));
+}
+function textLine(b){
+  const c = b.policy.checks.find(x => x.check === 'text_unanswered');
+  return c ? c.detail.replace(/^\w/, m => m.toUpperCase()) + '.' : '';
+}
+
+async function escalate(key, force){
+  const r = await api(`/voice/escalate/${encodeURIComponent(key)}?mode=browser${force?'&force=true':''}`, {method:'POST'});
+  if(!r.placed){ $('#events').innerHTML = `<div class="empty">No call: the policy says ${esc(r.policy.decision)}. ${esc(r.policy.checks.filter(c => !c.ok).map(c => c.detail).join('; '))}</div>`; return; }
+  document.querySelectorAll('.card').forEach(c => c.classList.toggle('active', c.dataset.key === key));
+  watch(r.call_id);
+}
+
+async function pollRinging(){
+  if(activeCall && ['ringing','in_progress'].includes(activeCall.status)) return;
+  const c = await api('/voice/ringing');
+  if(c.call_id){ watch(c.call_id); }
+}
+
+function watch(callId){
+  if(activeCall && activeCall.call_id === callId) return;
+  seen = 0; firstAt = null; $('#events').innerHTML = ''; $('#callid').textContent = callId.slice(0, 13) + '…';
+  activeCall = {call_id: callId, status: 'ringing'};
+  clearInterval(pollId); pollId = setInterval(refresh, 1000); refresh();
+}
+
+async function refresh(){
+  if(!activeCall) return;
+  const c = await api('/voice/calls/' + activeCall.call_id);
+  activeCall = c;
+  const evs = c.events || [];
+  for(const e of evs.slice(seen)) addEvent(e);
+  seen = evs.length;
+  renderSheet(c);
+  if(c.status === 'ringing' && !conv && !answering){ $('#screen').className = 'screen state-ring'; $('#ringwho').textContent = c.brand + ' assistant';
+    if(params.get('autocall') && !window.__auto){ window.__auto = 1; setTimeout(() => $('#answer').click(), 1500); } }
+  if(['completed','failed'].includes(c.status) && !conv && !answering){ setTimeout(() => { if(!conv) $('#screen').className = 'screen state-idle'; }, 2500); clearInterval(pollId); loadCards(); }
+}
+
+function renderSheet(c){
+  $('#sheet').innerHTML = (c.items||[]).map(i => {
+    const d = (c.decisions||{})[i.item];
+    const st = d ? d.decision : 'pending';
+    const label = !d ? 'waiting' : d.decision === 'REJECTED' ? 'kept as is' : 'updated ' + fmtH(d.final_hours);
+    return `<div class="row"><span>${esc(i.day_name_en)} ${esc(i.date.slice(5).split('-').reverse().join('.'))}: ${esc(fmtH(i.proposed_hours))}</span><span class="st ${st}">${esc(label)}</span></div>`;
+  }).join('');
+}
+
+const KIND = {escalated:'Escalated to a call', ringing:'Ringing', dialing:'Dialing', answered:'Owner answered', tool_call:'Agent tool call',
+  yext_write:'Written to Yext', yext_write_failed:'Yext write failed', decision:'Decision saved', standing_permission:'Standing permission',
+  call_ended:'Call ended', receipt_queued:'Written receipt queued', post_call_analysis:'Post-call analysis (ElevenLabs)',
+  invalid_hours:'Hours rejected by validation', call_not_connected:'Call not connected', call_failed:'Call failed', preview_session_opened:'Preview session'};
+function addEvent(e){
+  if(seen === 0 && $('#events .empty')) $('#events').innerHTML = '';
+  const at = new Date(e.at).getTime(); if(firstAt === null) firstAt = at;
+  const dt = Math.max(0, Math.round((at - firstAt) / 1000)); const t = '+' + Math.floor(dt/60) + ':' + String(dt%60).padStart(2,'0');
+  let d = '', cls = '';
+  if(e.kind === 'escalated') d = (e.forced ? 'Forced for the demo. ' : '') + e.reasons.join('\n');
+  else if(e.kind === 'tool_call') d = `${e.tool}(${Object.entries(e.args).filter(([k,v]) => v !== null && v !== '').map(([k,v]) => k + '=' + JSON.stringify(v)).join(', ')})`;
+  else if(e.kind === 'yext_write'){ cls = 'write'; d = `${e.target}: ${e.date} → ${fmtH(e.hours)}, read back and verified`; }
+  else if(e.kind === 'decision'){ cls = 'decision'; d = `item ${e.item}: ${e.decision}${e.final_hours ? ' ' + fmtH(e.final_hours) : ''}${e.applied ? ', live' : ''}`; }
+  else if(['yext_write_failed','invalid_hours','call_not_connected','call_failed'].includes(e.kind)){ cls = 'warn'; d = e.error || e.reason || ''; }
+  else if(e.kind === 'standing_permission') d = `${e.scope}: ${e.granted ? 'granted' : 'declined'}`;
+  else if(e.kind === 'receipt_queued') d = `${e.channel}: "${e.text}"`;
+  else if(e.kind === 'call_ended') d = e.reason + (e.open_items && e.open_items.length ? `; items ${e.open_items.join(', ')} stay open in the text channel` : '');
+  else if(e.kind === 'post_call_analysis') d = `${e.summary || ''}\nevaluation: ${JSON.stringify(e.evaluation)}`;
+  else if(e.kind === 'answered') d = e.conversation_id ? 'conversation ' + e.conversation_id : '';
+  const div = document.createElement('div');
+  div.className = 'ev ' + cls;
+  div.innerHTML = `<time>${t}</time><div><div class="k">${esc(KIND[e.kind] || e.kind)}</div><div class="d">${esc(d)}</div></div>`;
+  $('#events').appendChild(div); $('#events').scrollTop = 1e9;
+}
+
+function bubble(cls, text){
+  const b = document.createElement('div'); b.className = 'b ' + cls; b.textContent = text;
+  $('#bubbles').appendChild(b); $('#bubbles').scrollTop = 1e9;
+}
+
+$('#answer').onclick = async () => {
+  answering = true;
+  const s = await api(`/voice/calls/${activeCall.call_id}/session`);
+  if(!s.agent_id){ $('#err').textContent = 'ELEVENLABS_AGENT_ID is not set on the server.'; }
+  const textOnly = $('#textmode').checked;
+  if(!textOnly){
+    // Ask for the microphone first, so a blocked or missing mic shows up here instead of as silence
+    try{ const st = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, autoGainControl: true}}); st.getTracks().forEach(t => t.stop()); }
+    catch(e){ answering = false; $('#screen').className = 'screen state-ring'; alertMic(e); return; }
+  }
+  $('#screen').className = 'screen state-call' + (textOnly ? ' textmode' : '');
+  $('#callwho').textContent = activeCall.brand + ' assistant'; $('#bubbles').innerHTML = ''; $('#err').textContent = '';
+  t0 = Date.now(); clearInterval(timerId);
+  timerId = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $('#timer').textContent = String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0'); }, 500);
+  startConv(s, textOnly, textOnly ? 'websocket' : (params.get('transport') || 'webrtc'));
+};
+// Voice goes over WebRTC by default. Some networks (venue Wi-Fi, VPNs) block the UDP it needs, which
+// shows up as a connected call where the agent never speaks. If no agent message arrives within 8 s,
+// drop that session and reconnect over a WebSocket (TCP 443), which passes almost everywhere.
+async function startConv(s, textOnly, transport){
+  let heard = false, abandoned = false;
+  try{
+    const opts = {
+      dynamicVariables: s.dynamic_variables,
+      onConnect: ({conversationId}) => api(`/voice/calls/${activeCall.call_id}/started`, {method:'POST', body: JSON.stringify({conversation_id: conversationId})}),
+      onMessage: m => { if((m.role || m.source) !== 'user') heard = true; bubble((m.role || m.source) === 'user' ? 'me' : 'ai', m.message); },
+      onModeChange: ({mode}) => { $('#mode').className = 'mode ' + mode; $('#modetxt').textContent = mode; },
+      onAgentToolRequest: r => bubble('tool', '⟶ ' + (r.tool_name || 'tool')),
+      onError: (m) => { $('#err').textContent = String(m); },
+      onDisconnect: () => { if(!abandoned) endLocal(); },
+    };
+    if(textOnly){ opts.textOnly = true; }
+    opts.connectionType = transport;
+    if(s.conversation_token && transport === 'webrtc') opts.conversationToken = s.conversation_token; else opts.agentId = s.agent_id;
+    conv = await ElevenLabsClient.Conversation.startSession(opts);
+    if(!textOnly) meter();
+    if(transport === 'webrtc') setTimeout(async () => {
+      if(heard || !conv) return;
+      abandoned = true; bubble('tool', 'Voice link blocked on this network, switching to the backup connection');
+      const old = conv; conv = null;
+      try{ await old.endSession(); }catch(e){}
+      startConv(s, textOnly, 'websocket');
+    }, 8000);
+  }catch(e){
+    if(transport === 'webrtc' && !textOnly){ bubble('tool', 'Voice link failed, switching to the backup connection'); return startConv(s, textOnly, 'websocket'); }
+    $('#err').textContent = 'Could not start the call: ' + e.message;
+  }
+}
+function alertMic(e){
+  const d = document.createElement('div'); d.className = 'err';
+  d.textContent = 'Microphone blocked or missing (' + e.name + '). Allow the mic for localhost in the address bar, or tick "type instead of speaking".';
+  document.querySelector('.ring').appendChild(d);
+}
+function meter(){
+  if(!conv || !conv.getInputVolume) return;
+  const v = Math.min(1, conv.getInputVolume() * 4);
+  $('#mic').style.width = Math.round(v * 100) + '%';
+  requestAnimationFrame(meter);
+}
+$('#decline').onclick = () => { api(`/voice/calls/${activeCall.call_id}/ended`, {method:'POST', body:'{}'}); $('#screen').className = 'screen state-idle'; };
+$('#hangup').onclick = async () => { if(conv){ await conv.endSession(); } else endLocal(); };
+$('#say').addEventListener('keydown', e => {
+  if(e.key === 'Enter' && conv && e.target.value.trim()){ conv.sendUserMessage(e.target.value.trim()); bubble('me', e.target.value.trim()); e.target.value = ''; }
+});
+async function endLocal(){
+  clearInterval(timerId);
+  conv = null; answering = false;
+  if(activeCall){ await api(`/voice/calls/${activeCall.call_id}/ended`, {method:'POST', body:'{}'}); refresh(); }
+  $('#mode').className = 'mode'; $('#modetxt').textContent = 'ended';
+}
+$('#reset').onclick = async () => { await api('/voice/demo/reset', {method:'POST'}); activeCall = null; $('#events').innerHTML = '<div class="empty">Reset. Pick a business above.</div>'; $('#screen').className = 'screen state-idle'; loadCards(); };
+init();
+</script>
+</body>
+</html>

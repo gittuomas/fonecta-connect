@@ -1,0 +1,245 @@
+country,date,weekday,day_key,day_class,day_type,name_local,name_en,official_public_holiday
+FI,2024-01-01,Monday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Uudenvuodenpäivä,New Year's Day,1
+FI,2024-01-05,Friday,EPIPHANY_EVE,EVE_MINOR,EVE,Loppiaisaatto,Epiphany Eve,0
+FI,2024-01-06,Saturday,EPIPHANY,SOFT,PUBLIC_HOLIDAY,Loppiainen,Epiphany,1
+FI,2024-03-28,Thursday,MAUNDY_THURSDAY,EVE_MINOR,EVE,Kiirastorstai,Maundy Thursday,0
+FI,2024-03-29,Friday,GOOD_FRIDAY,MAJOR,PUBLIC_HOLIDAY,Pitkäperjantai,Good Friday,1
+FI,2024-03-30,Saturday,EASTER_SATURDAY,EVE_MINOR,EVE,Pääsiäislauantai,Easter Saturday,0
+FI,2024-03-31,Sunday,EASTER_SUNDAY,MAJOR,PUBLIC_HOLIDAY,Pääsiäispäivä,Easter Sunday,1
+FI,2024-04-01,Monday,EASTER_MONDAY,SOFT,PUBLIC_HOLIDAY,2. pääsiäispäivä,Easter Monday,1
+FI,2024-04-30,Tuesday,MAY_EVE,EVE_MINOR,EVE,Vappuaatto,May Day Eve,0
+FI,2024-05-01,Wednesday,MAY_DAY,SOFT,PUBLIC_HOLIDAY,Vappu,May Day,1
+FI,2024-05-09,Thursday,ASCENSION,SOFT,PUBLIC_HOLIDAY,Helatorstai,Ascension Day,1
+FI,2024-05-12,Sunday,MOTHERS_DAY,OBS,OBSERVANCE,Äitienpäivä,Mother's Day,0
+FI,2024-05-19,Sunday,PENTECOST,SOFT,PUBLIC_HOLIDAY,Helluntai,Pentecost,1
+FI,2024-06-21,Friday,MIDSUMMER_EVE,EVE_MAJOR,EVE,Juhannusaatto,Midsummer Eve,1
+FI,2024-06-22,Saturday,MIDSUMMER_DAY,MAJOR,PUBLIC_HOLIDAY,Juhannuspäivä,Midsummer Day,1
+FI,2024-11-02,Saturday,ALL_SAINTS,SOFT,PUBLIC_HOLIDAY,Pyhäinpäivä,All Saints' Day,1
+FI,2024-11-10,Sunday,FATHERS_DAY,OBS,OBSERVANCE,Isänpäivä,Father's Day,0
+FI,2024-11-29,Friday,BLACK_FRIDAY,COMM,COMMERCIAL,Black Friday,Black Friday,0
+FI,2024-12-06,Friday,INDEPENDENCE_DAY,SOFT,PUBLIC_HOLIDAY,Itsenäisyyspäivä,Independence Day,1
+FI,2024-12-23,Monday,DEC23,COMM,COMMERCIAL,Aatonaatto,Day before Christmas Eve,0
+FI,2024-12-24,Tuesday,XMAS_EVE,EVE_MAJOR,EVE,Jouluaatto,Christmas Eve,1
+FI,2024-12-25,Wednesday,XMAS_DAY,MAJOR,PUBLIC_HOLIDAY,Joulupäivä,Christmas Day,1
+FI,2024-12-26,Thursday,BOXING_DAY,SOFT,PUBLIC_HOLIDAY,Tapaninpäivä,Boxing Day,1
+FI,2024-12-27,Friday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Välipäivä,Between Christmas and New Year,0
+FI,2024-12-28,Saturday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Välipäivä,Between Christmas and New Year,0
+FI,2024-12-30,Monday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Välipäivä,Between Christmas and New Year,0
+FI,2024-12-31,Tuesday,NYE,EVE_MINOR,EVE,Uudenvuodenaatto,New Year's Eve,0
+FI,2025-01-01,Wednesday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Uudenvuodenpäivä,New Year's Day,1
+FI,2025-01-05,Sunday,EPIPHANY_EVE,EVE_MINOR,EVE,Loppiaisaatto,Epiphany Eve,0
+FI,2025-01-06,Monday,EPIPHANY,SOFT,PUBLIC_HOLIDAY,Loppiainen,Epiphany,1
+FI,2025-04-17,Thursday,MAUNDY_THURSDAY,EVE_MINOR,EVE,Kiirastorstai,Maundy Thursday,0
+FI,2025-04-18,Friday,GOOD_FRIDAY,MAJOR,PUBLIC_HOLIDAY,Pitkäperjantai,Good Friday,1
+FI,2025-04-19,Saturday,EASTER_SATURDAY,EVE_MINOR,EVE,Pääsiäislauantai,Easter Saturday,0
+FI,2025-04-20,Sunday,EASTER_SUNDAY,MAJOR,PUBLIC_HOLIDAY,Pääsiäispäivä,Easter Sunday,1
+FI,2025-04-21,Monday,EASTER_MONDAY,SOFT,PUBLIC_HOLIDAY,2. pääsiäispäivä,Easter Monday,1
+FI,2025-04-30,Wednesday,MAY_EVE,EVE_MINOR,EVE,Vappuaatto,May Day Eve,0
+FI,2025-05-01,Thursday,MAY_DAY,SOFT,PUBLIC_HOLIDAY,Vappu,May Day,1
+FI,2025-05-11,Sunday,MOTHERS_DAY,OBS,OBSERVANCE,Äitienpäivä,Mother's Day,0
+FI,2025-05-29,Thursday,ASCENSION,SOFT,PUBLIC_HOLIDAY,Helatorstai,Ascension Day,1
+FI,2025-06-08,Sunday,PENTECOST,SOFT,PUBLIC_HOLIDAY,Helluntai,Pentecost,1
+FI,2025-06-20,Friday,MIDSUMMER_EVE,EVE_MAJOR,EVE,Juhannusaatto,Midsummer Eve,1
+FI,2025-06-21,Saturday,MIDSUMMER_DAY,MAJOR,PUBLIC_HOLIDAY,Juhannuspäivä,Midsummer Day,1
+FI,2025-11-01,Saturday,ALL_SAINTS,SOFT,PUBLIC_HOLIDAY,Pyhäinpäivä,All Saints' Day,1
+FI,2025-11-09,Sunday,FATHERS_DAY,OBS,OBSERVANCE,Isänpäivä,Father's Day,0
+FI,2025-11-28,Friday,BLACK_FRIDAY,COMM,COMMERCIAL,Black Friday,Black Friday,0
+FI,2025-12-06,Saturday,INDEPENDENCE_DAY,SOFT,PUBLIC_HOLIDAY,Itsenäisyyspäivä,Independence Day,1
+FI,2025-12-23,Tuesday,DEC23,COMM,COMMERCIAL,Aatonaatto,Day before Christmas Eve,0
+FI,2025-12-24,Wednesday,XMAS_EVE,EVE_MAJOR,EVE,Jouluaatto,Christmas Eve,1
+FI,2025-12-25,Thursday,XMAS_DAY,MAJOR,PUBLIC_HOLIDAY,Joulupäivä,Christmas Day,1
+FI,2025-12-26,Friday,BOXING_DAY,SOFT,PUBLIC_HOLIDAY,Tapaninpäivä,Boxing Day,1
+FI,2025-12-27,Saturday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Välipäivä,Between Christmas and New Year,0
+FI,2025-12-29,Monday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Välipäivä,Between Christmas and New Year,0
+FI,2025-12-30,Tuesday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Välipäivä,Between Christmas and New Year,0
+FI,2025-12-31,Wednesday,NYE,EVE_MINOR,EVE,Uudenvuodenaatto,New Year's Eve,0
+FI,2026-01-01,Thursday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Uudenvuodenpäivä,New Year's Day,1
+FI,2026-01-05,Monday,EPIPHANY_EVE,EVE_MINOR,EVE,Loppiaisaatto,Epiphany Eve,0
+FI,2026-01-06,Tuesday,EPIPHANY,SOFT,PUBLIC_HOLIDAY,Loppiainen,Epiphany,1
+FI,2026-04-02,Thursday,MAUNDY_THURSDAY,EVE_MINOR,EVE,Kiirastorstai,Maundy Thursday,0
+FI,2026-04-03,Friday,GOOD_FRIDAY,MAJOR,PUBLIC_HOLIDAY,Pitkäperjantai,Good Friday,1
+FI,2026-04-04,Saturday,EASTER_SATURDAY,EVE_MINOR,EVE,Pääsiäislauantai,Easter Saturday,0
+FI,2026-04-05,Sunday,EASTER_SUNDAY,MAJOR,PUBLIC_HOLIDAY,Pääsiäispäivä,Easter Sunday,1
+FI,2026-04-06,Monday,EASTER_MONDAY,SOFT,PUBLIC_HOLIDAY,2. pääsiäispäivä,Easter Monday,1
+FI,2026-04-30,Thursday,MAY_EVE,EVE_MINOR,EVE,Vappuaatto,May Day Eve,0
+FI,2026-05-01,Friday,MAY_DAY,SOFT,PUBLIC_HOLIDAY,Vappu,May Day,1
+FI,2026-05-10,Sunday,MOTHERS_DAY,OBS,OBSERVANCE,Äitienpäivä,Mother's Day,0
+FI,2026-05-14,Thursday,ASCENSION,SOFT,PUBLIC_HOLIDAY,Helatorstai,Ascension Day,1
+FI,2026-05-24,Sunday,PENTECOST,SOFT,PUBLIC_HOLIDAY,Helluntai,Pentecost,1
+FI,2026-06-19,Friday,MIDSUMMER_EVE,EVE_MAJOR,EVE,Juhannusaatto,Midsummer Eve,1
+FI,2026-06-20,Saturday,MIDSUMMER_DAY,MAJOR,PUBLIC_HOLIDAY,Juhannuspäivä,Midsummer Day,1
+FI,2026-10-31,Saturday,ALL_SAINTS,SOFT,PUBLIC_HOLIDAY,Pyhäinpäivä,All Saints' Day,1
+FI,2026-11-08,Sunday,FATHERS_DAY,OBS,OBSERVANCE,Isänpäivä,Father's Day,0
+FI,2026-11-27,Friday,BLACK_FRIDAY,COMM,COMMERCIAL,Black Friday,Black Friday,0
+FI,2026-12-06,Sunday,INDEPENDENCE_DAY,SOFT,PUBLIC_HOLIDAY,Itsenäisyyspäivä,Independence Day,1
+FI,2026-12-23,Wednesday,DEC23,COMM,COMMERCIAL,Aatonaatto,Day before Christmas Eve,0
+FI,2026-12-24,Thursday,XMAS_EVE,EVE_MAJOR,EVE,Jouluaatto,Christmas Eve,1
+FI,2026-12-25,Friday,XMAS_DAY,MAJOR,PUBLIC_HOLIDAY,Joulupäivä,Christmas Day,1
+FI,2026-12-26,Saturday,BOXING_DAY,SOFT,PUBLIC_HOLIDAY,Tapaninpäivä,Boxing Day,1
+FI,2026-12-28,Monday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Välipäivä,Between Christmas and New Year,0
+FI,2026-12-29,Tuesday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Välipäivä,Between Christmas and New Year,0
+FI,2026-12-30,Wednesday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Välipäivä,Between Christmas and New Year,0
+FI,2026-12-31,Thursday,NYE,EVE_MINOR,EVE,Uudenvuodenaatto,New Year's Eve,0
+FI,2027-01-01,Friday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Uudenvuodenpäivä,New Year's Day,1
+FI,2027-01-05,Tuesday,EPIPHANY_EVE,EVE_MINOR,EVE,Loppiaisaatto,Epiphany Eve,0
+FI,2027-01-06,Wednesday,EPIPHANY,SOFT,PUBLIC_HOLIDAY,Loppiainen,Epiphany,1
+SE,2024-01-01,Monday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Nyårsdagen,New Year's Day,1
+SE,2024-01-05,Friday,EPIPHANY_EVE,EVE_MINOR,EVE,Trettondagsafton,Epiphany Eve,0
+SE,2024-01-06,Saturday,EPIPHANY,SOFT,PUBLIC_HOLIDAY,Trettondedag jul,Epiphany,1
+SE,2024-03-28,Thursday,MAUNDY_THURSDAY,EVE_MINOR,EVE,Skärtorsdagen,Maundy Thursday,0
+SE,2024-03-29,Friday,GOOD_FRIDAY,MAJOR,PUBLIC_HOLIDAY,Långfredagen,Good Friday,1
+SE,2024-03-30,Saturday,EASTER_SATURDAY,EVE_MINOR,EVE,Påskafton,Easter Saturday,0
+SE,2024-03-31,Sunday,EASTER_SUNDAY,MAJOR,PUBLIC_HOLIDAY,Påskdagen,Easter Sunday,1
+SE,2024-04-01,Monday,EASTER_MONDAY,SOFT,PUBLIC_HOLIDAY,Annandag påsk,Easter Monday,1
+SE,2024-04-30,Tuesday,MAY_EVE,EVE_MINOR,EVE,Valborgsmässoafton,May Day Eve,0
+SE,2024-05-01,Wednesday,MAY_DAY,SOFT,PUBLIC_HOLIDAY,Första maj,May Day,1
+SE,2024-05-09,Thursday,ASCENSION,SOFT,PUBLIC_HOLIDAY,Kristi himmelsfärdsdag,Ascension Day,1
+SE,2024-05-18,Saturday,PENTECOST_EVE,EVE_MINOR,EVE,Pingstafton,Whitsun Eve,0
+SE,2024-05-19,Sunday,PENTECOST,SOFT,PUBLIC_HOLIDAY,Pingstdagen,Pentecost,1
+SE,2024-05-26,Sunday,MOTHERS_DAY,OBS,OBSERVANCE,Mors dag,Mother's Day,0
+SE,2024-06-06,Thursday,NATIONAL_DAY,SOFT,PUBLIC_HOLIDAY,Sveriges nationaldag,National Day,1
+SE,2024-06-21,Friday,MIDSUMMER_EVE,EVE_MAJOR,EVE,Midsommarafton,Midsummer Eve,0
+SE,2024-06-22,Saturday,MIDSUMMER_DAY,MAJOR,PUBLIC_HOLIDAY,Midsommardagen,Midsummer Day,1
+SE,2024-11-02,Saturday,ALL_SAINTS,SOFT,PUBLIC_HOLIDAY,Alla helgons dag,All Saints' Day,1
+SE,2024-11-10,Sunday,FATHERS_DAY,OBS,OBSERVANCE,Fars dag,Father's Day,0
+SE,2024-11-29,Friday,BLACK_FRIDAY,COMM,COMMERCIAL,Black Friday,Black Friday,0
+SE,2024-12-13,Friday,LUCIA,OBS,OBSERVANCE,Lucia,St Lucy's Day,0
+SE,2024-12-23,Monday,DEC23,COMM,COMMERCIAL,Lillejulafton,Day before Christmas Eve,0
+SE,2024-12-24,Tuesday,XMAS_EVE,EVE_MAJOR,EVE,Julafton,Christmas Eve,0
+SE,2024-12-25,Wednesday,XMAS_DAY,MAJOR,PUBLIC_HOLIDAY,Juldagen,Christmas Day,1
+SE,2024-12-26,Thursday,BOXING_DAY,SOFT,PUBLIC_HOLIDAY,Annandag jul,Boxing Day,1
+SE,2024-12-27,Friday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Mellandag,Between Christmas and New Year,0
+SE,2024-12-28,Saturday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Mellandag,Between Christmas and New Year,0
+SE,2024-12-30,Monday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Mellandag,Between Christmas and New Year,0
+SE,2024-12-31,Tuesday,NYE,EVE_MINOR,EVE,Nyårsafton,New Year's Eve,0
+SE,2025-01-01,Wednesday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Nyårsdagen,New Year's Day,1
+SE,2025-01-05,Sunday,EPIPHANY_EVE,EVE_MINOR,EVE,Trettondagsafton,Epiphany Eve,0
+SE,2025-01-06,Monday,EPIPHANY,SOFT,PUBLIC_HOLIDAY,Trettondedag jul,Epiphany,1
+SE,2025-04-17,Thursday,MAUNDY_THURSDAY,EVE_MINOR,EVE,Skärtorsdagen,Maundy Thursday,0
+SE,2025-04-18,Friday,GOOD_FRIDAY,MAJOR,PUBLIC_HOLIDAY,Långfredagen,Good Friday,1
+SE,2025-04-19,Saturday,EASTER_SATURDAY,EVE_MINOR,EVE,Påskafton,Easter Saturday,0
+SE,2025-04-20,Sunday,EASTER_SUNDAY,MAJOR,PUBLIC_HOLIDAY,Påskdagen,Easter Sunday,1
+SE,2025-04-21,Monday,EASTER_MONDAY,SOFT,PUBLIC_HOLIDAY,Annandag påsk,Easter Monday,1
+SE,2025-04-30,Wednesday,MAY_EVE,EVE_MINOR,EVE,Valborgsmässoafton,May Day Eve,0
+SE,2025-05-01,Thursday,MAY_DAY,SOFT,PUBLIC_HOLIDAY,Första maj,May Day,1
+SE,2025-05-25,Sunday,MOTHERS_DAY,OBS,OBSERVANCE,Mors dag,Mother's Day,0
+SE,2025-05-29,Thursday,ASCENSION,SOFT,PUBLIC_HOLIDAY,Kristi himmelsfärdsdag,Ascension Day,1
+SE,2025-06-06,Friday,NATIONAL_DAY,SOFT,PUBLIC_HOLIDAY,Sveriges nationaldag,National Day,1
+SE,2025-06-07,Saturday,PENTECOST_EVE,EVE_MINOR,EVE,Pingstafton,Whitsun Eve,0
+SE,2025-06-08,Sunday,PENTECOST,SOFT,PUBLIC_HOLIDAY,Pingstdagen,Pentecost,1
+SE,2025-06-20,Friday,MIDSUMMER_EVE,EVE_MAJOR,EVE,Midsommarafton,Midsummer Eve,0
+SE,2025-06-21,Saturday,MIDSUMMER_DAY,MAJOR,PUBLIC_HOLIDAY,Midsommardagen,Midsummer Day,1
+SE,2025-11-01,Saturday,ALL_SAINTS,SOFT,PUBLIC_HOLIDAY,Alla helgons dag,All Saints' Day,1
+SE,2025-11-09,Sunday,FATHERS_DAY,OBS,OBSERVANCE,Fars dag,Father's Day,0
+SE,2025-11-28,Friday,BLACK_FRIDAY,COMM,COMMERCIAL,Black Friday,Black Friday,0
+SE,2025-12-13,Saturday,LUCIA,OBS,OBSERVANCE,Lucia,St Lucy's Day,0
+SE,2025-12-23,Tuesday,DEC23,COMM,COMMERCIAL,Lillejulafton,Day before Christmas Eve,0
+SE,2025-12-24,Wednesday,XMAS_EVE,EVE_MAJOR,EVE,Julafton,Christmas Eve,0
+SE,2025-12-25,Thursday,XMAS_DAY,MAJOR,PUBLIC_HOLIDAY,Juldagen,Christmas Day,1
+SE,2025-12-26,Friday,BOXING_DAY,SOFT,PUBLIC_HOLIDAY,Annandag jul,Boxing Day,1
+SE,2025-12-27,Saturday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Mellandag,Between Christmas and New Year,0
+SE,2025-12-29,Monday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Mellandag,Between Christmas and New Year,0
+SE,2025-12-30,Tuesday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Mellandag,Between Christmas and New Year,0
+SE,2025-12-31,Wednesday,NYE,EVE_MINOR,EVE,Nyårsafton,New Year's Eve,0
+SE,2026-01-01,Thursday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Nyårsdagen,New Year's Day,1
+SE,2026-01-05,Monday,EPIPHANY_EVE,EVE_MINOR,EVE,Trettondagsafton,Epiphany Eve,0
+SE,2026-01-06,Tuesday,EPIPHANY,SOFT,PUBLIC_HOLIDAY,Trettondedag jul,Epiphany,1
+SE,2026-04-02,Thursday,MAUNDY_THURSDAY,EVE_MINOR,EVE,Skärtorsdagen,Maundy Thursday,0
+SE,2026-04-03,Friday,GOOD_FRIDAY,MAJOR,PUBLIC_HOLIDAY,Långfredagen,Good Friday,1
+SE,2026-04-04,Saturday,EASTER_SATURDAY,EVE_MINOR,EVE,Påskafton,Easter Saturday,0
+SE,2026-04-05,Sunday,EASTER_SUNDAY,MAJOR,PUBLIC_HOLIDAY,Påskdagen,Easter Sunday,1
+SE,2026-04-06,Monday,EASTER_MONDAY,SOFT,PUBLIC_HOLIDAY,Annandag påsk,Easter Monday,1
+SE,2026-04-30,Thursday,MAY_EVE,EVE_MINOR,EVE,Valborgsmässoafton,May Day Eve,0
+SE,2026-05-01,Friday,MAY_DAY,SOFT,PUBLIC_HOLIDAY,Första maj,May Day,1
+SE,2026-05-14,Thursday,ASCENSION,SOFT,PUBLIC_HOLIDAY,Kristi himmelsfärdsdag,Ascension Day,1
+SE,2026-05-23,Saturday,PENTECOST_EVE,EVE_MINOR,EVE,Pingstafton,Whitsun Eve,0
+SE,2026-05-24,Sunday,PENTECOST,SOFT,PUBLIC_HOLIDAY,Pingstdagen,Pentecost,1
+SE,2026-05-31,Sunday,MOTHERS_DAY,OBS,OBSERVANCE,Mors dag,Mother's Day,0
+SE,2026-06-06,Saturday,NATIONAL_DAY,SOFT,PUBLIC_HOLIDAY,Sveriges nationaldag,National Day,1
+SE,2026-06-19,Friday,MIDSUMMER_EVE,EVE_MAJOR,EVE,Midsommarafton,Midsummer Eve,0
+SE,2026-06-20,Saturday,MIDSUMMER_DAY,MAJOR,PUBLIC_HOLIDAY,Midsommardagen,Midsummer Day,1
+SE,2026-10-31,Saturday,ALL_SAINTS,SOFT,PUBLIC_HOLIDAY,Alla helgons dag,All Saints' Day,1
+SE,2026-11-08,Sunday,FATHERS_DAY,OBS,OBSERVANCE,Fars dag,Father's Day,0
+SE,2026-11-27,Friday,BLACK_FRIDAY,COMM,COMMERCIAL,Black Friday,Black Friday,0
+SE,2026-12-13,Sunday,LUCIA,OBS,OBSERVANCE,Lucia,St Lucy's Day,0
+SE,2026-12-23,Wednesday,DEC23,COMM,COMMERCIAL,Lillejulafton,Day before Christmas Eve,0
+SE,2026-12-24,Thursday,XMAS_EVE,EVE_MAJOR,EVE,Julafton,Christmas Eve,0
+SE,2026-12-25,Friday,XMAS_DAY,MAJOR,PUBLIC_HOLIDAY,Juldagen,Christmas Day,1
+SE,2026-12-26,Saturday,BOXING_DAY,SOFT,PUBLIC_HOLIDAY,Annandag jul,Boxing Day,1
+SE,2026-12-28,Monday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Mellandag,Between Christmas and New Year,0
+SE,2026-12-29,Tuesday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Mellandag,Between Christmas and New Year,0
+SE,2026-12-30,Wednesday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Mellandag,Between Christmas and New Year,0
+SE,2026-12-31,Thursday,NYE,EVE_MINOR,EVE,Nyårsafton,New Year's Eve,0
+SE,2027-01-01,Friday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Nyårsdagen,New Year's Day,1
+SE,2027-01-05,Tuesday,EPIPHANY_EVE,EVE_MINOR,EVE,Trettondagsafton,Epiphany Eve,0
+SE,2027-01-06,Wednesday,EPIPHANY,SOFT,PUBLIC_HOLIDAY,Trettondedag jul,Epiphany,1
+NO,2024-01-01,Monday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Første nyttårsdag,New Year's Day,1
+NO,2024-02-11,Sunday,MOTHERS_DAY,OBS,OBSERVANCE,Morsdag,Mother's Day,0
+NO,2024-03-28,Thursday,MAUNDY_THURSDAY,EVE_MINOR,EVE,Skjærtorsdag,Maundy Thursday,1
+NO,2024-03-29,Friday,GOOD_FRIDAY,MAJOR,PUBLIC_HOLIDAY,Langfredag,Good Friday,1
+NO,2024-03-30,Saturday,EASTER_SATURDAY,EVE_MINOR,EVE,Påskeaften,Easter Saturday,0
+NO,2024-03-31,Sunday,EASTER_SUNDAY,MAJOR,PUBLIC_HOLIDAY,Første påskedag,Easter Sunday,1
+NO,2024-04-01,Monday,EASTER_MONDAY,SOFT,PUBLIC_HOLIDAY,Andre påskedag,Easter Monday,1
+NO,2024-05-01,Wednesday,MAY_DAY,SOFT,PUBLIC_HOLIDAY,Arbeidernes dag,May Day,1
+NO,2024-05-09,Thursday,ASCENSION,SOFT,PUBLIC_HOLIDAY,Kristi himmelfartsdag,Ascension Day,1
+NO,2024-05-17,Friday,NATIONAL_DAY,SOFT,PUBLIC_HOLIDAY,Grunnlovsdag (17. mai),National Day,1
+NO,2024-05-18,Saturday,PENTECOST_EVE,EVE_MINOR,EVE,Pinseaften,Whitsun Eve,0
+NO,2024-05-19,Sunday,PENTECOST,SOFT,PUBLIC_HOLIDAY,Første pinsedag,Pentecost,1
+NO,2024-05-20,Monday,WHIT_MONDAY,SOFT,PUBLIC_HOLIDAY,Andre pinsedag,Whit Monday,1
+NO,2024-11-10,Sunday,FATHERS_DAY,OBS,OBSERVANCE,Farsdag,Father's Day,0
+NO,2024-11-29,Friday,BLACK_FRIDAY,COMM,COMMERCIAL,Black Friday,Black Friday,0
+NO,2024-12-23,Monday,DEC23,COMM,COMMERCIAL,Lille julaften,Day before Christmas Eve,0
+NO,2024-12-24,Tuesday,XMAS_EVE,EVE_MAJOR,EVE,Julaften,Christmas Eve,0
+NO,2024-12-25,Wednesday,XMAS_DAY,MAJOR,PUBLIC_HOLIDAY,Første juledag,Christmas Day,1
+NO,2024-12-26,Thursday,BOXING_DAY,SOFT,PUBLIC_HOLIDAY,Andre juledag,Boxing Day,1
+NO,2024-12-27,Friday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Romjul,Between Christmas and New Year,0
+NO,2024-12-28,Saturday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Romjul,Between Christmas and New Year,0
+NO,2024-12-30,Monday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Romjul,Between Christmas and New Year,0
+NO,2024-12-31,Tuesday,NYE,EVE_MINOR,EVE,Nyttårsaften,New Year's Eve,0
+NO,2025-01-01,Wednesday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Første nyttårsdag,New Year's Day,1
+NO,2025-02-09,Sunday,MOTHERS_DAY,OBS,OBSERVANCE,Morsdag,Mother's Day,0
+NO,2025-04-17,Thursday,MAUNDY_THURSDAY,EVE_MINOR,EVE,Skjærtorsdag,Maundy Thursday,1
+NO,2025-04-18,Friday,GOOD_FRIDAY,MAJOR,PUBLIC_HOLIDAY,Langfredag,Good Friday,1
+NO,2025-04-19,Saturday,EASTER_SATURDAY,EVE_MINOR,EVE,Påskeaften,Easter Saturday,0
+NO,2025-04-20,Sunday,EASTER_SUNDAY,MAJOR,PUBLIC_HOLIDAY,Første påskedag,Easter Sunday,1
+NO,2025-04-21,Monday,EASTER_MONDAY,SOFT,PUBLIC_HOLIDAY,Andre påskedag,Easter Monday,1
+NO,2025-05-01,Thursday,MAY_DAY,SOFT,PUBLIC_HOLIDAY,Arbeidernes dag,May Day,1
+NO,2025-05-17,Saturday,NATIONAL_DAY,SOFT,PUBLIC_HOLIDAY,Grunnlovsdag (17. mai),National Day,1
+NO,2025-05-29,Thursday,ASCENSION,SOFT,PUBLIC_HOLIDAY,Kristi himmelfartsdag,Ascension Day,1
+NO,2025-06-07,Saturday,PENTECOST_EVE,EVE_MINOR,EVE,Pinseaften,Whitsun Eve,0
+NO,2025-06-08,Sunday,PENTECOST,SOFT,PUBLIC_HOLIDAY,Første pinsedag,Pentecost,1
+NO,2025-06-09,Monday,WHIT_MONDAY,SOFT,PUBLIC_HOLIDAY,Andre pinsedag,Whit Monday,1
+NO,2025-11-09,Sunday,FATHERS_DAY,OBS,OBSERVANCE,Farsdag,Father's Day,0
+NO,2025-11-28,Friday,BLACK_FRIDAY,COMM,COMMERCIAL,Black Friday,Black Friday,0
+NO,2025-12-23,Tuesday,DEC23,COMM,COMMERCIAL,Lille julaften,Day before Christmas Eve,0
+NO,2025-12-24,Wednesday,XMAS_EVE,EVE_MAJOR,EVE,Julaften,Christmas Eve,0
+NO,2025-12-25,Thursday,XMAS_DAY,MAJOR,PUBLIC_HOLIDAY,Første juledag,Christmas Day,1
+NO,2025-12-26,Friday,BOXING_DAY,SOFT,PUBLIC_HOLIDAY,Andre juledag,Boxing Day,1
+NO,2025-12-27,Saturday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Romjul,Between Christmas and New Year,0
+NO,2025-12-29,Monday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Romjul,Between Christmas and New Year,0
+NO,2025-12-30,Tuesday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Romjul,Between Christmas and New Year,0
+NO,2025-12-31,Wednesday,NYE,EVE_MINOR,EVE,Nyttårsaften,New Year's Eve,0
+NO,2026-01-01,Thursday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Første nyttårsdag,New Year's Day,1
+NO,2026-02-08,Sunday,MOTHERS_DAY,OBS,OBSERVANCE,Morsdag,Mother's Day,0
+NO,2026-04-02,Thursday,MAUNDY_THURSDAY,EVE_MINOR,EVE,Skjærtorsdag,Maundy Thursday,1
+NO,2026-04-03,Friday,GOOD_FRIDAY,MAJOR,PUBLIC_HOLIDAY,Langfredag,Good Friday,1
+NO,2026-04-04,Saturday,EASTER_SATURDAY,EVE_MINOR,EVE,Påskeaften,Easter Saturday,0
+NO,2026-04-05,Sunday,EASTER_SUNDAY,MAJOR,PUBLIC_HOLIDAY,Første påskedag,Easter Sunday,1
+NO,2026-04-06,Monday,EASTER_MONDAY,SOFT,PUBLIC_HOLIDAY,Andre påskedag,Easter Monday,1
+NO,2026-05-01,Friday,MAY_DAY,SOFT,PUBLIC_HOLIDAY,Arbeidernes dag,May Day,1
+NO,2026-05-14,Thursday,ASCENSION,SOFT,PUBLIC_HOLIDAY,Kristi himmelfartsdag,Ascension Day,1
+NO,2026-05-17,Sunday,NATIONAL_DAY,SOFT,PUBLIC_HOLIDAY,Grunnlovsdag (17. mai),National Day,1
+NO,2026-05-23,Saturday,PENTECOST_EVE,EVE_MINOR,EVE,Pinseaften,Whitsun Eve,0
+NO,2026-05-24,Sunday,PENTECOST,SOFT,PUBLIC_HOLIDAY,Første pinsedag,Pentecost,1
+NO,2026-05-25,Monday,WHIT_MONDAY,SOFT,PUBLIC_HOLIDAY,Andre pinsedag,Whit Monday,1
+NO,2026-11-08,Sunday,FATHERS_DAY,OBS,OBSERVANCE,Farsdag,Father's Day,0
+NO,2026-11-27,Friday,BLACK_FRIDAY,COMM,COMMERCIAL,Black Friday,Black Friday,0
+NO,2026-12-23,Wednesday,DEC23,COMM,COMMERCIAL,Lille julaften,Day before Christmas Eve,0
+NO,2026-12-24,Thursday,XMAS_EVE,EVE_MAJOR,EVE,Julaften,Christmas Eve,0
+NO,2026-12-25,Friday,XMAS_DAY,MAJOR,PUBLIC_HOLIDAY,Første juledag,Christmas Day,1
+NO,2026-12-26,Saturday,BOXING_DAY,SOFT,PUBLIC_HOLIDAY,Andre juledag,Boxing Day,1
+NO,2026-12-28,Monday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Romjul,Between Christmas and New Year,0
+NO,2026-12-29,Tuesday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Romjul,Between Christmas and New Year,0
+NO,2026-12-30,Wednesday,INTERDAY,INTER,BETWEEN_HOLIDAYS,Romjul,Between Christmas and New Year,0
+NO,2026-12-31,Thursday,NYE,EVE_MINOR,EVE,Nyttårsaften,New Year's Eve,0
+NO,2027-01-01,Friday,NEW_YEARS_DAY,MAJOR,PUBLIC_HOLIDAY,Første nyttårsdag,New Year's Day,1

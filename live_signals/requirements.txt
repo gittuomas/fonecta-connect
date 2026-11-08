@@ -1,0 +1,2 @@
+# Supplies IANA time zones on Windows; Unix installations generally have system zone data.
+tzdata>=2024.1

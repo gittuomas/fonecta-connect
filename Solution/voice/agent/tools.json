@@ -1,0 +1,203 @@
+{
+  "record_decision": {
+    "type": "webhook",
+    "name": "record_decision",
+    "description": "Record the owner's confirmed decision for ONE listed date and start publication for an approval or edit. A clear yes to an exact proposal is sufficient; edited hours require a read-back and yes. A clear request to keep the current listing is DECLINE. Wait for the result, then acknowledge only when useful and continue naturally. A saved decision does not prove publication has finished.",
+    "api_schema": {
+      "url": "https://coveted-anemia-celestial.ngrok-free.dev/voice/tools/record-decision",
+      "method": "POST",
+      "path_params_schema": [],
+      "query_params_schema": [],
+      "request_body_schema": {
+        "type": "object",
+        "description": "The owner's confirmed decision for one suggested date.",
+        "required": [
+          "call_id",
+          "item",
+          "decision",
+          "confirmed"
+        ],
+        "properties": {
+          "call_id": {
+            "type": "string",
+            "dynamic_variable": "call_id",
+            "description": ""
+          },
+          "conversation_id": {
+            "type": "string",
+            "dynamic_variable": "system__conversation_id",
+            "description": ""
+          },
+          "item": {
+            "type": "integer",
+            "description": "Item number of the date from the suggestions list (1, 2, 3 or 4)."
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "EDIT",
+              "DECLINE"
+            ],
+            "description": "APPROVE = our suggested hours as they are. EDIT = the owner gave other hours. DECLINE = keep what the listing shows now."
+          },
+          "hours": {
+            "type": "string",
+            "description": "Only for EDIT. 24-hour format HH:MM-HH:MM, e.g. 10:00-14:00. Several ranges separated by commas, e.g. 10:00-14:00,17:00-22:00. Use 'closed' for closed all day. Leave empty for APPROVE and DECLINE."
+          },
+          "confirmed": {
+            "type": "boolean",
+            "description": "true only after explicit agreement to this date's exact proposed or read-back hours, or an explicit request to keep its currently listed hours. For EDIT, read back the date and complete final hours and get a clear yes. Hesitation or agreement about another date is not confirmation."
+          },
+          "owner_comment": {
+            "type": "string",
+            "description": "Optional. Anything the owner said that a colleague should know, in one short sentence. Empty if nothing."
+          }
+        }
+      },
+      "request_headers": [],
+      "content_type": "application/json",
+      "auth_connection": null,
+      "mtls_auth_connection": null,
+      "response_filter": null
+    },
+    "response_timeout_secs": 20,
+    "follow_redirects": false,
+    "follow_redirects_allowed_domains": [],
+    "dynamic_variables": {
+      "dynamic_variable_placeholders": {}
+    },
+    "assignments": [],
+    "interruption_mode": "disable_during_tool",
+    "pre_tool_speech": "auto",
+    "tool_call_sound": "typing",
+    "tool_call_sound_behavior": "always",
+    "execution_mode": "immediate",
+    "tool_error_handling_mode": "passthrough",
+    "response_mocks": []
+  },
+  "set_standing_permission": {
+    "type": "webhook",
+    "name": "set_standing_permission",
+    "description": "Save the owner's answer to the standing permission offer: handle public holidays automatically from now on, informing them by message each time. Call only after a clear yes or no.",
+    "api_schema": {
+      "url": "https://coveted-anemia-celestial.ngrok-free.dev/voice/tools/standing-permission",
+      "method": "POST",
+      "path_params_schema": [],
+      "query_params_schema": [],
+      "request_body_schema": {
+        "type": "object",
+        "description": "The owner's answer to the standing permission offer.",
+        "required": [
+          "call_id",
+          "scope",
+          "granted",
+          "confirmed"
+        ],
+        "properties": {
+          "call_id": {
+            "type": "string",
+            "dynamic_variable": "call_id",
+            "description": ""
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "PUBLIC_HOLIDAYS"
+            ],
+            "description": "Always PUBLIC_HOLIDAYS."
+          },
+          "granted": {
+            "type": "boolean",
+            "description": "true if the owner said yes to automatic handling, false if no."
+          },
+          "confirmed": {
+            "type": "boolean",
+            "description": "true only if the owner gave a clear answer."
+          }
+        }
+      },
+      "request_headers": [],
+      "content_type": "application/json",
+      "auth_connection": null,
+      "mtls_auth_connection": null,
+      "response_filter": null
+    },
+    "response_timeout_secs": 20,
+    "follow_redirects": false,
+    "follow_redirects_allowed_domains": [],
+    "dynamic_variables": {
+      "dynamic_variable_placeholders": {}
+    },
+    "assignments": [],
+    "interruption_mode": "disable_during_tool",
+    "pre_tool_speech": "auto",
+    "tool_call_sound": "typing",
+    "tool_call_sound_behavior": "always",
+    "execution_mode": "immediate",
+    "tool_error_handling_mode": "passthrough",
+    "response_mocks": []
+  },
+  "set_contact_preference": {
+    "type": "webhook",
+    "name": "set_contact_preference",
+    "description": "Save how the owner wants to be contacted: call back later, messages only, or no more calls. Use when the owner is busy, asks for a later time, prefers messages, or asks not to be called.",
+    "api_schema": {
+      "url": "https://coveted-anemia-celestial.ngrok-free.dev/voice/tools/contact-preference",
+      "method": "POST",
+      "path_params_schema": [],
+      "query_params_schema": [],
+      "request_body_schema": {
+        "type": "object",
+        "description": "How the owner wants to be contacted.",
+        "required": [
+          "call_id",
+          "preference"
+        ],
+        "properties": {
+          "call_id": {
+            "type": "string",
+            "dynamic_variable": "call_id",
+            "description": ""
+          },
+          "preference": {
+            "type": "string",
+            "enum": [
+              "CALL_LATER",
+              "TEXT_ONLY",
+              "NO_MORE_CALLS"
+            ],
+            "description": "CALL_LATER if they want a call at another time, TEXT_ONLY if they prefer messages, NO_MORE_CALLS if they do not want calls."
+          },
+          "when": {
+            "type": "string",
+            "description": "For CALL_LATER: the time they asked for, in their words, e.g. 'tomorrow after 3 pm'. Empty otherwise."
+          },
+          "note": {
+            "type": "string",
+            "description": "Optional short note. Empty if nothing."
+          }
+        }
+      },
+      "request_headers": [],
+      "content_type": "application/json",
+      "auth_connection": null,
+      "mtls_auth_connection": null,
+      "response_filter": null
+    },
+    "response_timeout_secs": 20,
+    "follow_redirects": false,
+    "follow_redirects_allowed_domains": [],
+    "dynamic_variables": {
+      "dynamic_variable_placeholders": {}
+    },
+    "assignments": [],
+    "interruption_mode": "allow",
+    "pre_tool_speech": "auto",
+    "tool_call_sound": "typing",
+    "tool_call_sound_behavior": "always",
+    "execution_mode": "immediate",
+    "tool_error_handling_mode": "passthrough",
+    "response_mocks": []
+  }
+}

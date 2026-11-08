@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "byte_exact_reference": true,
+  "prediction_sha256": "32fc46fb0ed61b7483a0aa5283cf51ae7ec0fed453cb67b148ddfaf9a45b88b8",
+  "partitions": 7,
+  "candidate_rows_compared": 90455,
+  "feature_cells_compared": 15286895,
+  "max_expected_points_error": 2.220446049250313e-16,
+  "demo_rows": 257,
+  "demo_businesses": 17,
+  "demo_actions": {
+    "NO_ACTION": 133,
+    "SUGGEST": 109,
+    "FLAG": 15
+  },
+  "cold_start_rows": 14,
+  "zero_invented_own_history_evidence": true,
+  "no_model_refits": true,
+  "no_label_reads": true
+}

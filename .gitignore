@@ -1,0 +1,15 @@
+# Credentials and generated runtime state
+.env
+.env.*
+!.env.example
+**/.runtime/
+.runtime/
+**/.venv/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+Solution/voice/data/
+Solution/engine/output/cache/
+Solution/engine/output/verification/
+*.log

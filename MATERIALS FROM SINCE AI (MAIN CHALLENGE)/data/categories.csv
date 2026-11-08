@@ -1,0 +1,35 @@
+id,segment,name_fi,name_sv,name_nb,name_en,archetype
+1001,cafe,Kahvila,Kafé,Kafé,Café,CAFE
+1002,restaurant,Ravintola,Restaurang,Restaurant,Restaurant,DINNER
+1003,lunch_restaurant,Lounasravintola,Lunchrestaurang,Lunsjrestaurant,Lunch restaurant,LUNCH
+1004,pizzeria,Pizzeria / kebab,Pizzeria,Pizzeria,Pizzeria / kebab,FASTFOOD
+1005,bar_pub,Baari / pubi,Bar / pub,Bar / pub,Bar / pub,BAR
+1006,bakery,Leipomo,Bageri,Bakeri,Bakery,BAKERY
+1007,grocery,Lähikauppa,Livsmedelsbutik,Dagligvarebutikk,Grocery store,GROCERY
+1008,clothing_store,Vaatekauppa,Klädbutik,Klesbutikk,Clothing store,RETAIL
+1009,bookstore,Kirjakauppa,Bokhandel,Bokhandel,Bookstore,RETAIL
+1010,hardware_store,Rautakauppa,Järnhandel,Jernvarehandel,Hardware store,RETAIL
+1011,florist,Kukkakauppa,Blomsterhandel,Blomsterbutikk,Florist,FLORIST
+1012,pet_store,Lemmikkitarvikeliike,Djuraffär,Dyrebutikk,Pet store,RETAIL
+1013,optician,Optikko,Optiker,Optiker,Optician,RETAIL
+1014,hair_salon,Kampaamo,Frisörsalong,Frisørsalong,Hair salon,PERSONAL
+1015,beauty_salon,Kauneushoitola,Skönhetssalong,Skjønnhetssalong,Beauty salon,PERSONAL
+1016,massage,Hieronta,Massage,Massasje,Massage clinic,PERSONAL
+1017,dental_clinic,Hammaslääkäri,Tandläkare,Tannlege,Dental clinic,HEALTH
+1018,physiotherapy,Fysioterapia,Fysioterapi,Fysioterapi,Physiotherapy,HEALTH
+1019,veterinary,Eläinlääkäri,Veterinär,Veterinær,Veterinary clinic,VET
+1020,pharmacy,Apteekki,Apotek,Apotek,Pharmacy,PHARMACY
+1021,car_repair,Autokorjaamo,Bilverkstad,Bilverksted,Car repair,AUTO
+1022,tire_shop,Rengasliike,Däckverkstad,Dekkverksted,Tyre shop,AUTO
+1023,gym,Kuntosali,Gym,Treningssenter,Gym,GYM
+1024,accounting_office,Tilitoimisto,Redovisningsbyrå,Regnskapskontor,Accounting office,OFFICE
+1025,real_estate_agency,Kiinteistönvälitys,Mäklarbyrå,Eiendomsmegler,Real estate agency,OFFICE
+1026,hotel,Hotelli,Hotell,Hotell,Hotel,H24
+1027,fuel_station,Huoltoasema,Bensinstation,Bensinstasjon,Fuel station,FUEL
+1028,museum,Museo,Museum,Museum,Museum,CULTURE
+1029,cinema,Elokuvateatteri,Biograf,Kino,Cinema,CINEMA
+1030,indoor_playground,Sisäleikkipuisto,Lekland,Lekeland,Indoor playground,FAMILY
+1031,bowling,Keilahalli,Bowlinghall,Bowlinghall,Bowling alley,FAMILY
+1032,ski_rental,Suksivuokraamo,Skiduthyrning,Skiutleie,Ski rental,SKI
+1033,seasonal_terrace,Kesäravintola / terassi,Sommarrestaurang,Sommerrestaurant,Seasonal terrace restaurant,SEASONAL
+1100,shopping_centre,Kauppakeskus,Köpcentrum,Kjøpesenter,Shopping centre,MALL_SELF

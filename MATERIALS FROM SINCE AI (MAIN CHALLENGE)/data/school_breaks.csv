@@ -1,0 +1,25 @@
+country,school_year_start,break,start,end,note
+FI,2023,autumn,2023-10-16,2023-10-20,approximate; real dates vary by municipality
+FI,2023,christmas,2023-12-21,2024-01-06,approximate; real dates vary by municipality
+FI,2024,autumn,2024-10-14,2024-10-18,approximate; real dates vary by municipality
+FI,2024,christmas,2024-12-21,2025-01-06,approximate; real dates vary by municipality
+FI,2025,autumn,2025-10-13,2025-10-17,approximate; real dates vary by municipality
+FI,2025,christmas,2025-12-21,2026-01-06,approximate; real dates vary by municipality
+FI,2026,autumn,2026-10-12,2026-10-16,approximate; real dates vary by municipality
+FI,2026,christmas,2026-12-21,2027-01-06,approximate; real dates vary by municipality
+SE,2023,autumn,2023-10-30,2023-11-03,approximate; real dates vary by municipality
+SE,2023,christmas,2023-12-21,2024-01-08,approximate; real dates vary by municipality
+SE,2024,autumn,2024-10-28,2024-11-01,approximate; real dates vary by municipality
+SE,2024,christmas,2024-12-21,2025-01-08,approximate; real dates vary by municipality
+SE,2025,autumn,2025-10-27,2025-10-31,approximate; real dates vary by municipality
+SE,2025,christmas,2025-12-21,2026-01-08,approximate; real dates vary by municipality
+SE,2026,autumn,2026-10-26,2026-10-30,approximate; real dates vary by municipality
+SE,2026,christmas,2026-12-21,2027-01-08,approximate; real dates vary by municipality
+NO,2023,autumn,2023-10-02,2023-10-06,approximate; real dates vary by municipality
+NO,2023,christmas,2023-12-21,2024-01-02,approximate; real dates vary by municipality
+NO,2024,autumn,2024-10-07,2024-10-11,approximate; real dates vary by municipality
+NO,2024,christmas,2024-12-21,2025-01-02,approximate; real dates vary by municipality
+NO,2025,autumn,2025-10-06,2025-10-10,approximate; real dates vary by municipality
+NO,2025,christmas,2025-12-21,2026-01-02,approximate; real dates vary by municipality
+NO,2026,autumn,2026-10-05,2026-10-09,approximate; real dates vary by municipality
+NO,2026,christmas,2026-12-21,2027-01-02,approximate; real dates vary by municipality

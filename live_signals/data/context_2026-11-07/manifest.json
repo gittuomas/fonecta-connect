@@ -1,0 +1,331 @@
+{
+  "generated_at": "2026-11-07T12:10:03.576470+00:00",
+  "window": {
+    "start": "2026-11-08",
+    "end_exclusive": "2026-11-15"
+  },
+  "event_sources": [
+    {
+      "provider": "helsinki",
+      "status": "cached",
+      "events": 733,
+      "requests": 8,
+      "attribution": "City of Helsinki Linked Events, CC BY 4.0; normalized event facts.",
+      "warnings": [
+        "Page limit reached; event coverage is partial."
+      ],
+      "fetched_at": "2026-11-07T11:42:40.400177+00:00"
+    },
+    {
+      "provider": "stockholm",
+      "status": "cached",
+      "events": 161,
+      "requests": 7,
+      "attribution": "Stockholm Business Region AB, CC BY 4.0; normalized event facts.",
+      "warnings": [],
+      "fetched_at": "2026-11-07T11:42:55.393118+00:00"
+    },
+    {
+      "provider": "oslo",
+      "status": "cached",
+      "events": 19,
+      "requests": 1,
+      "attribution": "Tangokalender Oslo and linked organizers; event facts only, source links retained.",
+      "warnings": [
+        "Oslo tango/community events only; not a comprehensive Norway feed. Venue positions are address-level estimates."
+      ],
+      "fetched_at": "2026-11-07T11:42:57.385867+00:00"
+    },
+    {
+      "provider": "ticketmaster",
+      "status": "cached",
+      "events": 53,
+      "requests": 3,
+      "attribution": "Ticketmaster Discovery API; source links retained; provider terms apply.",
+      "warnings": [],
+      "fetched_at": "2026-11-07T11:52:08.457819+00:00"
+    }
+  ],
+  "weather_sources": [
+    {
+      "city": "Helsinki",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=60.1699&longitude=24.9384&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:01.490118+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Espoo",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=60.2055&longitude=24.6559&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:01.492876+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Vantaa",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=60.2934&longitude=25.0378&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:01.481362+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Tampere",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=61.4978&longitude=23.761&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:01.700399+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Turku",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=60.4518&longitude=22.2666&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:01.746933+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Oulu",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=65.0121&longitude=25.4651&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:01.738090+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Jyväskylä",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=62.2426&longitude=25.7473&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:01.941348+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Lahti",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=60.9827&longitude=25.6612&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:01.967636+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Kuopio",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=62.8924&longitude=27.677&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:01.968662+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Vaasa",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=63.0951&longitude=21.6165&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.168687+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Pori",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=61.4851&longitude=21.7974&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.178616+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Rovaniemi",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=66.5039&longitude=25.7294&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.188163+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Kittilä (Levi)",
+      "country": "FI",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=67.804&longitude=24.809&forecast_days=10&timezone=Europe%2FHelsinki&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.404290+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Stockholm",
+      "country": "SE",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=59.3293&longitude=18.0686&forecast_days=10&timezone=Europe%2FStockholm&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.405298+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Göteborg",
+      "country": "SE",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=57.7089&longitude=11.9746&forecast_days=10&timezone=Europe%2FStockholm&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.413293+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Malmö",
+      "country": "SE",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=55.605&longitude=13.0038&forecast_days=10&timezone=Europe%2FStockholm&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.638176+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Uppsala",
+      "country": "SE",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=59.8586&longitude=17.6389&forecast_days=10&timezone=Europe%2FStockholm&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.638176+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Linköping",
+      "country": "SE",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=58.4108&longitude=15.6214&forecast_days=10&timezone=Europe%2FStockholm&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.645272+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Örebro",
+      "country": "SE",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=59.2753&longitude=15.2134&forecast_days=10&timezone=Europe%2FStockholm&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.861499+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Umeå",
+      "country": "SE",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=63.8258&longitude=20.263&forecast_days=10&timezone=Europe%2FStockholm&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.863502+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Åre",
+      "country": "SE",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=63.399&longitude=13.0815&forecast_days=10&timezone=Europe%2FStockholm&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:02.861499+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Oslo",
+      "country": "NO",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=59.9139&longitude=10.7522&forecast_days=10&timezone=Europe%2FOslo&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:03.116707+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Bergen",
+      "country": "NO",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=60.3913&longitude=5.3221&forecast_days=10&timezone=Europe%2FOslo&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:03.101301+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Trondheim",
+      "country": "NO",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=63.4305&longitude=10.3951&forecast_days=10&timezone=Europe%2FOslo&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:03.114704+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Stavanger",
+      "country": "NO",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=58.97&longitude=5.7331&forecast_days=10&timezone=Europe%2FOslo&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:03.321368+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Tromsø",
+      "country": "NO",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=69.6492&longitude=18.9553&forecast_days=10&timezone=Europe%2FOslo&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:03.342289+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Kristiansand",
+      "country": "NO",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=58.1467&longitude=7.9956&forecast_days=10&timezone=Europe%2FOslo&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:03.335287+00:00",
+      "missing_values": 0
+    },
+    {
+      "city": "Hemsedal",
+      "country": "NO",
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=60.863&longitude=8.552&forecast_days=10&timezone=Europe%2FOslo&hourly=snow_depth&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum",
+      "status": "live",
+      "days": 7,
+      "fetched_at": "2026-11-07T12:10:03.546830+00:00",
+      "missing_values": 0
+    }
+  ],
+  "event_counts": {
+    "FI": 725,
+    "SE": 147,
+    "NO": 19
+  },
+  "weather_rows": 196,
+  "weather_cities_requested": 28,
+  "weather_attribution": "Weather data by Open-Meteo.com, CC BY 4.0; hourly forecast summaries.",
+  "transformations": [
+    "Event facts mapped to the supplied LinkedEvents-like shape; unknown attendance/end times remain null.",
+    "Weather: provider daily local-time aggregates; snow depth at local noon, metres converted to centimetres.",
+    "Missing CSV values are blank, never fabricated as zero. No observed history is supplied."
+  ],
+  "limitations": [
+    "Live facts do not establish that published business hours are wrong or that demand will justify an extension.",
+    "No customer messages, new hours, model scores, or Yext writes are produced.",
+    "The selected frozen ensemble does not use this detailed context variant. Promotion requires validation.",
+    "Current retrievals cannot be treated as available at the 6 November benchmark cutoff."
+  ],
+  "schema_version": 1,
+  "research_only": true,
+  "event_hours_candidates_enabled": false,
+  "files": {
+    "local_events.json": "64bd46b98dff29e14089d311be378998912d600d52de3bb74f22701caf926c23",
+    "weather_daily.csv": "a3a521ecf36e94d10d13649d8749e06cbc2f5543197ec0eab721f0c7927ad4fb"
+  },
+  "recording_note": "Ticketmaster event content excluded from the distributable replay; retrieve it into the ignored runtime cache with your own key. Original aggregate retrieval counts retained in event_sources.",
+  "excluded_ticketmaster_records": 53
+}
