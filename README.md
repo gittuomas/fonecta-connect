@@ -26,10 +26,10 @@ Use **Python 3.12+**, from the repository root:
 
 ```sh
 python -m pip install -r requirements.txt
-python app/app.py
+python app/app.py --demo
 ```
 
-Open the **[WhatsApp demo](http://localhost:8000/demo)** (requires the app to be running locally on your computer). The link selects Kahvila Aurora when it is mapped to the real sandbox, or Kahvila Kipinä in local demo mode. On Windows, use `py -3.12 app/app.py`. The checked-in C13 exports are sufficient; no model training is required at startup. Keep the supplied challenge data and engine outputs in their repository locations.
+Open the **[WhatsApp demo](http://localhost:8000/demo)** (requires the app to be running locally on your computer). On Windows, use `py -3.12 app/app.py --demo`. This starts a fresh Kahvila Kipinä walkthrough each time, with local saves and external delivery disabled. Configured OpenShift AI still parses replies. The checked-in C13 exports are sufficient; no model training is required at startup. Keep the supplied challenge data and engine outputs in their repository locations.
 
 **The connected services require credentials.** Copy [.env.example](.env.example) to an ignored `.env` if one does not already exist, then configure the services you intend to use:
 
@@ -56,14 +56,14 @@ Omit `--sandbox` for local-only writes. See [live-source setup](live_signals/REA
 
 ## A two-minute walkthrough
 
-1. Open the [WhatsApp demo](http://localhost:8000/demo) (requires the app to be running locally on your computer). It selects a business supported by the active Yext mode; the chat identifies the business and whether writes use the sandbox or local simulation.
+1. Start the app with `--demo` and open the [WhatsApp demo](http://localhost:8000/demo) (requires the app to be running locally on your computer). Kahvila Kipinä starts with a pending Christmas proposal, independent of any earlier sandbox approvals.
 2. Choose **Yes, update all**, read the confirmation, then reply `UNDO` to restore the previous hours.
 3. Reset the chat, choose **Other hours**, and type `24 Dec 10-14`. Review the draft and press **Save these hours**. Only the named day changes.
 4. Reset the chat and choose **No, keep as it is**. Existing hours stay unchanged; the owner can also choose whether to receive future suggestions.
 
 Chat reset clears the conversation; already-saved suggestions are omitted. Use UNDO to restore hours before resetting.
 
-For the **real sandbox submission**, use `FI-D0001` (Kahvila Aurora), mapped one-to-one to the sandbox entity in `.env`. Set `CONNECT_APPLY_MODE=sandbox`; the demo link selects Aurora with this mapping, and missing/broken Yext setup fails closed. `auto` prefers a read-verified sandbox but otherwise selects labelled local simulation. To try **Kahvila Kipinä**, the new customer with no previous hours history or owner decisions, set `CONNECT_APPLY_MODE=demo` and restart the app before opening the demo link. Kipinä is a local example, not a mapped real sandbox business. Sample Instagram captions do not replace the sandbox holiday proposal.
+For **real sandbox writes**, run `python app/app.py` without `--demo`. Use `FI-D0001` (Kahvila Aurora), mapped one-to-one to the sandbox entity in `.env`, and set `CONNECT_APPLY_MODE=sandbox`; missing/broken Yext setup then fails closed. The demo link opens a remaining proposal for a mapped business, preferring Christmas. Already-approved hours are not proposed again. `auto` prefers a read-verified sandbox but otherwise selects labelled local simulation. Kipinä is a local example, not a mapped real sandbox business. Sample Instagram captions do not replace the sandbox holiday proposal.
 
 ## Project layout
 

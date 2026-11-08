@@ -197,7 +197,17 @@ CHECK_SESSIONS = {}   # freeze a weather/season question once answered, so feedb
 # Step 5 (Apply) is the team's step5_apply package: it writes to Yext (its own mock, plus the real
 # sandbox when .env says so), reads the change back, keeps an audit log, writes the confirmation
 # message and handles UNDO. Its saved state is in step5_apply/.runtime/ (delete it for a fresh demo).
-S5 = Step5.from_env()
+DEMO_MODE = __name__ == '__main__' and '--demo' in sys.argv
+if DEMO_MODE:
+    import tempfile
+    from step5_apply.mock_runtime import start_mock
+    DEMO_SESSION = tempfile.TemporaryDirectory(prefix='fonecta-demo-')
+    demo_mock = start_mock(DEMO_SESSION.name)
+    S5 = Step5.from_env(mode='demo', use_sandbox=False, mock_url=demo_mock.url,
+                        runtime_dir=DEMO_SESSION.name)
+    S5.mock = demo_mock
+else:
+    S5 = Step5.from_env()
 LIVE = CheckFeed(os.environ.get('CONNECT_LIVE_CHECKS'), sandbox=bool(S5.applier.sandbox or S5.applier.primary.name == 'sandbox'),
                  state_path=S5.applier.audit.path.parent / 'live_checks_seen.json')
 SEEN = {}   # (eid, pid) -> step 5 snapshot of the dates when the message was first shown ("seen_before")
@@ -1039,7 +1049,8 @@ REMIND = set()  # (channel, eid, pid) -> the reminder was sent (no reply after 2
 # ---------------------------------------------------------------- learning what each owner wants
 # docs/new-customer-plan.md: a welcome message (no questions), then a score per reason (public holiday,
 # local event, ...) learned from yes / no / no reply / UNDO. Quiet mode after 3 unanswered messages; STOP.
-LEARN = learning.Learner(os.path.join(os.environ['CONNECT_RUNTIME_DIR'], 'learning.json')
+LEARN = learning.Learner(os.path.join(DEMO_SESSION.name, 'learning.json') if DEMO_MODE else
+                         os.path.join(os.environ['CONNECT_RUNTIME_DIR'], 'learning.json')
                          if os.environ.get('CONNECT_RUNTIME_DIR') else learning.STATE,
                          preferred=lambda eid: _preferred(eid))
 
@@ -1341,6 +1352,8 @@ def browser_result(result):
 def initialize_messaging():
     """Missing/broken setup must not prevent the credential-free browser demo."""
     cfg = messaging.configuration()
+    if DEMO_MODE:
+        return None, {**cfg, 'mode': 'demo', 'reason': 'Fresh browser demo; external delivery disabled'}
     if not cfg["configured"]:
         return None, {**cfg, "mode": "demo", "reason": "messaging configuration unavailable"}
     try:
@@ -2392,10 +2405,18 @@ class App(BaseHTTPRequestHandler):
                 available = sorted(eid for eid in S5.applier.primary.mapping if eid in BL.ents)
                 if not available:
                     return self.send(page('Demo unavailable', '<h1>No demo business is mapped</h1><p>Configure YEXT_SANDBOX_MIRROR with a supplied business ID, or restart with CONNECT_APPLY_MODE=demo for the local preview.</p>'), 503)
-                eid = 'FI-D0001' if 'FI-D0001' in available else available[0]
+                available.sort(key=lambda eid: (eid != 'FI-D0001', eid))
             else:
-                eid = 'FI-D0017'
-            return self.redirect(f'/w/{eid}/christmas')
+                available = ['FI-D0017']
+            for eid in available:
+                pending = bundles_for(eid)
+                if pending:
+                    pid = next((pid for pid, _, _ in pending if pid == 'christmas'), pending[0][0])
+                    return self.redirect(f'/w/{eid}/{pid}')
+            return self.send(page('Demo complete', '<h1>All suggested opening hours are already saved</h1>'
+                '<p>There are no remaining proposals for this demo. Existing hours have been kept.</p>'
+                '<p>For a fresh walkthrough, restart with <code>python app/app.py --demo</code>. '
+                'This starts a new local session without changing your Yext sandbox.</p>'))
         if parts == ["setup"]:
             return self.send(setup_page())
         if (parts[0] in ('w', 's', 'e', 'p', 'b', 'm', 'ig') and len(parts) >= 2
@@ -2847,10 +2868,13 @@ if __name__ == "__main__":
     import json
     import threading
     parser = argparse.ArgumentParser()
+    parser.add_argument('--demo', action='store_true', help='Fresh local browser walkthrough; keeps configured AI parsing, disables Yext and external message delivery')
     parser.add_argument("--send-whatsapp", nargs=2, metavar=("BUSINESS", "PERIOD"))
     parser.add_argument("--messaging-status", action="store_true")
     parser.add_argument('--check-services', action='store_true', help='Read-only Yext and synthetic OpenShift inference check; never sends WhatsApp or writes hours')
     args = parser.parse_args()
+    if args.demo and args.send_whatsapp:
+        parser.error('--demo cannot send real WhatsApp messages; omit --demo for provider delivery')
     MESSAGING, cfg = initialize_messaging()
     if args.check_services:
         ai = {'configured': hours_ai.configured(), 'verified': False, 'status': hours_ai.status()}

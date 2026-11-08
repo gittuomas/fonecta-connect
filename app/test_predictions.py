@@ -156,6 +156,20 @@ class OwnerFlow(unittest.TestCase):
             self.assertIn("href='/demo'", err.exception.read().decode('utf-8'))
         self.assertEqual(self.s5.mock.module.STORE.update_log, [])
 
+    def test_demo_entry_skips_a_completed_christmas_proposal(self):
+        item = {'day': date(2026, 12, 31), 'seen_before': None}
+        with patch.object(self.app, 'bundles_for', return_value=[('new-year', 'New Year', [item])]), \
+                patch.object(self.app, 'wa_page', return_value='<h1>Pending New Year proposal</h1>'):
+            with urllib.request.urlopen(self.base + '/demo', timeout=10) as response:
+                self.assertTrue(response.url.endswith('/w/FI-D0017/new-year'))
+                self.assertIn('Pending New Year proposal', response.read().decode())
+
+    def test_exhausted_demo_explains_how_to_start_a_fresh_walkthrough(self):
+        with patch.object(self.app, 'bundles_for', return_value=[]):
+            html = self.request('/demo')
+        self.assertIn('python app/app.py --demo', html)
+        self.assertEqual(self.s5.mock.module.STORE.update_log, [])
+
     def test_demo_entry_rejects_mapping_without_a_supplied_business(self):
         with patch.object(self.s5.applier.primary, 'name', 'sandbox'), \
                 patch.object(self.s5.applier.primary, 'mapping', {'UNKNOWN': 'real-cafe'}, create=True):
