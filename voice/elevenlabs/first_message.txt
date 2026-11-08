@@ -1,0 +1,1 @@
+Hi {{owner_first_name}}, it's the {{brand}} AI assistant. Google may have the wrong hours for {{business_name}} on Christmas Eve. Got a minute?

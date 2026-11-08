@@ -1,0 +1,56 @@
+[
+  {
+    "type": "system",
+    "name": "end_call",
+    "description": "",
+    "response_timeout_secs": 20,
+    "disable_interruptions": false,
+    "interruption_mode": "allow",
+    "force_pre_tool_speech": false,
+    "pre_tool_speech": "auto",
+    "assignments": [],
+    "tool_call_sound": null,
+    "tool_call_sound_behavior": "auto",
+    "tool_error_handling_mode": "auto",
+    "params": {
+      "system_tool_type": "end_call"
+    }
+  },
+  {
+    "type": "system",
+    "name": "skip_turn",
+    "description": "",
+    "response_timeout_secs": 20,
+    "disable_interruptions": false,
+    "interruption_mode": "allow",
+    "force_pre_tool_speech": false,
+    "pre_tool_speech": "auto",
+    "assignments": [],
+    "tool_call_sound": null,
+    "tool_call_sound_behavior": "auto",
+    "tool_error_handling_mode": "auto",
+    "params": {
+      "system_tool_type": "skip_turn",
+      "wait_timeout_secs": -1,
+      "omit_from_transcript": false
+    }
+  },
+  {
+    "type": "system",
+    "name": "voicemail_detection",
+    "description": "",
+    "response_timeout_secs": 20,
+    "disable_interruptions": false,
+    "interruption_mode": "allow",
+    "force_pre_tool_speech": false,
+    "pre_tool_speech": "auto",
+    "assignments": [],
+    "tool_call_sound": null,
+    "tool_call_sound_behavior": "auto",
+    "tool_error_handling_mode": "auto",
+    "params": {
+      "system_tool_type": "voicemail_detection",
+      "voicemail_message": "{{voicemail_message}}"
+    }
+  }
+]

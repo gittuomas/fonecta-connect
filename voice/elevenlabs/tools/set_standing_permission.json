@@ -1,0 +1,96 @@
+{
+  "type": "webhook",
+  "name": "set_standing_permission",
+  "description": "Save the owner's answer to the standing permission offer: handle public holidays automatically from now on, informing them by message each time. Call only after a clear yes or no.",
+  "response_timeout_secs": 20,
+  "disable_interruptions": true,
+  "interruption_mode": "disable_during_tool",
+  "force_pre_tool_speech": false,
+  "pre_tool_speech": "auto",
+  "assignments": [],
+  "tool_call_sound": "typing",
+  "tool_call_sound_behavior": "always",
+  "tool_error_handling_mode": "passthrough",
+  "dynamic_variables": {
+    "dynamic_variable_placeholders": {
+      "call_id": "preview"
+    }
+  },
+  "execution_mode": "immediate",
+  "api_schema": {
+    "request_headers": {},
+    "kind": "webhook",
+    "url": "https://YOUR_PUBLIC_BASE_URL/voice/tools/standing-permission",
+    "method": "POST",
+    "path_params_schema": {},
+    "query_params_schema": null,
+    "request_body_schema": {
+      "description": "The owner's answer to the standing permission offer.",
+      "dynamic_variable": "",
+      "is_omitted": false,
+      "type": "object",
+      "required": [
+        "call_id",
+        "scope",
+        "granted",
+        "confirmed"
+      ],
+      "properties": {
+        "call_id": {
+          "type": "string",
+          "description": "",
+          "enum": null,
+          "is_system_provided": false,
+          "dynamic_variable": "call_id",
+          "allowed_values": null,
+          "allowed_values_dynamic_variable": "",
+          "constant_value": "",
+          "is_omitted": false
+        },
+        "scope": {
+          "type": "string",
+          "description": "Always PUBLIC_HOLIDAYS.",
+          "enum": [
+            "PUBLIC_HOLIDAYS"
+          ],
+          "is_system_provided": false,
+          "dynamic_variable": "",
+          "allowed_values": null,
+          "allowed_values_dynamic_variable": "",
+          "constant_value": "",
+          "is_omitted": false
+        },
+        "granted": {
+          "type": "boolean",
+          "description": "true if the owner said yes to automatic handling, false if no.",
+          "enum": null,
+          "is_system_provided": false,
+          "dynamic_variable": "",
+          "allowed_values": null,
+          "allowed_values_dynamic_variable": "",
+          "constant_value": "",
+          "is_omitted": false
+        },
+        "confirmed": {
+          "type": "boolean",
+          "description": "true only if the owner gave a clear answer.",
+          "enum": null,
+          "is_system_provided": false,
+          "dynamic_variable": "",
+          "allowed_values": null,
+          "allowed_values_dynamic_variable": "",
+          "constant_value": "",
+          "is_omitted": false
+        }
+      }
+    },
+    "response_body_schema": null,
+    "response_filter": null,
+    "content_type": "application/json",
+    "auth_resolved_params": [],
+    "auth_connection": null,
+    "mtls_auth_connection": null
+  },
+  "follow_redirects": false,
+  "follow_redirects_allowed_domains": []
+}

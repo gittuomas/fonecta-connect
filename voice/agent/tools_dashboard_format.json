@@ -23,7 +23,7 @@
     "tool_error_handling_mode": "passthrough",
     "response_mocks": [],
     "api_schema": {
-      "url": "https://coveted-anemia-celestial.ngrok-free.dev/voice/tools/record-decision",
+      "url": "https://YOUR_PUBLIC_BASE_URL/voice/tools/record-decision",
       "method": "POST",
       "path_params_schema": [],
       "query_params_schema": [],
@@ -142,7 +142,7 @@
     "tool_error_handling_mode": "passthrough",
     "response_mocks": [],
     "api_schema": {
-      "url": "https://coveted-anemia-celestial.ngrok-free.dev/voice/tools/standing-permission",
+      "url": "https://YOUR_PUBLIC_BASE_URL/voice/tools/standing-permission",
       "method": "POST",
       "path_params_schema": [],
       "query_params_schema": [],
@@ -229,7 +229,7 @@
     "tool_error_handling_mode": "passthrough",
     "response_mocks": [],
     "api_schema": {
-      "url": "https://coveted-anemia-celestial.ngrok-free.dev/voice/tools/contact-preference",
+      "url": "https://YOUR_PUBLIC_BASE_URL/voice/tools/contact-preference",
       "method": "POST",
       "path_params_schema": [],
       "query_params_schema": [],

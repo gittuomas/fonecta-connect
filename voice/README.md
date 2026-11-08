@@ -2,6 +2,8 @@
 
 When an important opening-hours request goes unanswered, the ElevenLabs voice agent follows up, confirms each date and saves the owner's approved hours. The demo starts from a seeded unanswered-message scenario.
 
+**ElevenLabs agent:** the full platform setup (system prompt, first message, tools, voice and turn settings, analysis) and step-by-step instructions to recreate the agent are in [`elevenlabs/`](elevenlabs/README.md).
+
 ## Run
 
 Configure the repository-root `.env` from [.env.example](../.env.example). An accessible `ELEVENLABS_AGENT_ID` is required for the browser conversation. Private agents also need `ELEVENLABS_API_KEY`. Actual outbound calls need that key, `ELEVENLABS_PHONE_NUMBER_ID` and `DEMO_OWNER_PHONE`. Yext sandbox writes require `YEXT_API_KEY`, `YEXT_BASE_URL` and `YEXT_SANDBOX_ENTITY_ID`.

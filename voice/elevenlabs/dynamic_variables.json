@@ -1,0 +1,13 @@
+{
+  "dynamic_variable_placeholders": {
+    "brand": "Fonecta Connect",
+    "owner_first_name": "Max",
+    "business_name": "Cinnamon Swirl Café",
+    "city": "Helsinki",
+    "today": "Tuesday 15 December 2026",
+    "call_id": "preview",
+    "text_history": "a WhatsApp message 26 hours ago, no reply yet",
+    "suggestions": "1. Christmas Eve, Thursday 24 December 2026. Listing shows now: open 10:00–18:00. Suggested: open 07:30–13:00. Why: Last year on Wednesday 24 December 2025 they were open 07:30–13:00, but nothing is entered for this year, so the listing shows their regular Thursday hours (open 10:00–18:00).\n2. Christmas Day, Friday 25 December 2026. Listing shows now: open 10:00–18:00. Suggested: closed. Why: Last year on Thursday 25 December 2025 they were closed, but nothing is entered for this year, so the listing shows their regular Friday hours (open 10:00–18:00).\n3. New Year's Day, Friday 1 January 2027. Listing shows now: open 10:00–18:00. Suggested: closed. Why: Last year on Thursday 1 January 2026 they were closed, but nothing is entered for this year, so the listing shows their regular Friday hours (open 10:00–18:00).",
+    "voicemail_message": "Hi Max, this is the Fonecta Connect assistant about Cinnamon Swirl Café's holiday opening hours. We sent you a suggestion by message. Please check it and tap approve, edit or no thanks. Thank you!"
+  }
+}

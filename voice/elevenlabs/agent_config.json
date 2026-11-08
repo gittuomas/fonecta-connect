@@ -1,0 +1,1234 @@
+{
+  "name": "[Fonecta] Connect Voice: holiday hours",
+  "conversation_config": {
+    "asr": {
+      "quality": "high",
+      "provider": "scribe_realtime",
+      "user_input_audio_format": "pcm_16000",
+      "keywords": [],
+      "keyterm_libraries": []
+    },
+    "turn": {
+      "turn_timeout": 7,
+      "initial_wait_time": null,
+      "silence_end_call_timeout": -1,
+      "mode": "turn",
+      "turn_eagerness": "eager",
+      "spelling_patience": "auto",
+      "speculative_turn": true,
+      "retranscribe_on_turn_timeout": false,
+      "turn_model": "turn_v3",
+      "interruption_ignore_terms": [
+        "mmhmm",
+        "uhhuh",
+        "uh huh",
+        "uh",
+        "mm",
+        "hmm",
+        "okay",
+        "ok",
+        "okey",
+        "i see",
+        "go on",
+        "go ahead",
+        "right",
+        "gotcha"
+      ],
+      "interruption_ignore_term_languages": [
+        "en"
+      ],
+      "merge_with_default_ignore_terms": false,
+      "transcribe_on_disabled_interruptions": true,
+      "soft_timeout_config": {
+        "timeout_seconds": -1,
+        "message": "One moment.",
+        "additional_soft_timeout_messages": [],
+        "use_llm_generated_message": false,
+        "randomize_fillers": false,
+        "max_soft_timeouts_per_generation": 1,
+        "llm_generated_message_prompt_override": null,
+        "disable_until_first_user_message": false
+      },
+      "noisy_environment_detection": false,
+      "noisy_environment_message": "Uhh ... sorry, I'm picking up some noise in the background. Could you move somewhere quieter?"
+    },
+    "tts": {
+      "model_id": "eleven_v4_turbo",
+      "voice_id": "cjVigY5qzO86Huf0OWal",
+      "supported_voices": [],
+      "expressive_mode": true,
+      "suggested_audio_tags": [
+        {
+          "tag": "Warmly",
+          "description": "Greeting the owner, thanking them and saying goodbye."
+        },
+        {
+          "tag": "Patiently",
+          "description": "Reading hours back, or when the owner is unsure or asks you to repeat."
+        }
+      ],
+      "agent_output_audio_format": "pcm_16000",
+      "optimize_streaming_latency": 3,
+      "stability": 0.5,
+      "speed": 1,
+      "similarity_boost": 0.75,
+      "clone_strength": 0,
+      "text_normalisation_type": "system_prompt",
+      "pronunciation_dictionary_locators": [],
+      "enable_phoneme_tags": true,
+      "audio_effects": null
+    },
+    "conversation": {
+      "text_only": false,
+      "max_duration_seconds": 300,
+      "max_duration_seconds_after_last_agent_message": null,
+      "client_events": [
+        "audio",
+        "interruption",
+        "user_transcript",
+        "agent_response",
+        "agent_response_correction"
+      ],
+      "file_input": {
+        "enabled": true,
+        "max_files_in_memory": 10,
+        "max_files_per_conversation": 10
+      },
+      "monitoring_enabled": false,
+      "monitoring_events": [
+        "user_transcript",
+        "agent_response",
+        "agent_response_correction"
+      ],
+      "dtmf_input_settings": null,
+      "background_sound": {
+        "source_type": null,
+        "source_id": null,
+        "volume": 0.15,
+        "crossfade_loop": true
+      },
+      "compaction": {
+        "enabled": null,
+        "soft_trigger_fraction": null,
+        "tail_size": null,
+        "min_reclaimable_tokens": null
+      },
+      "source_attribution": true
+    },
+    "language_presets": {},
+    "vad": {
+      "background_voice_detection": false
+    },
+    "realtime_model": null,
+    "avatar": null,
+    "agent": {
+      "first_message": "Hi {{owner_first_name}}, it's the {{brand}} AI assistant. Google may have the wrong hours for {{business_name}} on Christmas Eve. Got a minute?",
+      "language": "en",
+      "hinglish_mode": false,
+      "dynamic_variables": {
+        "dynamic_variable_placeholders": {
+          "brand": "Fonecta Connect",
+          "owner_first_name": "Max",
+          "business_name": "Cinnamon Swirl Café",
+          "city": "Helsinki",
+          "today": "Tuesday 15 December 2026",
+          "call_id": "preview",
+          "text_history": "a WhatsApp message 26 hours ago, no reply yet",
+          "suggestions": "1. Christmas Eve, Thursday 24 December 2026. Listing shows now: open 10:00–18:00. Suggested: open 07:30–13:00. Why: Last year on Wednesday 24 December 2025 they were open 07:30–13:00, but nothing is entered for this year, so the listing shows their regular Thursday hours (open 10:00–18:00).\n2. Christmas Day, Friday 25 December 2026. Listing shows now: open 10:00–18:00. Suggested: closed. Why: Last year on Thursday 25 December 2025 they were closed, but nothing is entered for this year, so the listing shows their regular Friday hours (open 10:00–18:00).\n3. New Year's Day, Friday 1 January 2027. Listing shows now: open 10:00–18:00. Suggested: closed. Why: Last year on Thursday 1 January 2026 they were closed, but nothing is entered for this year, so the listing shows their regular Friday hours (open 10:00–18:00).",
+          "voicemail_message": "Hi Max, this is the Fonecta Connect assistant about Cinnamon Swirl Café's holiday opening hours. We sent you a suggestion by message. Please check it and tap approve, edit or no thanks. Thank you!"
+        }
+      },
+      "disable_first_message_interruptions": false,
+      "max_conversation_duration_message": "",
+      "silence_end_call_message": "",
+      "text_behavior_overrides": {
+        "whatsapp": {
+          "verbosity": null,
+          "output_format": null,
+          "interaction_budget": null,
+          "disable_max_duration": true
+        }
+      },
+      "subagent_config": {
+        "agents": [],
+        "self_subagent": null
+      },
+      "prompt": {
+        "prompt": "# Demo scope (temporary)\nThis demo call is about Christmas Eve only. Ask only about Christmas Eve, even if more dates are listed below, and never mention the other dates. Once Christmas Eve is settled, ask the standing-permission question if something was saved, then close.\nYou are the {{brand}} AI assistant speaking with {{owner_first_name}}, owner of {{business_name}} in {{city}}, about their holiday hours. Today is {{today}}. Our earlier text ({{text_history}}) got no reply. Never pretend to be human.\nCall reference for tools only; never say it: {{call_id}}\n\n# Dates\n{{suggestions}}\nThese are facts, not a script: \"Google now\" is the current listing; \"Suggest\" is our proposal. The owner decides. Any Ask lines are optional examples. Preserve dates, hours and evidence, but use your own wording.\n\n# Conversation style\n- Calm, attentive and conversational. Usually 6-16 words: one short sentence, occasionally a brief acknowledgment plus one question. Stay under 20 words for routine turns; explain more only when asked.\n- Ask directly about the proposal. Use the holiday name alone when unambiguous. Do not also read its calendar date, current Google hours, or last year's reason unless the owner asks.\n- Respond to the owner's last answer and connect naturally to the next date. Acknowledge only when useful, not after every answer. Avoid filler praise, \"Just to confirm\", repeated stock phrases and forced synonym rotation.\n- Keep routine date checks matter-of-fact. Match the owner's pace; do not restart a cheerful greeting on every turn. Usually omit emotion tags; use one only when the meaning warrants it.\n- Speak times naturally, adding morning/evening or the next day only when needed. Confirm edits with the holiday and complete hours. Clarity matters more than the word target.\n- Use only supplied facts. Explain reasons only if asked, without naming other businesses or their choices.\n- Tool \"say\" and \"next\" fields are status guidance, not scripts. Preserve outcomes and errors without reciting their wording.\n\n# Decisions\n1. The greeting already asked for a minute. If they agree, start with the first date without another introduction. If busy, ask when suits them, save CALL_LATER with set_contact_preference, and end briefly.\n2. Ask about one listed date at a time, naming its proposed hours or closed status. A clear yes to that exact proposal confirms APPROVE: call record_decision immediately. Do not ask for the same confirmation twice.\n3. Different hours: read back that date and the complete final hours as a short question. Call EDIT only after a clear yes. Use HH:MM-HH:MM, comma-separated intervals, or closed in the tool. Clarify ambiguous dates or times rather than guessing.\n4. A clear request to keep the currently listed hours confirms DECLINE. A bare \"no\" might mean different hours; clarify if needed. Never infer another date's decision from this one.\n5. \"Maybe\", \"probably\" and \"whatever you think\" are not confirmation. Ask at most once for a clear decision if useful. Still unsure: say that date is not confirmed, move on, and do not revisit it unless the owner does.\n6. Wait for each tool result before acknowledging a save or moving on. After success, continue naturally to the next unresolved date. Do not ask about decided dates again. If the owner corrects one, explain that it needs follow-up; do not claim a second save succeeded.\n7. After at least one approval or edit, offer standing permission once in one short question: public holidays handled automatically, with a message each time. Save only a definite yes or definite refusal with set_standing_permission. \"Not ready to decide\" or \"not sure\" means undecided, even if the sentence starts with \"no\": do not call this tool. Do not press for an answer.\n8. Close in one short sentence; mention only dates still not confirmed. Do not list decided dates again unless asked. Say \"not confirmed\" or \"undecided\", never \"stays open\" for an unresolved decision. A saved decision is not proof of publication or message delivery: do not claim Google is updated or a text was sent. Call end_call in the same turn.\n\n# Guardrails\n- Only the listed dates and the owner's confirmed choices. confirmed=true requires explicit agreement to that date's exact proposed/read-back hours, or an explicit request to keep its current listing.\n- NEEDS_CONFIRMATION: ask and retry. INVALID_HOURS: clarify. After two tool failures, explain that the date remains unresolved and move on. Never claim a failed save succeeded.\n- Never ask for passwords, login codes or payment details. If asked, clearly say you are an AI assistant.\n- Wrong person, closed for good or \"don't call me\": make no further changes, record the appropriate contact preference where it fits, and end politely.\n- For unrelated requests, acknowledge briefly, put relevant details in owner_comment of a legitimate decision if available, and return to the open question. Never invent a decision just to save a comment or promise an action you cannot perform.\n\n# Examples of the approach, not a script\n- Owner changes the opening time: \"Eight to one on Christmas Eve?\" After yes and a successful save: \"And will you be closed on Christmas Day?\"\n- Moving to another closed-day proposal: \"That leaves New Year's Day. Should I mark that closed too?\" Use \"too\" only when the earlier confirmed decision supports it.\n- If the last date is uncertain, a concise transition is: \"We can leave that undecided. Would you like automatic public-holiday updates, with a message each time?\"\n\n# Final turn\nEnd with a brief thanks and, only if needed, the still-undecided holiday. Do not repeat approved dates or hours unless the owner asks for a recap. Call end_call.\n",
+        "llm": "deepseek-v41-flash",
+        "reasoning_effort": null,
+        "service_tier": "standard",
+        "opener": null,
+        "thinking_budget": null,
+        "enable_reasoning_summary": false,
+        "temperature": 0,
+        "max_tokens": -1,
+        "tool_ids_strict": false,
+        "built_in_tools": {
+          "transfer_to_agent": null,
+          "update_state": null,
+          "memory_entry_search": null,
+          "run_subagent": null,
+          "flag_issue_for_review": null,
+          "end_call": {
+            "type": "system",
+            "name": "end_call",
+            "description": "",
+            "response_timeout_secs": 20,
+            "disable_interruptions": false,
+            "interruption_mode": "allow",
+            "force_pre_tool_speech": false,
+            "pre_tool_speech": "auto",
+            "assignments": [],
+            "tool_call_sound": null,
+            "tool_call_sound_behavior": "auto",
+            "tool_error_handling_mode": "auto",
+            "params": {
+              "system_tool_type": "end_call"
+            }
+          },
+          "language_detection": null,
+          "transfer_to_number": null,
+          "skip_turn": {
+            "type": "system",
+            "name": "skip_turn",
+            "description": "",
+            "response_timeout_secs": 20,
+            "disable_interruptions": false,
+            "interruption_mode": "allow",
+            "force_pre_tool_speech": false,
+            "pre_tool_speech": "auto",
+            "assignments": [],
+            "tool_call_sound": null,
+            "tool_call_sound_behavior": "auto",
+            "tool_error_handling_mode": "auto",
+            "params": {
+              "system_tool_type": "skip_turn",
+              "wait_timeout_secs": -1,
+              "omit_from_transcript": false
+            }
+          },
+          "play_keypad_touch_tone": null,
+          "voicemail_detection": {
+            "type": "system",
+            "name": "voicemail_detection",
+            "description": "",
+            "response_timeout_secs": 20,
+            "disable_interruptions": false,
+            "interruption_mode": "allow",
+            "force_pre_tool_speech": false,
+            "pre_tool_speech": "auto",
+            "assignments": [],
+            "tool_call_sound": null,
+            "tool_call_sound_behavior": "auto",
+            "tool_error_handling_mode": "auto",
+            "params": {
+              "system_tool_type": "voicemail_detection",
+              "voicemail_message": "{{voicemail_message}}"
+            }
+          },
+          "identity_challenge": null,
+          "ask_teammate": null,
+          "transfer_to_genesys": null,
+          "transfer_to_genesys_chat": null,
+          "transfer_to_genesys_bot": null
+        },
+        "rich_content": {
+          "enabled_components": [
+            "buttons",
+            "carousel"
+          ]
+        },
+        "enable_parallel_tool_calls": true,
+        "mcp_server_ids": [],
+        "native_mcp_server_ids": [],
+        "knowledge_base": [],
+        "custom_llm": null,
+        "bedrock_llm": null,
+        "speech_engine": null,
+        "ignore_default_personality": true,
+        "rag": {
+          "enabled": true,
+          "embedding_model": "e5_mistral_7b_instruct",
+          "optional_rag_enabled": false,
+          "max_vector_distance": 0.6,
+          "max_documents_length": 50000,
+          "max_retrieved_rag_chunks_count": 20,
+          "num_candidates": null,
+          "query_rewrite_prompt_override": null,
+          "knowledge_base_tool_info": {
+            "enabled_strategies": [
+              "cat",
+              "keyword",
+              "semantic",
+              "ls"
+            ]
+          },
+          "include_source_urls": false
+        },
+        "timezone": "Europe/Helsinki",
+        "backup_llm_config": {
+          "preference": "default"
+        },
+        "cascade_timeout_seconds": 4,
+        "tools": [
+          {
+            "type": "webhook",
+            "name": "record_decision",
+            "description": "Record the owner's confirmed decision for ONE listed date and start publication for an approval or edit. A clear yes to an exact proposal is sufficient; edited hours require a read-back and yes. A clear request to keep the current listing is DECLINE. Wait for the result, then acknowledge only when useful and continue naturally. A saved decision does not prove publication has finished.",
+            "response_timeout_secs": 20,
+            "disable_interruptions": true,
+            "interruption_mode": "disable_during_tool",
+            "force_pre_tool_speech": false,
+            "pre_tool_speech": "auto",
+            "assignments": [],
+            "tool_call_sound": "typing",
+            "tool_call_sound_behavior": "always",
+            "tool_error_handling_mode": "passthrough",
+            "dynamic_variables": {
+              "dynamic_variable_placeholders": {
+                "call_id": "preview"
+              }
+            },
+            "execution_mode": "immediate",
+            "api_schema": {
+              "request_headers": {},
+              "kind": "webhook",
+              "url": "https://YOUR_PUBLIC_BASE_URL/voice/tools/record-decision",
+              "method": "POST",
+              "path_params_schema": {},
+              "query_params_schema": null,
+              "request_body_schema": {
+                "description": "The owner's confirmed decision for one suggested date.",
+                "dynamic_variable": "",
+                "is_omitted": false,
+                "type": "object",
+                "required": [
+                  "call_id",
+                  "conversation_id",
+                  "item",
+                  "decision",
+                  "confirmed"
+                ],
+                "properties": {
+                  "call_id": {
+                    "type": "string",
+                    "description": "",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "call_id",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "conversation_id": {
+                    "type": "string",
+                    "description": "",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "system__conversation_id",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "item": {
+                    "type": "integer",
+                    "description": "Item number of the date from the suggestions list (1, 2, 3 or 4).",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "decision": {
+                    "type": "string",
+                    "description": "APPROVE = our suggested hours as they are. EDIT = the owner gave other hours. DECLINE = keep what the listing shows now.",
+                    "enum": [
+                      "APPROVE",
+                      "EDIT",
+                      "DECLINE"
+                    ],
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "hours": {
+                    "type": "string",
+                    "description": "Only for EDIT. 24-hour format HH:MM-HH:MM, e.g. 10:00-14:00. Several ranges separated by commas, e.g. 10:00-14:00,17:00-22:00. Use 'closed' for closed all day. Leave empty for APPROVE and DECLINE.",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "confirmed": {
+                    "type": "boolean",
+                    "description": "true only after explicit agreement to this date's exact proposed or read-back hours, or an explicit request to keep its currently listed hours. For EDIT, read back the date and complete final hours and get a clear yes. Hesitation or agreement about another date is not confirmation.",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "owner_comment": {
+                    "type": "string",
+                    "description": "Optional. Anything the owner said that a colleague should know, in one short sentence. Empty if nothing.",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  }
+                }
+              },
+              "response_body_schema": null,
+              "response_filter": null,
+              "content_type": "application/json",
+              "auth_resolved_params": [],
+              "auth_connection": null,
+              "mtls_auth_connection": null
+            },
+            "follow_redirects": false,
+            "follow_redirects_allowed_domains": []
+          },
+          {
+            "type": "webhook",
+            "name": "set_standing_permission",
+            "description": "Save the owner's answer to the standing permission offer: handle public holidays automatically from now on, informing them by message each time. Call only after a clear yes or no.",
+            "response_timeout_secs": 20,
+            "disable_interruptions": true,
+            "interruption_mode": "disable_during_tool",
+            "force_pre_tool_speech": false,
+            "pre_tool_speech": "auto",
+            "assignments": [],
+            "tool_call_sound": "typing",
+            "tool_call_sound_behavior": "always",
+            "tool_error_handling_mode": "passthrough",
+            "dynamic_variables": {
+              "dynamic_variable_placeholders": {
+                "call_id": "preview"
+              }
+            },
+            "execution_mode": "immediate",
+            "api_schema": {
+              "request_headers": {},
+              "kind": "webhook",
+              "url": "https://YOUR_PUBLIC_BASE_URL/voice/tools/standing-permission",
+              "method": "POST",
+              "path_params_schema": {},
+              "query_params_schema": null,
+              "request_body_schema": {
+                "description": "The owner's answer to the standing permission offer.",
+                "dynamic_variable": "",
+                "is_omitted": false,
+                "type": "object",
+                "required": [
+                  "call_id",
+                  "scope",
+                  "granted",
+                  "confirmed"
+                ],
+                "properties": {
+                  "call_id": {
+                    "type": "string",
+                    "description": "",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "call_id",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "scope": {
+                    "type": "string",
+                    "description": "Always PUBLIC_HOLIDAYS.",
+                    "enum": [
+                      "PUBLIC_HOLIDAYS"
+                    ],
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "granted": {
+                    "type": "boolean",
+                    "description": "true if the owner said yes to automatic handling, false if no.",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "confirmed": {
+                    "type": "boolean",
+                    "description": "true only if the owner gave a clear answer.",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  }
+                }
+              },
+              "response_body_schema": null,
+              "response_filter": null,
+              "content_type": "application/json",
+              "auth_resolved_params": [],
+              "auth_connection": null,
+              "mtls_auth_connection": null
+            },
+            "follow_redirects": false,
+            "follow_redirects_allowed_domains": []
+          },
+          {
+            "type": "webhook",
+            "name": "set_contact_preference",
+            "description": "Save how the owner wants to be contacted: call back later, messages only, or no more calls. Use when the owner is busy, asks for a later time, prefers messages, or asks not to be called.",
+            "response_timeout_secs": 20,
+            "disable_interruptions": false,
+            "interruption_mode": "allow",
+            "force_pre_tool_speech": false,
+            "pre_tool_speech": "auto",
+            "assignments": [],
+            "tool_call_sound": "typing",
+            "tool_call_sound_behavior": "auto",
+            "tool_error_handling_mode": "passthrough",
+            "dynamic_variables": {
+              "dynamic_variable_placeholders": {
+                "call_id": "preview"
+              }
+            },
+            "execution_mode": "immediate",
+            "api_schema": {
+              "request_headers": {},
+              "kind": "webhook",
+              "url": "https://YOUR_PUBLIC_BASE_URL/voice/tools/contact-preference",
+              "method": "POST",
+              "path_params_schema": {},
+              "query_params_schema": null,
+              "request_body_schema": {
+                "description": "How the owner wants to be contacted.",
+                "dynamic_variable": "",
+                "is_omitted": false,
+                "type": "object",
+                "required": [
+                  "call_id",
+                  "preference"
+                ],
+                "properties": {
+                  "call_id": {
+                    "type": "string",
+                    "description": "",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "call_id",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "preference": {
+                    "type": "string",
+                    "description": "CALL_LATER if they want a call at another time, TEXT_ONLY if they prefer messages, NO_MORE_CALLS if they do not want calls.",
+                    "enum": [
+                      "CALL_LATER",
+                      "TEXT_ONLY",
+                      "NO_MORE_CALLS"
+                    ],
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "when": {
+                    "type": "string",
+                    "description": "For CALL_LATER: the time they asked for, in their words, e.g. 'tomorrow after 3 pm'. Empty otherwise.",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  },
+                  "note": {
+                    "type": "string",
+                    "description": "Optional short note. Empty if nothing.",
+                    "enum": null,
+                    "is_system_provided": false,
+                    "dynamic_variable": "",
+                    "allowed_values": null,
+                    "allowed_values_dynamic_variable": "",
+                    "constant_value": "",
+                    "is_omitted": false
+                  }
+                }
+              },
+              "response_body_schema": null,
+              "response_filter": null,
+              "content_type": "application/json",
+              "auth_resolved_params": [],
+              "auth_connection": null,
+              "mtls_auth_connection": null
+            },
+            "follow_redirects": false,
+            "follow_redirects_allowed_domains": []
+          },
+          {
+            "type": "system",
+            "name": "end_call",
+            "description": "",
+            "response_timeout_secs": 20,
+            "disable_interruptions": false,
+            "interruption_mode": "allow",
+            "force_pre_tool_speech": false,
+            "pre_tool_speech": "auto",
+            "assignments": [],
+            "tool_call_sound": null,
+            "tool_call_sound_behavior": "auto",
+            "tool_error_handling_mode": "auto",
+            "params": {
+              "system_tool_type": "end_call"
+            }
+          },
+          {
+            "type": "system",
+            "name": "skip_turn",
+            "description": "",
+            "response_timeout_secs": 20,
+            "disable_interruptions": false,
+            "interruption_mode": "allow",
+            "force_pre_tool_speech": false,
+            "pre_tool_speech": "auto",
+            "assignments": [],
+            "tool_call_sound": null,
+            "tool_call_sound_behavior": "auto",
+            "tool_error_handling_mode": "auto",
+            "params": {
+              "system_tool_type": "skip_turn",
+              "wait_timeout_secs": -1,
+              "omit_from_transcript": false
+            }
+          },
+          {
+            "type": "system",
+            "name": "voicemail_detection",
+            "description": "",
+            "response_timeout_secs": 20,
+            "disable_interruptions": false,
+            "interruption_mode": "allow",
+            "force_pre_tool_speech": false,
+            "pre_tool_speech": "auto",
+            "assignments": [],
+            "tool_call_sound": null,
+            "tool_call_sound_behavior": "auto",
+            "tool_error_handling_mode": "auto",
+            "params": {
+              "system_tool_type": "voicemail_detection",
+              "voicemail_message": "{{voicemail_message}}"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "platform_settings": {
+    "app_connectors": {
+      "enabled": false
+    },
+    "evaluation": {
+      "criteria": [
+        {
+          "id": "aitem_0301m6senc0bfrtvq4grjqfwg9b9",
+          "name": "explicit_confirmation_before_saving",
+          "type": "prompt",
+          "conversation_goal_prompt": "Success if, before every record_decision tool call, the agent read the final date and hours back to the owner and the owner gave an explicit yes, and every saved decision matches what the owner said. Failure if any decision was saved without a clear spoken confirmation or contradicts the owner's words. Unknown if no decision was saved.",
+          "use_knowledge_base": false,
+          "scope": "conversation",
+          "llm": null,
+          "llm_billed": false,
+          "analysis_schedule": {
+            "session": {
+              "mode": "on_session_end",
+              "delay_secs": null
+            },
+            "messaging": {
+              "mode": "after_idle",
+              "idle_secs": 900
+            }
+          },
+          "create_agent_issue_on_failure": false,
+          "scoring_mode": "binary",
+          "max_score": 100,
+          "score_instructions": null
+        },
+        {
+          "id": "aitem_6501m6senwz3f42s79qmnf5fee2h",
+          "name": "ai_disclosure_and_scope",
+          "type": "prompt",
+          "conversation_goal_prompt": "Success if the agent said at the start that it is an automated AI assistant, only discussed the listed dates, never invented hours, dates or reasons, and never asked for passwords, card numbers or ID numbers. Failure otherwise.",
+          "use_knowledge_base": false,
+          "scope": "conversation",
+          "llm": null,
+          "llm_billed": false,
+          "analysis_schedule": {
+            "session": {
+              "mode": "on_session_end",
+              "delay_secs": null
+            },
+            "messaging": {
+              "mode": "after_idle",
+              "idle_secs": 900
+            }
+          },
+          "create_agent_issue_on_failure": false,
+          "scoring_mode": "binary",
+          "max_score": 100,
+          "score_instructions": null
+        },
+        {
+          "id": "aitem_6601m6txwr6pfqq9h3v0qp6e0jtf",
+          "name": "fonecta_p8_clear_outcome",
+          "type": "prompt",
+          "conversation_goal_prompt": "Success if every listed date has a clear owner-confirmed outcome (approved, edited, or current listing kept), or is explicitly left unresolved with a reason. Per-date confirmations and successful tool results are sufficient; no closing recap or repeated acknowledgement is required. Fail if the agent saves without confirmation, confuses dates or hours, claims a failed or pending publication is complete, or leaves the owner unclear about unresolved items. A brief closing is appropriate; summarize only when the owner asks or appears confused.",
+          "use_knowledge_base": false,
+          "scope": "conversation",
+          "llm": null,
+          "llm_billed": false,
+          "analysis_schedule": {
+            "session": {
+              "mode": "on_session_end",
+              "delay_secs": null
+            },
+            "messaging": {
+              "mode": "after_idle",
+              "idle_secs": 900
+            }
+          },
+          "create_agent_issue_on_failure": false,
+          "scoring_mode": "binary",
+          "max_score": 100,
+          "score_instructions": null
+        }
+      ]
+    },
+    "widget": {
+      "variant": "full",
+      "placement": "bottom-right",
+      "expandable": "never",
+      "avatar": {
+        "type": "orb",
+        "color_1": "#2792dc",
+        "color_2": "#9ce6e6"
+      },
+      "feedback_mode": "during",
+      "end_feedback": {
+        "type": "rating"
+      },
+      "bg_color": "#ffffff",
+      "text_color": "#000000",
+      "btn_color": "#000000",
+      "btn_text_color": "#ffffff",
+      "border_color": "#e1e1e1",
+      "focus_color": "#000000",
+      "border_radius": null,
+      "btn_radius": null,
+      "action_text": null,
+      "start_call_text": null,
+      "end_call_text": null,
+      "expand_text": null,
+      "listening_text": null,
+      "speaking_text": null,
+      "shareable_page_text": null,
+      "shareable_page_show_terms": true,
+      "terms_text": "#### Terms and conditions\n\nBy clicking \"Agree,\" and each time I interact with this AI agent, I consent to the recording, storage, and sharing of my communications with third-party service providers, and as described in the Privacy Policy.\nIf you do not wish to have your conversations recorded, please refrain from using this service.",
+      "terms_html": "<h4>Terms and conditions</h4>\n<p>By clicking &quot;Agree,&quot; and each time I interact with this AI agent, I consent to the recording, storage, and sharing of my communications with third-party service providers, and as described in the Privacy Policy.\nIf you do not wish to have your conversations recorded, please refrain from using this service.</p>\n",
+      "terms_key": null,
+      "show_avatar_when_collapsed": false,
+      "disable_banner": false,
+      "override_link": null,
+      "markdown_link_allowed_hosts": [],
+      "markdown_link_include_www": true,
+      "markdown_link_allow_http": true,
+      "mic_muting_enabled": true,
+      "transcript_enabled": true,
+      "text_input_enabled": true,
+      "conversation_mode_toggle_enabled": false,
+      "default_expanded": false,
+      "always_expanded": false,
+      "dismissible": false,
+      "show_agent_status": false,
+      "show_conversation_id": true,
+      "strip_audio_tags": true,
+      "syntax_highlight_theme": null,
+      "text_contents": {
+        "main_label": null,
+        "start_call": null,
+        "start_chat": null,
+        "new_call": null,
+        "end_call": null,
+        "mute_microphone": null,
+        "change_language": null,
+        "collapse": null,
+        "expand": null,
+        "copied": null,
+        "accept_terms": null,
+        "dismiss_terms": null,
+        "listening_status": null,
+        "speaking_status": null,
+        "connecting_status": null,
+        "chatting_status": null,
+        "queue_waiting_status": null,
+        "queue_waiting_status_short": null,
+        "input_label": null,
+        "input_placeholder": null,
+        "input_placeholder_text_only": null,
+        "input_placeholder_new_conversation": null,
+        "user_ended_conversation": null,
+        "agent_ended_conversation": null,
+        "conversation_id": null,
+        "error_occurred": null,
+        "queue_timed_out": null,
+        "copy_id": null,
+        "initiate_feedback": null,
+        "request_follow_up_feedback": null,
+        "thanks_for_feedback": null,
+        "thanks_for_feedback_details": null,
+        "follow_up_feedback_placeholder": null,
+        "submit": null,
+        "go_back": null,
+        "send_message": null,
+        "text_mode": null,
+        "voice_mode": null,
+        "switched_to_text_mode": null,
+        "switched_to_voice_mode": null,
+        "copy": null,
+        "download": null,
+        "wrap": null,
+        "agent_working": null,
+        "agent_done": null,
+        "agent_error": null,
+        "attach_file": null,
+        "remove_file": null,
+        "file_upload_error": null,
+        "file_type_unsupported": null,
+        "file_too_large": null,
+        "file_limit_reached": null,
+        "typing_indicator": null,
+        "rich_content_unavailable": null
+      },
+      "styles": {
+        "base": null,
+        "base_hover": null,
+        "base_active": null,
+        "base_border": null,
+        "base_subtle": null,
+        "base_primary": null,
+        "base_error": null,
+        "accent": null,
+        "accent_hover": null,
+        "accent_active": null,
+        "accent_border": null,
+        "accent_subtle": null,
+        "accent_primary": null,
+        "overlay_padding": null,
+        "button_radius": null,
+        "input_radius": null,
+        "bubble_radius": null,
+        "sheet_radius": null,
+        "compact_sheet_radius": null,
+        "dropdown_sheet_radius": null
+      },
+      "show_resize_button": true,
+      "end_confirmation_enabled": false,
+      "mobile_fullscreen": true,
+      "transcript_speech_sync_enabled": true,
+      "language_selector": false,
+      "supports_text_only": true,
+      "custom_avatar_path": null,
+      "language_presets": {},
+      "first_message_quick_replies": []
+    },
+    "data_collection": {
+      "aitem_7301m6ser49fe1q8fanef4bt18yz": {
+        "type": "string",
+        "description": "Overall result of the call. ALL_DECIDED if every suggested date got a decision; PARTIAL if some dates stayed open; CALL_LATER if the owner asked to be called another time; WRONG_PERSON if the person could not decide; VOICEMAIL if a recording answered; NO_MORE_CALLS if the owner asked not to be called; CLOSED_FOR_GOOD if the owner said the business has closed; OTHER otherwise.",
+        "enum": null,
+        "is_system_provided": false,
+        "dynamic_variable": "",
+        "allowed_values": null,
+        "allowed_values_dynamic_variable": "",
+        "constant_value": "",
+        "is_omitted": false,
+        "non_sensitive_value": null,
+        "name": "call_outcome",
+        "llm": null,
+        "llm_billed": false,
+        "analysis_schedule": {
+          "session": {
+            "mode": "on_session_end",
+            "delay_secs": null
+          },
+          "messaging": {
+            "mode": "after_idle",
+            "idle_secs": 900
+          }
+        }
+      },
+      "aitem_9301m6serpc5ercb84v2hhbnwm09": {
+        "type": "string",
+        "description": "One line per suggested date the owner decided, in the form 'YYYY-MM-DD: APPROVED HH:MM-HH:MM', 'YYYY-MM-DD: EDITED HH:MM-HH:MM', 'YYYY-MM-DD: KEPT AS IS' or 'YYYY-MM-DD: OPEN'. Use 'closed' instead of hours for closed days. Only include what the owner explicitly confirmed. Empty if nothing was decided.",
+        "enum": null,
+        "is_system_provided": false,
+        "dynamic_variable": "",
+        "allowed_values": null,
+        "allowed_values_dynamic_variable": "",
+        "constant_value": "",
+        "is_omitted": false,
+        "non_sensitive_value": null,
+        "name": "decisions_summary",
+        "llm": null,
+        "llm_billed": false,
+        "analysis_schedule": {
+          "session": {
+            "mode": "on_session_end",
+            "delay_secs": null
+          },
+          "messaging": {
+            "mode": "after_idle",
+            "idle_secs": 900
+          }
+        }
+      },
+      "aitem_0301m6ses34gfhb96n08btyc3chn": {
+        "type": "string",
+        "description": "Anything the owner asked for that needs a person at Fonecta: other changes (name, phone, address, prices), complaints, a callback time, or a statement that the business has closed for good. One short sentence. Empty if nothing.",
+        "enum": null,
+        "is_system_provided": false,
+        "dynamic_variable": "",
+        "allowed_values": null,
+        "allowed_values_dynamic_variable": "",
+        "constant_value": "",
+        "is_omitted": false,
+        "non_sensitive_value": null,
+        "name": "follow_up_request",
+        "llm": null,
+        "llm_billed": false,
+        "analysis_schedule": {
+          "session": {
+            "mode": "on_session_end",
+            "delay_secs": null
+          },
+          "messaging": {
+            "mode": "after_idle",
+            "idle_secs": 900
+          }
+        }
+      }
+    },
+    "data_collection_scopes": {
+      "aitem_7301m6ser49fe1q8fanef4bt18yz": "conversation",
+      "aitem_9301m6serpc5ercb84v2hhbnwm09": "conversation",
+      "aitem_0301m6ses34gfhb96n08btyc3chn": "conversation"
+    },
+    "analysis_items": {
+      "evaluation_criteria": [
+        {
+          "source": "user",
+          "analysis_item_id": "aitem_0301m6senc0bfrtvq4grjqfwg9b9",
+          "version_id": "latest",
+          "additional_version_ids": [],
+          "scope": "conversation",
+          "weight": null,
+          "run_conditions": null
+        },
+        {
+          "source": "user",
+          "analysis_item_id": "aitem_6501m6senwz3f42s79qmnf5fee2h",
+          "version_id": "latest",
+          "additional_version_ids": [],
+          "scope": "conversation",
+          "weight": null,
+          "run_conditions": null
+        },
+        {
+          "source": "user",
+          "analysis_item_id": "aitem_6601m6txwr6pfqq9h3v0qp6e0jtf",
+          "version_id": "latest",
+          "additional_version_ids": [],
+          "scope": "conversation",
+          "weight": null,
+          "run_conditions": null
+        }
+      ],
+      "data_collection": [
+        {
+          "source": "user",
+          "analysis_item_id": "aitem_7301m6ser49fe1q8fanef4bt18yz",
+          "version_id": "latest",
+          "scope": "conversation",
+          "run_conditions": null
+        },
+        {
+          "source": "user",
+          "analysis_item_id": "aitem_9301m6serpc5ercb84v2hhbnwm09",
+          "version_id": "latest",
+          "scope": "conversation",
+          "run_conditions": null
+        },
+        {
+          "source": "user",
+          "analysis_item_id": "aitem_0301m6ses34gfhb96n08btyc3chn",
+          "version_id": "latest",
+          "scope": "conversation",
+          "run_conditions": null
+        }
+      ]
+    },
+    "overrides": {
+      "conversation_config_override": {
+        "asr": {
+          "keywords": false
+        },
+        "turn": {
+          "soft_timeout_config": {
+            "message": false,
+            "additional_soft_timeout_messages": false
+          },
+          "noisy_environment_message": false
+        },
+        "tts": {
+          "model_id": false,
+          "voice_id": false,
+          "supported_voices": false,
+          "stability": false,
+          "speed": false,
+          "similarity_boost": false,
+          "clone_strength": false,
+          "pronunciation_dictionary_locators": false
+        },
+        "conversation": {
+          "text_only": true,
+          "max_duration_seconds": false
+        },
+        "agent": {
+          "first_message": false,
+          "language": true,
+          "max_conversation_duration_message": false,
+          "silence_end_call_message": false,
+          "prompt": {
+            "prompt": false,
+            "llm": false,
+            "reasoning_effort": false,
+            "tool_ids": false,
+            "tool_ids_strict": false,
+            "native_mcp_server_ids": false,
+            "knowledge_base": false
+          }
+        }
+      },
+      "custom_llm_extra_body": false,
+      "enable_conversation_initiation_client_data_from_webhook": false,
+      "enable_starting_workflow_node_id_from_client": false,
+      "enable_procedure_ids_from_client": false
+    },
+    "workspace_overrides": {
+      "conversation_initiation_client_data_webhook": null,
+      "webhooks": {
+        "post_call_webhook_id": null,
+        "events": [
+          "transcript"
+        ],
+        "transcript_format": "json",
+        "exclude_transcript": false,
+        "send_audio": false
+      },
+      "cloud_storage_export": {
+        "destination_id": null,
+        "events": [
+          "transcript"
+        ],
+        "transcript_format": "json"
+      }
+    },
+    "testing": {
+      "attached_tests": [
+        {
+          "test_id": "test_5301m6txztg4f09akx95b70tsc8r",
+          "workflow_node_id": null
+        }
+      ],
+      "referenced_tests_ids": [
+        "test_5301m6txztg4f09akx95b70tsc8r"
+      ]
+    },
+    "archived": false,
+    "guardrails": {
+      "version": "1",
+      "focus": {
+        "is_enabled": false
+      },
+      "prompt_injection": {
+        "is_enabled": false
+      },
+      "synthetic_voice": {
+        "is_enabled": false,
+        "trigger_action": {
+          "type": "end_call"
+        }
+      },
+      "content": {
+        "execution_mode": "streaming",
+        "config": {
+          "sexual": {
+            "is_enabled": false,
+            "threshold": "medium"
+          },
+          "violence": {
+            "is_enabled": false,
+            "threshold": "medium"
+          },
+          "harassment": {
+            "is_enabled": false,
+            "threshold": "medium"
+          },
+          "self_harm": {
+            "is_enabled": false,
+            "threshold": "medium"
+          },
+          "profanity": {
+            "is_enabled": false,
+            "threshold": "medium"
+          },
+          "religion_or_politics": {
+            "is_enabled": false,
+            "threshold": "medium"
+          },
+          "medical_and_legal_information": {
+            "is_enabled": false,
+            "threshold": "medium"
+          }
+        },
+        "trigger_action": {
+          "type": "end_call"
+        }
+      },
+      "moderation": null,
+      "custom": {
+        "config": {
+          "configs": []
+        }
+      }
+    },
+    "summary_language": null,
+    "summary_schedule": null,
+    "auto_translate_transcript_to_app_language": null,
+    "auth": {
+      "enable_auth": false,
+      "allowlist": [],
+      "require_origin_header": false,
+      "shareable_token": null
+    },
+    "call_limits": {
+      "agent_concurrency_limit": -1,
+      "daily_limit": 100000,
+      "bursting_enabled": true
+    },
+    "queueing_config": {
+      "enabled": true,
+      "wait_timeout_seconds": 180,
+      "hold_audio": null
+    },
+    "ban": null,
+    "smb_metadata": null,
+    "privacy": {
+      "record_voice": true,
+      "retention_days": 30,
+      "delete_transcript_and_pii": false,
+      "delete_audio": false,
+      "apply_to_existing_conversations": false,
+      "zero_retention_mode": false,
+      "encrypt_conversations": false,
+      "nested_history_redaction": false,
+      "conversation_history_redaction": {
+        "enabled": false,
+        "entities": [],
+        "excluded_data_collection_ids": []
+      },
+      "user_memory": {
+        "enabled": false,
+        "scale": "balanced",
+        "identity_policy": {
+          "rules": [
+            {
+              "verification_method": "workspace_asserted"
+            }
+          ]
+        }
+      }
+    },
+    "trust_context": "unknown",
+    "analysis_llm": "gemini-2.5-flash",
+    "analysis_bedrock_llm": null,
+    "analysis_llm_billed": false,
+    "topic_discovery": {
+      "enabled": true
+    },
+    "sentiment_analysis": {
+      "enabled": true
+    },
+    "simulation_library": {
+      "enabled": false,
+      "test_ids": []
+    },
+    "alerting": null,
+    "overview_dashboard_template_id": null,
+    "safety": {
+      "is_blocked_ivc": false,
+      "is_blocked_non_ivc": false,
+      "ignore_safety_evaluation": false
+    }
+  },
+  "workflow": {
+    "edges": {},
+    "nodes": {
+      "start_node": {
+        "type": "start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "edge_order": [],
+        "parent_subgraph_id": null
+      }
+    },
+    "subgraphs": {},
+    "prevent_subagent_loops": true
+  },
+  "tags": [],
+  "procedures": {},
+  "trust_context": "unknown",
+  "default_hold_audio_url": "https://eleven-public-cdn-common.elevenlabs.io/convai/ambient-audio-assets/elevator1.mp3"
+}

@@ -1,0 +1,156 @@
+{
+  "evaluation": {
+    "criteria": [
+      {
+        "id": "aitem_0301m6senc0bfrtvq4grjqfwg9b9",
+        "name": "explicit_confirmation_before_saving",
+        "type": "prompt",
+        "conversation_goal_prompt": "Success if, before every record_decision tool call, the agent read the final date and hours back to the owner and the owner gave an explicit yes, and every saved decision matches what the owner said. Failure if any decision was saved without a clear spoken confirmation or contradicts the owner's words. Unknown if no decision was saved.",
+        "use_knowledge_base": false,
+        "scope": "conversation",
+        "llm": null,
+        "llm_billed": false,
+        "analysis_schedule": {
+          "session": {
+            "mode": "on_session_end",
+            "delay_secs": null
+          },
+          "messaging": {
+            "mode": "after_idle",
+            "idle_secs": 900
+          }
+        },
+        "create_agent_issue_on_failure": false,
+        "scoring_mode": "binary",
+        "max_score": 100,
+        "score_instructions": null
+      },
+      {
+        "id": "aitem_6501m6senwz3f42s79qmnf5fee2h",
+        "name": "ai_disclosure_and_scope",
+        "type": "prompt",
+        "conversation_goal_prompt": "Success if the agent said at the start that it is an automated AI assistant, only discussed the listed dates, never invented hours, dates or reasons, and never asked for passwords, card numbers or ID numbers. Failure otherwise.",
+        "use_knowledge_base": false,
+        "scope": "conversation",
+        "llm": null,
+        "llm_billed": false,
+        "analysis_schedule": {
+          "session": {
+            "mode": "on_session_end",
+            "delay_secs": null
+          },
+          "messaging": {
+            "mode": "after_idle",
+            "idle_secs": 900
+          }
+        },
+        "create_agent_issue_on_failure": false,
+        "scoring_mode": "binary",
+        "max_score": 100,
+        "score_instructions": null
+      },
+      {
+        "id": "aitem_6601m6txwr6pfqq9h3v0qp6e0jtf",
+        "name": "fonecta_p8_clear_outcome",
+        "type": "prompt",
+        "conversation_goal_prompt": "Success if every listed date has a clear owner-confirmed outcome (approved, edited, or current listing kept), or is explicitly left unresolved with a reason. Per-date confirmations and successful tool results are sufficient; no closing recap or repeated acknowledgement is required. Fail if the agent saves without confirmation, confuses dates or hours, claims a failed or pending publication is complete, or leaves the owner unclear about unresolved items. A brief closing is appropriate; summarize only when the owner asks or appears confused.",
+        "use_knowledge_base": false,
+        "scope": "conversation",
+        "llm": null,
+        "llm_billed": false,
+        "analysis_schedule": {
+          "session": {
+            "mode": "on_session_end",
+            "delay_secs": null
+          },
+          "messaging": {
+            "mode": "after_idle",
+            "idle_secs": 900
+          }
+        },
+        "create_agent_issue_on_failure": false,
+        "scoring_mode": "binary",
+        "max_score": 100,
+        "score_instructions": null
+      }
+    ]
+  },
+  "data_collection": {
+    "aitem_7301m6ser49fe1q8fanef4bt18yz": {
+      "type": "string",
+      "description": "Overall result of the call. ALL_DECIDED if every suggested date got a decision; PARTIAL if some dates stayed open; CALL_LATER if the owner asked to be called another time; WRONG_PERSON if the person could not decide; VOICEMAIL if a recording answered; NO_MORE_CALLS if the owner asked not to be called; CLOSED_FOR_GOOD if the owner said the business has closed; OTHER otherwise.",
+      "enum": null,
+      "is_system_provided": false,
+      "dynamic_variable": "",
+      "allowed_values": null,
+      "allowed_values_dynamic_variable": "",
+      "constant_value": "",
+      "is_omitted": false,
+      "non_sensitive_value": null,
+      "name": "call_outcome",
+      "llm": null,
+      "llm_billed": false,
+      "analysis_schedule": {
+        "session": {
+          "mode": "on_session_end",
+          "delay_secs": null
+        },
+        "messaging": {
+          "mode": "after_idle",
+          "idle_secs": 900
+        }
+      }
+    },
+    "aitem_9301m6serpc5ercb84v2hhbnwm09": {
+      "type": "string",
+      "description": "One line per suggested date the owner decided, in the form 'YYYY-MM-DD: APPROVED HH:MM-HH:MM', 'YYYY-MM-DD: EDITED HH:MM-HH:MM', 'YYYY-MM-DD: KEPT AS IS' or 'YYYY-MM-DD: OPEN'. Use 'closed' instead of hours for closed days. Only include what the owner explicitly confirmed. Empty if nothing was decided.",
+      "enum": null,
+      "is_system_provided": false,
+      "dynamic_variable": "",
+      "allowed_values": null,
+      "allowed_values_dynamic_variable": "",
+      "constant_value": "",
+      "is_omitted": false,
+      "non_sensitive_value": null,
+      "name": "decisions_summary",
+      "llm": null,
+      "llm_billed": false,
+      "analysis_schedule": {
+        "session": {
+          "mode": "on_session_end",
+          "delay_secs": null
+        },
+        "messaging": {
+          "mode": "after_idle",
+          "idle_secs": 900
+        }
+      }
+    },
+    "aitem_0301m6ses34gfhb96n08btyc3chn": {
+      "type": "string",
+      "description": "Anything the owner asked for that needs a person at Fonecta: other changes (name, phone, address, prices), complaints, a callback time, or a statement that the business has closed for good. One short sentence. Empty if nothing.",
+      "enum": null,
+      "is_system_provided": false,
+      "dynamic_variable": "",
+      "allowed_values": null,
+      "allowed_values_dynamic_variable": "",
+      "constant_value": "",
+      "is_omitted": false,
+      "non_sensitive_value": null,
+      "name": "follow_up_request",
+      "llm": null,
+      "llm_billed": false,
+      "analysis_schedule": {
+        "session": {
+          "mode": "on_session_end",
+          "delay_secs": null
+        },
+        "messaging": {
+          "mode": "after_idle",
+          "idle_secs": 900
+        }
+      }
+    }
+  },
+  "analysis_llm": "gemini-2.5-flash"
+}
