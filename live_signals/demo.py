@@ -70,7 +70,7 @@ def prepare(*, sandbox=False, refresh_sources=True, bundle=DEFAULT_BUNDLE, limit
                           'fresh_weather_city_days': len(weather), 'fresh_weather_cities': len({r['city'] for r in weather}),
                           'requested_weather_cities': context.manifest['weather_cities_requested'],
                           'manifest': str(Path(bundle).resolve()/'manifest.json')},
-              'note': 'Preparation performs no listing writes. Owner decisions use owner-page -> Step5 -> Yext.'}
+              'note': 'Preparation performs no listing writes. Owner decisions use app -> Step5 -> Yext.'}
     write_json(output.with_name('demo-readiness.json'), report)
     return report
 
@@ -100,7 +100,7 @@ def main():
     env['CONNECT_APPLY_MODE'] = 'sandbox' if args.sandbox else 'demo'
     if not args.sandbox:
         env['YEXT_SANDBOX_MIRROR'] = 'disabled'
-    return subprocess.call([sys.executable, str(ROOT/'owner-page/app.py')], cwd=ROOT, env=env)
+    return subprocess.call([sys.executable, str(ROOT/'app/app.py')], cwd=ROOT, env=env)
 
 
 if __name__ == '__main__':

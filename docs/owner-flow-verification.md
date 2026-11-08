@@ -21,7 +21,7 @@ entire hours object back from Yext after each step. It used no Yext network doub
 The original snapshot, individual Apply/Undo records, and machine-readable report
 are retained locally in the ignored rehearsal runtime. Secrets are not included
 in this document or in the repository. The repeatable entry point is
-`python owner-page/rehearse_sandbox.py --run`; without `--run` it prints help and
+`python app/rehearse_sandbox.py --run`; without `--run` it prints help and
 does not start the backend or change hours. Do not run concurrent owner mutations
 against the same sandbox entity during a rehearsal.
 
@@ -43,7 +43,7 @@ live AI inference or delivery to a phone.
 - **Real WhatsApp delivery:** provide the Twilio sender/template configuration,
   opted-in recipient registry and public webhook origin. No real message was sent.
 
-Run `python owner-page/app.py --check-services` after configuring OpenShift.
+Run `python app/app.py --check-services` after configuring OpenShift.
 It makes a real synthetic parsing request and verifies sandbox read access,
 without changing hours or sending a message. A successful live inference check
 is required before claiming the natural-language path was live-tested.

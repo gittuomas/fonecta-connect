@@ -13,7 +13,7 @@ The challenge asks us to **replace at least one dataset file with a live source 
 | `providers.py`, `datasets.py` | Fetch Nordic events and forecasts; preserve source timestamps, missing values, attribution and checksums. |
 | `context.LiveContext` | Validate the replacement files; exclude stale/cancelled events and historical look-ahead. |
 | `checks.py` | Select `CHECK_HOURS` questions, with `proposed_hours: null`. Rank eligible businesses using their observed search activity when available. |
-| `owner.py`, `owner-page/app.py`, `owner-page/proactive.py` | Add event checks to the existing channel screens and feed live forecasts into the ski-rental check. Current listed hours are a confirmation choice. Owner preferences apply. |
+| `owner.py`, `app/app.py`, `app/proactive.py` | Add event checks to the existing channel screens and feed live forecasts into the ski-rental check. Current listed hours are a confirmation choice. Owner preferences apply. |
 | `step5_apply` | Apply only owner-confirmed/edited hours; verify, audit, confirm and undo through the existing path. |
 | Selected C13 engine | Unchanged benchmark predictor. Live checks neither overwrite its decisions nor become scored benchmark rows. |
 
@@ -28,12 +28,12 @@ python -m pip install -r live_signals/requirements.txt
 # Optional: rank by observed business search activity; otherwise use proximity.
 python -m pip install pyarrow
 # Copy .env.example to ignored .env and fill in keys first.
-python -m live_signals.demo --sandbox --runtime-dir owner-page/.runtime/rehearsal-01
+python -m live_signals.demo --sandbox --runtime-dir app/.runtime/rehearsal-01
 ```
 
 Open `http://localhost:8000`. Selected live-check businesses appear in the existing panel with source links and per-message sandbox status. Events use the existing WhatsApp, SMS, email, push and web screens; weather/season use the WhatsApp/web flow. The ordinary holiday messages are unchanged. The demo does not implement a delivery scheduler for live checks; contact-window delivery remains a production integration task.
 
-Omit `--sandbox` to force local-only writes. `--prepare-only` refreshes/selects and performs read-only Yext preflight; `--use-existing` keeps the current bundle but still enforces freshness. `--env-file <path>` loads credentials from an ignored file in another checkout. The separate `refresh` and `checks` commands remain available; set `CONNECT_LIVE_CHECKS` to their checks export when launching `owner-page/app.py` manually.
+Omit `--sandbox` to force local-only writes. `--prepare-only` refreshes/selects and performs read-only Yext preflight; `--use-existing` keeps the current bundle but still enforces freshness. `--env-file <path>` loads credentials from an ignored file in another checkout. The separate `refresh` and `checks` commands remain available; set `CONNECT_LIVE_CHECKS` to their checks export when launching `app/app.py` manually.
 
 `refresh` writes the two replacement files and `manifest.json` into the ignored `live_signals/.runtime/context/`. Default window: the next seven days; all 28 challenge cities are requested for weather. `--days` allows 1–10, `--max-pages` 1–9, and `--output` chooses a separate directory. Protected challenge materials and recorded evidence cannot be overwritten, including through `--output`.
 
@@ -48,7 +48,7 @@ python -m live_signals checks --bundle $bundle --as-of $cutoff --output live_sig
 $env:CONNECT_LIVE_CHECKS = (Resolve-Path live_signals/.runtime/replay.json).Path
 # Disable sandbox mirroring for an explicitly backdated replay.
 $env:YEXT_SANDBOX_MIRROR = 'disabled'
-python owner-page/app.py
+python app/app.py
 ```
 
 The operator panel labels **recorded_replay**; it is not current live evidence. This recording excludes Ticketmaster content, so it may select fewer countries than a fresh run with a key. Synthetic challenge businesses still describe the 6 November snapshot. Neither mode is a production hours predictor.
@@ -106,7 +106,7 @@ Attendance was unknown for every event in the audit. A missing source never mean
 
 ```sh
 python -m unittest live_signals.test_live_signals live_signals.test_checks live_signals.test_demo -v
-python -m unittest discover -s owner-page -p "test_*.py" -v
+python -m unittest discover -s app -p "test_*.py" -v
 python -m unittest discover -s step5_apply/tests -t .
 ```
 

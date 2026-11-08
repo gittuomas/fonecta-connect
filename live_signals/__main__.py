@@ -1,4 +1,4 @@
-"""Data ingestion and feature inspection; the owner experience remains in owner-page."""
+"""Data ingestion and feature inspection; the owner experience remains in app."""
 from __future__ import annotations
 
 import argparse

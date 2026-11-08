@@ -15,7 +15,7 @@ from zoneinfo import ZoneInfo
 from .providers import ATTRIBUTIONS, JsonCache, ZONES, fetch_events, utcnow
 
 PACKAGE = Path(__file__).resolve().parent
-DATA = PACKAGE.parent / 'MATERIALS FROM SINCE AI (MAIN CHALLENGE)' / 'data'
+DATA = PACKAGE.parent / 'resources' / 'data'
 DEFAULT_BUNDLE = PACKAGE / '.runtime' / 'context'
 WEATHER_FIELDS = ['city', 'country', 'date', 'tmean_c', 'tmin_c', 'tmax_c', 'precip_mm', 'snow_depth_cm', 'is_forecast', 'snowfall_cm']
 

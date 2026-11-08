@@ -9,7 +9,7 @@
 *.py[cod]
 .pytest_cache/
 .DS_Store
-Solution/voice/data/
-Solution/engine/output/cache/
-Solution/engine/output/verification/
+voice/data/
+engine/output/cache/
+engine/output/verification/
 *.log

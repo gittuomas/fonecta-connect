@@ -2,7 +2,7 @@
 
 What the owner sees on their phone. The screenshots are from the browser demonstration; exact message text follows below.
 
-## 1. Opening hours (works in the demo)
+## Opening-hours conversation
 
 | Proposal | Approval |
 |---|---|
@@ -18,29 +18,6 @@ What the owner sees on their phone. The screenshots are from the browser demonst
 - **Approval:** the confirmation and the "handle it next year?" question arrive in the same chat, right after the yes.
 - **Edit:** the owner types "24 Dec 10-14" and reviews the draft. **Save these hours / CONFIRM** saves only that day; **Cancel** saves nothing. The other two days stay as they were.
 - **Decline:** after a no, Connect asks once whether the owner wants this kind of suggestion in future, so it knows if they declined just this one or the whole kind.
-
-## 2. Other ideas (examples, not working features yet)
-
-The same loop beyond opening hours: Connect suggests, the owner approves in the chat. These screens are examples of where it could go next.
-
-### Post suggestions
-
-| Monthly post | Event post | Occasion post |
-|---|---|---|
-| <img src="images/customer-messages/post-monthly.jpg" alt="Monthly post preview with Publish now, Edit text and Skip this one" width="260"> | <img src="images/customer-messages/post-event.jpg" alt="Event post about an ice hockey game 50 m away, approved and published" width="260"> | <img src="images/customer-messages/post-christmas-menu.jpg" alt="Christmas menu question, owner's details and the post preview" width="260"> |
-
-- **Monthly post:** Fonecta's existing monthly post as a WhatsApp preview instead of an email that needs a login; it goes live after 7 days unless the owner skips it.
-- **Event post:** only for events that fit the business; nothing is posted without a yes, and *DELETE* takes it down.
-- **Occasion post:** before Christmas, Mother's Day or another occasion, Connect asks what the business has planned (here: a Christmas menu), and the owner's own answer becomes the post, so nothing is invented.
-
-### From the owner's own Instagram
-
-| Holiday hours from Instagram | Campaign post from Instagram |
-|---|---|
-| <img src="images/customer-messages/instagram-hours.jpg" alt="Instagram hours differ from Google; owner approves the update" width="300"> | <img src="images/customer-messages/instagram-campaign.jpg" alt="Black Friday offer from Instagram turned into a short post" width="300"> |
-
-- **Holiday hours:** "You posted these Christmas hours on Instagram, but Google shows something else. Shall we update Google too?" One tap updates Google and 8 other sites.
-- **Campaign post:** a Black Friday offer from Instagram becomes a short post written from the facts only (discount, dates), never a copy of the owner's post.
 
 ## Exact customer message text
 
@@ -149,4 +126,4 @@ OK, we won't change anything. Your existing hours stay unchanged.
 If something changes, just reply here.
 ```
 
-Real WhatsApp uses the approved [template](../owner-page/whatsapp-template.json) with proposal references. Its confirmations report verified Yext sandbox writes; live publisher propagation has not been verified.
+Real WhatsApp uses the approved [template](../app/whatsapp-template.json) with proposal references. Its confirmations report verified Yext sandbox writes; live publisher propagation has not been verified.

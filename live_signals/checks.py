@@ -144,7 +144,7 @@ def build_checks(bundle, as_of=None, limit=3, with_analytics=True):
     with (DATA/'customer_contacts.csv').open(encoding='utf-8', newline='') as f:
         contacts = {r['entity_id']: r for r in csv.DictReader(f)}
     # Block an event check whenever the chosen engine already has an action for that business/date.
-    source = DATA.parent.parent/'Solution/engine/output/predictions_2026.csv'
+    source = DATA.parent.parent/'engine/output/predictions_2026.csv'
     if not source.exists(): raise ValueError('Generate the C13 export before selecting live checks')
     with source.open(encoding='utf-8', newline='') as f:
         decisions = {(r['entity_id'], r['date']): r for r in csv.DictReader(f) if r['action'] != 'NO_ACTION'}

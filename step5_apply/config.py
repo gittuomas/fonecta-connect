@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-MATERIALS = REPO_ROOT / "MATERIALS FROM SINCE AI (MAIN CHALLENGE)"
+MATERIALS = REPO_ROOT / "resources"
 DATA = MATERIALS / "data"
 PACKAGE_DIR = Path(__file__).resolve().parent
 RUNTIME = PACKAGE_DIR / ".runtime"        # audit log, standing permissions, mock state (gitignored)

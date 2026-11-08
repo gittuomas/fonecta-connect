@@ -48,17 +48,17 @@ Twilio or ElevenLabs availability. The eight sandbox checks used real Yext.
    the real FI-D0001 rehearsal, or `demo` for the full synthetic roster.
 2. Supply OpenShift URL/token/model for natural-language replies and Yext
    credentials plus the unique FI-D0001 mapping for real writes.
-3. Run `python owner-page/app.py --check-services`, then `python owner-page/app.py`.
+3. Run `python app/app.py --check-services`, then `python app/app.py`.
 4. Open `/w/FI-D0001/christmas` in sandbox mode. If the proposed hours are already
    saved, “No update needed” is intentional. Reset never erases those hours.
 5. To repeat the reversible live test, run
-   `python owner-page/rehearse_sandbox.py --run`. This temporarily writes to Yext,
+   `python app/rehearse_sandbox.py --run`. This temporarily writes to Yext,
    verifies each step and restores the original hours. Avoid concurrent edits to
    that sandbox entity during the rehearsal.
 
 FI-00762 is a separate live-event example. It needs another sandbox entity or a
 deliberate replacement of the FI-D0001 mapping; mapping both businesses to one
 entity is rejected. See [service configuration](configuration.md),
-[real WhatsApp setup](../owner-page/MESSAGING.md),
-[voice setup](../Solution/voice/README.md), and
+[real WhatsApp setup](../app/MESSAGING.md),
+[voice setup](../voice/README.md), and
 [live-source setup](../live_signals/README.md).

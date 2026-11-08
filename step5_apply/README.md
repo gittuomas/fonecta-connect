@@ -27,6 +27,6 @@ s5.close()
 
 `CONNECT_APPLY_MODE=auto` prefers a mapped real sandbox after a read-only startup check and otherwise selects the local simulation. `sandbox` requires valid real configuration; `demo` explicitly selects the challenge simulator with optional sandbox mirroring. `CONNECT_RUNTIME_DIR` selects a separate local runtime; `CONNECT_ENV_FILE` selects a separate credentials file.
 
-Real WhatsApp uses `Step5.from_env(mode="sandbox")`: the mapped sandbox entity is the primary destination, mappings must be one-to-one, and configuration failures never substitute a simulated write. See [real messaging setup](../owner-page/MESSAGING.md).
+Real WhatsApp uses `Step5.from_env(mode="sandbox")`: the mapped sandbox entity is the primary destination, mappings must be one-to-one, and configuration failures never substitute a simulated write. See [real messaging setup](../app/MESSAGING.md).
 
 Audit logs, permissions and local simulator state are ignored by Git. Keep them across restarts when undo or recovery is needed. Deleting local state cannot undo a real write.

@@ -4,7 +4,7 @@
 
 **Keep businesses up to date, even when owners don’t answer messages.** Our assistant identifies opening hours that need attention and contacts the owner with a ready-made suggestion. When an important request goes unanswered, an AI voice agent follows up by phone, confirms the right hours and saves the approved update to Yext. Owners keep working; Connect takes care of the follow-up, because a busy entrepreneur doesn’t have time to answer texts and emails, but still picks up the phone.
 
-**Video:** [Watch the demo](https://youtu.be/jwwFUcyqsgw) · **Pitch deck:** [Fonecta Connect](docs/pitch-deck.pptx) · **Prediction file:** [predictions_2026.csv](predictions_2026.csv)
+**Video:** [Watch the demo](https://youtu.be/jwwFUcyqsgw) · **Pitch deck:** [Fonecta Connect](docs/pitch-deck.pptx) · **Customer messages:** [Message pack](docs/customer-messages.md) · **Prediction file:** [predictions_2026.csv](predictions_2026.csv)
 
 ## Run it
 
@@ -15,27 +15,27 @@
 Check the actual inference and Yext paths from the repository root:
 
 ```sh
-python owner-page/app.py --check-services
+python app/app.py --check-services
 ```
 
 This sends one synthetic parsing request and reads Yext; it sends no WhatsApp message and writes no hours. A nonzero exit means one or both live services are unverified. Credentials are not bundled, and evaluators must supply them in their environment.
 
-**Current implementation and remaining simulations:** [runtime overview](docs/runtime-status.md). [Real WhatsApp setup](owner-page/MESSAGING.md) is separate from the browser preview.
+**Current implementation and remaining simulations:** [runtime overview](docs/runtime-status.md). [Real WhatsApp setup](app/MESSAGING.md) is separate from the browser preview.
 
 Use **Python 3.12+**, from the repository root:
 
 ```sh
 python -m pip install -r requirements.txt
-python owner-page/app.py
+python app/app.py
 ```
 
-Open the **[WhatsApp demo: Kahvila Kipinä](http://localhost:8000/w/FI-D0017/christmas)** (requires the demo to be running locally on your computer). On Windows, use `py -3.12 owner-page/app.py`. For this no-history walkthrough, select `CONNECT_APPLY_MODE=demo` in `.env`. The checked-in C13 exports are sufficient; no model training is required at startup. Keep the supplied challenge data and engine outputs in their repository locations.
+Open the **[WhatsApp demo: Kahvila Kipinä](http://localhost:8000/w/FI-D0017/christmas)** (requires the demo to be running locally on your computer). On Windows, use `py -3.12 app/app.py`. For this no-history walkthrough, select `CONNECT_APPLY_MODE=demo` in `.env`. The checked-in C13 exports are sufficient; no model training is required at startup. Keep the supplied challenge data and engine outputs in their repository locations.
 
 **The connected services require credentials.** Copy [.env.example](.env.example) to an ignored `.env` if one does not already exist, then configure the services you intend to use:
 
 | Capability | Required configuration | Without it |
 |---|---|---|
-| Real WhatsApp delivery | Twilio account/token, WhatsApp sender, approved template, opted-in recipient and public HTTPS webhooks. See [messaging setup](owner-page/MESSAGING.md). | The browser preview remains available; no external message is sent. |
+| Real WhatsApp delivery | Twilio account/token, WhatsApp sender, approved template, opted-in recipient and public HTTPS webhooks. See [messaging setup](app/MESSAGING.md). | The browser preview remains available; no external message is sent. |
 | Ticketmaster events | `TICKETMASTER_API_KEY` (Consumer Key). | Ticketmaster is skipped; public city feeds and weather remain available. |
 | **OpenShift AI free-text interpretation (required to evaluate conversational replies)** | `OPENSHIFT_AI_URL`, `OPENSHIFT_AI_TOKEN`, `OPENSHIFT_AI_MODEL`, and a running model deployment. | Exact-format parsing when both URL and token are absent; configured service failures save nothing. |
 | Yext sandbox writes | `YEXT_API_KEY`, `YEXT_BASE_URL`, `YEXT_SANDBOX_MIRROR` for the owner app; `YEXT_SANDBOX_ENTITY_ID` for voice. | The owner demo uses local simulator writes. |
@@ -52,7 +52,7 @@ python -m pip install -r live_signals/requirements.txt
 python -m live_signals.demo --sandbox
 ```
 
-Omit `--sandbox` for local-only writes. See [live-source setup](live_signals/README.md), [owner app setup](owner-page/README.md) and [Connect Voice setup](Solution/voice/README.md). Voice starts separately and also defaults to port 8000; run the demos sequentially or configure separate ports. To regenerate predictions, follow the [C13 engine instructions](Solution/engine/README.md).
+Omit `--sandbox` for local-only writes. See [live-source setup](live_signals/README.md), [owner app setup](app/README.md) and [Connect Voice setup](voice/README.md). Voice starts separately and also defaults to port 8000; run the demos sequentially or configure separate ports. To regenerate predictions, follow the [C13 engine instructions](engine/README.md).
 
 ## A two-minute walkthrough
 
@@ -64,6 +64,18 @@ Omit `--sandbox` for local-only writes. See [live-source setup](live_signals/REA
 Chat reset clears the conversation; already-saved suggestions are omitted. Use UNDO to restore hours before resetting.
 
 For the **real sandbox submission**, use `FI-D0001` (Kahvila Aurora), mapped one-to-one to the sandbox entity in `.env`. Set `CONNECT_APPLY_MODE=sandbox` and open `/w/FI-D0001/christmas`; missing/broken Yext setup then fails closed. `auto` prefers a read-verified sandbox but otherwise selects labelled local simulation. `demo` is the local preview. FI-D0017 above is a simulated new-customer example, not the selected real sandbox business. Sample Instagram captions do not replace the sandbox holiday proposal.
+
+## Project layout
+
+| Folder | Purpose |
+|---|---|
+| `app/` | Owner conversation and WhatsApp delivery. |
+| `engine/` | C13 prediction model, exports and reproducibility checks. |
+| `voice/` | ElevenLabs voice follow-up service. |
+| `step5_apply/` | Approved updates, verification, audit and undo. |
+| `live_signals/` | Event and weather integrations. |
+| `resources/` | Synthetic demo data, local simulator and evaluation inputs. |
+| `docs/` | Pitch deck, customer messages, setup and verified runtime status. |
 
 ## The five steps
 
@@ -87,7 +99,7 @@ For the **real sandbox submission**, use `FI-D0001` (Kahvila Aurora), mapped one
 
 ## Results
 
-**Utility score: 70.92**, the final C13 engine's three-seed mean on grouped 2026 cross-validation. [Evaluation report](Solution/engine/metrics.json).
+**Utility score: 70.92**, the final C13 engine's three-seed mean on grouped 2026 cross-validation. [Evaluation report](engine/metrics.json).
 
 ## What we tried that didn't work
 
@@ -222,13 +234,13 @@ The recorded 7 November audit retrieved **944 event occurrences** across Finland
 ## Verification and demo scope
 
 ```sh
-python -m pip install -r owner-page/requirements-messaging.txt
-python -m unittest discover -s owner-page -p "test_*.py"
+python -m pip install -r app/requirements-messaging.txt
+python -m unittest discover -s app -p "test_*.py"
 python -m unittest discover -s step5_apply/tests -t .
 python -m unittest live_signals.test_live_signals live_signals.test_checks live_signals.test_demo
 ```
 
-These checks cover exported decisions, approval/edit/decline, undo, conflicts, contact preferences and live-source selection. Voice has its own [test commands](Solution/voice/README.md#tests).
+These checks cover exported decisions, approval/edit/decline, undo, conflicts, contact preferences and live-source selection. Voice has its own [test commands](voice/README.md#tests).
 
 See the [runtime overview](docs/runtime-status.md) for the verification record, service setup and simulation boundaries.
 
@@ -247,6 +259,6 @@ See the [runtime overview](docs/runtime-status.md) for the verification record, 
 | Live weather and city feeds | Source-specific attribution and terms are listed in the [live-source documentation](live_signals/README.md#keys-attribution-and-terms); Ticketmaster content is retrieved into ignored runtime storage. |
 | Windows timezone support (`tzdata`) | Apache-2.0 package; IANA timezone data is public domain. |
 
-Preserve upstream notices. No GPL/AGPL components without Fonecta's written approval. See the [challenge licence](MATERIALS%20FROM%20SINCE%20AI%20%28MAIN%20CHALLENGE%29/LICENSE.md).
+Preserve upstream notices. No GPL/AGPL components without Fonecta's written approval. See the [challenge licence](resources/LICENSE.md).
 
 **Team:** Eppu Rantanen, Max Minkkinen, Laura Salminen and Tuomas Kärnä.

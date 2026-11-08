@@ -12,7 +12,7 @@ simulation. It reads exported predictions and uses the local Yext simulator when
 no real target is available. It does not contact OpenShift or ElevenLabs simply
 because the browser page loads. Regenerating the integrated C13 artifacts needs
 its pinned Python dependencies, but no inference-service API credential; see the
-[engine instructions](../Solution/engine/README.md).
+[engine instructions](../engine/README.md).
 
 ## Ticketmaster and live events/weather
 
@@ -43,19 +43,19 @@ inference service; the token is sent as a Bearer credential. This is an inferenc
 access token, not a requirement to provide a general OpenShift administrator key.
 
 Both URL and token must be present for successful AI inference. This checkout
-includes the backend adapter in `owner-page/hours_ai.py`; the browser and real
+includes the backend adapter in `app/hours_ai.py`; the browser and real
 WhatsApp worker share it. With neither setting configured, a clearly labelled
 preview accepts exact entries such as `24 Dec 10-14`. Partial configuration or an
 unavailable/invalid model response fails closed; it does not silently switch to
 rules. Every interpreted edit is shown for confirmation before saving. The
 OpenShift service must be deployed and reachable; adding a token does not deploy it.
 
-Run `python owner-page/app.py --check-services` to check the real inference path
+Run `python app/app.py --check-services` to check the real inference path
 with a synthetic natural-language reply and check the selected Yext destination.
 This does not send WhatsApp or write opening hours. It reports missing setup and
 returns a nonzero exit code unless AI inference and sandbox access are verified.
 
-Source: [hours_ai.py](../owner-page/hours_ai.py).
+Source: [hours_ai.py](../app/hours_ai.py).
 
 ## ElevenLabs voice
 
@@ -70,7 +70,7 @@ Source: [hours_ai.py](../owner-page/hours_ai.py).
 | Real Yext target | `YEXT_API_KEY`, `YEXT_BASE_URL`, `YEXT_SANDBOX_ENTITY_ID`. Synthetic dataset businesses use the voice service's separate local mock. |
 
 Install the voice requirements and follow the
-[voice startup instructions](../Solution/voice/README.md).
+[voice startup instructions](../voice/README.md).
 The supplied `start.sh` is a Bash launcher using `uv` and `ngrok`; use an appropriate
 Bash/WSL environment on Windows. It starts the local mock on 8787, voice on 8000
 and a public tunnel. The ngrok CLI must already be installed and able to create a
@@ -83,10 +83,10 @@ the existence of a local API key does not prove every transport works. No access
 agent means no real conversation. The demo also seeds an unanswered-text history
 to exercise escalation; it does not establish that an earlier real message was sent.
 
-Sources: [configuration](../Solution/voice/voice_service/config.py),
-[API credential checks](../Solution/voice/voice_service/elevenlabs_api.py),
-[session/webhook handlers](../Solution/voice/voice_service/app.py),
-[browser transport](../Solution/voice/voice_service/static/console.html).
+Sources: [configuration](../voice/voice_service/config.py),
+[API credential checks](../voice/voice_service/elevenlabs_api.py),
+[session/webhook handlers](../voice/voice_service/app.py),
+[browser transport](../voice/voice_service/static/console.html).
 
 ## WhatsApp transport and Yext
 
@@ -95,7 +95,7 @@ Actual WhatsApp sending uses `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`,
 `CONNECT_MESSAGING_CONTACTS`. It also requires an approved sender/template and an
 explicitly opted-in test recipient. Its approvals use `YEXT_API_KEY`,
 `YEXT_BASE_URL` and `YEXT_SANDBOX_MIRROR` for the direct sandbox destination.
-See [the complete messaging setup](../owner-page/MESSAGING.md).
+See [the complete messaging setup](../app/MESSAGING.md).
 
 `CONNECT_PUBLIC_URL` is the WhatsApp webhook origin; `PUBLIC_BASE_URL` belongs to
 the voice tools. The owner and voice apps both default to port 8000: run them
