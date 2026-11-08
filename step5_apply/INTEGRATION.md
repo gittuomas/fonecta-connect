@@ -20,9 +20,9 @@ s5 = Step5.from_env()          # same options: mock_url=..., use_sandbox=False, 
 s5.apply({...}); s5.undo(entity_id="FI-D0001"); s5.snapshot(...); s5.policy(...); s5.close()
 ```
 
-- **Sandbox:** if `.env` has `YEXT_API_KEY` and `YEXT_SANDBOX_MIRROR=FI-D0001:Cinnamon Swirl Café`, every change applied to `FI-D0001` is also written to our real Yext sandbox business.
+- **Sandbox:** destination selection is explicit; see the modes below. The default auto mode prefers a read-verified real sandbox primary.
 - **Saved state:** the audit log, standing permissions and the mock's state live in `step5_apply/.runtime/` (gitignored), so they survive restarts.
-- **Reset for a fresh demo:** delete `step5_apply/.runtime/`.
+- **Reset:** use UNDO before resetting a conversation. Preserve audits needed to restore real sandbox writes; deleting local state cannot restore Yext.
 
 ## When to call what
 
@@ -138,7 +138,7 @@ curl -s -X POST http://127.0.0.1:8790/reply -H "Content-Type: application/json" 
 
 `python -m live_signals.demo --sandbox` refreshes events and weather, read-verifies the configured sandbox and starts the existing owner app. See [the integration handoff](../live_signals/README.md). Preparation never applies hours. Only the existing owner decision handlers call Step 5. One-off event/weather/season checks set their own `day_key` and never set `remember_yearly`.
 
-The example mapping includes the holiday hero `FI-D0001` and live event case `FI-00762`, both to sandbox entity `Cinnamon Swirl Café`. Rehearse sequentially. Other businesses are local-only unless explicitly mapped. The operator panel displays `mirror.ok` separately from the local result; an `APPLIED` local result alone does not prove a sandbox update or Google publication.
+The submission maps `FI-D0001` to sandbox entity `Cinnamon Swirl Café`. Live event case `FI-00762` needs its own sandbox entity or a deliberate remapping. Strict sandbox mode only serves mapped businesses. A verified sandbox write does not establish public Google publication.
 
 Sandbox UNDO restores the sandbox's **own before values**, not the mock's before values. It leaves pre-existing matching entries alone and refuses restoration if the target date has since changed or the mapping changed. A failed sandbox restoration is shown to the operator and needs attention; successful local UNDO alone does not prove sandbox restoration. Preserve the audit until read-back confirms the target is restored.
 
@@ -152,7 +152,15 @@ Verified in Chrome on 7 November 2026, 17:13 EET: owner-edited 14 November hours
 sim = owner_response("FI-D0001", "2026-12-24", "closed")      # examples/yext_client.py
 item = {"date": "2026-12-24", "decision": sim["decision"], "final_hours": sim["final_hours"], "seen_before": None}
 ```
+## Destination selection
 
-## Real WhatsApp destination
+`CONNECT_APPLY_MODE=sandbox` requires the real sandbox as the primary destination;
+missing configuration fails closed. `auto` (default) uses the sandbox after a
+successful read-only startup check, otherwise selects labelled local simulation.
+`demo` explicitly uses the simulator, with an optional sandbox mirror. A failed
+write is never retried against a mock. API results expose `apply_target` and
+`publication_verified=false`; publisher timings are estimates.
 
-`Step5.from_env(mode="sandbox")` requires a Yext sandbox key and one-to-one `YEXT_SANDBOX_MIRROR` mappings. The primary destination is the mapped real sandbox entity; missing configuration fails without a simulator fallback. This mode is used by the real [WhatsApp transport](../owner-page/MESSAGING.md). The browser demo keeps its local simulator plus optional sandbox mirror.
+Use a one-to-one `YEXT_SANDBOX_MIRROR` mapping. The submission maps only FI-D0001
+to Cinnamon Swirl Café. See [runtime status](../docs/runtime-status.md) for the
+current service boundaries and verified rehearsal.

@@ -11,16 +11,15 @@ Open [Kahvila Kipinä](http://localhost:8000/w/FI-D0017/christmas) (requires the
 
 ## How it works
 
-C13 exports supply the proposals. The app groups them by holiday and records a snapshot before an owner decides. Step 5 checks conflicts, applies the decision, reads back the result and records an audit for undo. With configured Yext credentials and `YEXT_SANDBOX_MIRROR`, mapped businesses also write to the real sandbox; otherwise the browser demo uses the supplied local simulator.
+C13 exports supply the proposals. The app groups them by holiday and records a snapshot before an owner decides. Step 5 checks conflicts, applies the decision, reads back the result and records an audit for undo. `CONNECT_APPLY_MODE=auto` prefers a read-verified sandbox and otherwise selects labelled local simulation. Use `sandbox` to require real writes for the uniquely mapped FI-D0001 business, or `demo` for the full synthetic roster. Matching saved dates are omitted from new proposals. Typed edits produce a draft; **Save these hours / CONFIRM** writes it, and **Cancel** discards it.
 
 **OpenShift AI is required to evaluate conversational replies.** Copy [.env.example](../.env.example) to the repository-root `.env`, set `OPENSHIFT_AI_URL`, `OPENSHIFT_AI_MODEL` and `OPENSHIFT_AI_TOKEN`, and start the model deployment. The browser demo does not need a WhatsApp delivery key, but it does need this model connection for full natural-language interpretation.
 
 ```sh
-python -c "import sys; sys.path.insert(0, 'owner-page'); import hours_ai; print(hours_ai.status())"
-python owner-page/test_ai_replies.py
+python owner-page/app.py --check-services
 ```
 
-The health result should be `up`. `off` means missing URL/token; `down` means the endpoint is unavailable or credentials are invalid. Without the connection, buttons and exact edits such as `24 Dec 10-14` remain available through local rules. Conversational replies may need clarification.
+The check makes a synthetic inference request and reads Yext without changing hours or sending messages. A nonzero exit means one or both live services remain unverified. Leave both AI URL and token empty for labelled exact-format parsing. Partial configuration or service failure saves nothing and asks for clarification. Both browser and real WhatsApp use this parser.
 
 ## Channels and scope
 
@@ -39,3 +38,5 @@ python -m unittest discover -s step5_apply/tests -t .
 ```
 
 Offline tests cover proposals, approvals, edits, declines, undo, conflicts, preferences, live-source selection and authenticated WhatsApp transport behavior. The explicit AI-reply script above uses the configured model; actual WhatsApp delivery needs a credentialed recipient test.
+
+See the [runtime overview](../docs/runtime-status.md), [service configuration](../docs/configuration.md) and [recorded sandbox verification](../docs/owner-flow-verification.md).

@@ -101,11 +101,11 @@ class OwnerFlow(unittest.TestCase):
 
     def setUp(self):
         self.s5.mock.reset()
-        for name in ('SEEN','DECISIONS','DELIVERY','CHECK_SESSIONS','WA','WA_CHAT','WA_DONE','WA_AUTO','WA_MORE','REMIND','NOREPLY','EDIT_LEARNED','WELCOME_CHAT','READER'):
+        for name in ('SEEN','PROPOSALS','PENDING_HOURS','CHAT_TIMES','DECISIONS','DELIVERY','CHECK_SESSIONS','WA','WA_CHAT','WA_DONE','WA_AUTO','WA_MORE','REMIND','NOREPLY','EDIT_LEARNED','WELCOME_CHAT','READER'):
             getattr(self.app,name).clear()
         self.app.LEARN.reset()
         for fn in ('suggestion','bundles_for','opted_out','_value'):getattr(self.app,fn).cache_clear()
-        ai=patch.object(self.app.hours_ai,'read_reply',return_value=None);ai.start();self.addCleanup(ai.stop)
+        ai=patch.object(self.app.hours_ai,'configured',return_value=False);ai.start();self.addCleanup(ai.stop)
 
     def request(self,path,form=None):
         data=urllib.parse.urlencode(form).encode() if form is not None else None
@@ -165,6 +165,8 @@ class OwnerFlow(unittest.TestCase):
         path='/w/FI-D0017/christmas';self.request(path)
         self.request(path,{'a':'other'})
         self.request(path+'/reply',{'msg':'24 Dec 10-14'})
+        self.assertIsNone(self.s5.snapshot('FI-D0017',['2026-12-24'])['2026-12-24'])
+        self.request(path+'/reply',{'msg':'CONFIRM'})
         self.assertEqual(self.s5.snapshot('FI-D0017',['2026-12-24','2026-12-25']),
                          {'2026-12-24':'10:00-14:00','2026-12-25':None})
 
@@ -192,5 +194,148 @@ class OwnerFlow(unittest.TestCase):
             self.assertEqual(err.exception.code,404)
             self.assertFalse(any(s['day'].isoformat()==key[1] for _,_,items in self.app.bundles_for(key[0]) for s in items))
 
+
+
+    def test_demo_success_and_undo_keep_product_copy(self):
+        path = '/w/FI-D0017/christmas'
+        self.request(path)
+        html = self.request(path, {'a': 'yes'})
+        self.assertIn('Done', html)
+        self.assertIn('Publisher timings are estimates', html)
+        self.assertNotIn('Local simulator only', html)
+        self.assertNotIn('Public listings have not been', html)
+        self.assertIn('Demo preview', html)
+        undone = self.request(path + '/reply', {'msg': 'UNDO'})
+        self.assertIn('Put back', undone)
+        self.assertNotIn('Local simulator only', undone)
+
+    def test_missing_or_invalid_messaging_setup_keeps_demo_available(self):
+        with patch.object(self.app.messaging, 'configuration', return_value={'configured': False, 'missing': ['key']}):
+            service, cfg = self.app.initialize_messaging()
+        self.assertIsNone(service)
+        self.assertEqual(cfg['mode'], 'demo')
+        with patch.object(self.app.messaging, 'configuration', return_value={'configured': True, 'missing': []}), \
+             patch.object(self.app.messaging, 'from_env', side_effect=ValueError('invalid setup')):
+            service, cfg = self.app.initialize_messaging()
+        self.assertIsNone(service)
+        self.assertEqual(cfg['mode'], 'demo')
+        self.assertIn('demo ready', self.request('/'))
+
+    def test_reset_does_not_resend_already_saved_hours(self):
+        path = '/w/FI-D0017/christmas'
+        self.request(path)
+        self.request(path, {'a': 'yes'})
+        html = self.request(path + '/reset')
+        self.assertIn('No update needed', html)
+        self.assertNotIn('Yes, update', html)
+        self.assertEqual(self.s5.snapshot('FI-D0017', ['2026-12-24'])['2026-12-24'], 'closed')
+        self.assertNotIn('christmas', [b[0] for b in self.app.bundles_for('FI-D0017')])
+
+    def test_only_missing_days_proposed_and_matching_regular_hours_still_need_exception(self):
+        self.s5.apply({'entity_id': 'FI-D0017', 'suggestion_id': 'existing', 'actor': 'owner',
+                       'items': [{'date': '2026-12-24', 'hours': 'closed', 'decision': 'ACCEPTED', 'seen_before': None}]})
+        b = self.app.bundle('FI-D0017', 'christmas')
+        self.assertEqual([s['day'].day for s in b[2]], [25, 26])
+        payload = self.app.messaging_proposal('FI-D0017', 'christmas')
+        self.assertNotIn('2026-12-24', [s['date'] for s in payload['items']])
+
+    def test_proposal_preserved_and_intervening_write_not_overwritten(self):
+        path = '/w/FI-D0017/christmas'
+        original = self.request(path)
+        self.s5.apply({'entity_id': 'FI-D0017', 'suggestion_id': 'elsewhere', 'actor': 'owner',
+                       'items': [{'date': '2026-12-24', 'hours': '10:00-15:00', 'decision': 'ACCEPTED', 'seen_before': None}]})
+        self.assertEqual(original, self.request(path))
+        result = self.request(path, {'a': 'yes'})
+        self.assertIn("didn&#x27;t change it", result)
+        self.assertEqual(self.s5.snapshot('FI-D0017', ['2026-12-24'])['2026-12-24'], '10:00-15:00')
+
+    def test_unclear_reply_never_partly_applies_or_keeps_old_draft(self):
+        path = '/w/FI-D0017/christmas'
+        self.request(path, {'a': 'other'})
+        self.request(path + '/reply', {'msg': '24 Dec 10-14'})
+        for text in ('24 Dec 10-14; 25 Dec maybe', '24 Dec 10:99-14:00',
+                     '24 Dec not closed', '24 Dec 10-14; 24 Dec closed'):
+            html = self.request(path + '/reply', {'msg': text})
+            self.assertIn('Nothing has been saved', html)
+            self.assertNotIn(('w', 'FI-D0017', 'christmas'), self.app.PENDING_HOURS)
+        self.request(path + '/reply', {'msg': 'CONFIRM'})
+        self.assertIsNone(self.s5.snapshot('FI-D0017', ['2026-12-24'])['2026-12-24'])
+
+    def test_ai_reply_is_used_and_confirmed_before_apply(self):
+        path = '/w/FI-D0017/christmas'
+        self.request(path, {'a': 'other'})
+        with patch.object(self.app.hours_ai, 'configured', return_value=True), \
+             patch.object(self.app.hours_ai, 'read_reply', return_value=({date(2026,12,24): '12:00-18:00'}, [])) as ai:
+            self.request(path + '/reply', {'msg': 'On Christmas Eve we open at noon and close at 6pm'})
+        ai.assert_called_once()
+        self.assertIsNone(self.s5.snapshot('FI-D0017', ['2026-12-24'])['2026-12-24'])
+        self.request(path + '/reply', {'msg': 'CONFIRM'})
+        self.assertEqual(self.s5.snapshot('FI-D0017', ['2026-12-24'])['2026-12-24'], '12:00-18:00')
+
+    def test_ai_failure_never_falls_back_and_cancel_does_not_write(self):
+        path = '/w/FI-D0017/christmas'
+        self.request(path, {'a': 'other'})
+        with patch.object(self.app.hours_ai, 'configured', return_value=True), \
+             patch.object(self.app.hours_ai, 'read_reply', return_value=({}, ['unavailable'])):
+            self.request(path + '/reply', {'msg': '24 Dec 10-14'})
+        self.assertNotIn(('w', 'FI-D0017', 'christmas'), self.app.PENDING_HOURS)
+        self.request(path + '/reply', {'msg': '24 Dec 10-14'})
+        self.request(path + '/reply', {'msg': 'CANCEL'})
+        self.request(path + '/reply', {'msg': 'CONFIRM'})
+        self.assertIsNone(self.s5.snapshot('FI-D0017', ['2026-12-24'])['2026-12-24'])
+
+    def test_direct_reply_and_plain_yes_work_without_quick_buttons(self):
+        path = '/w/FI-D0017/christmas'
+        html = self.request(path)
+        self.assertIn('aria-label=\'Reply\'', html)
+        self.assertIn('AI parsing not configured', html)
+        self.request(path + '/reply', {'msg': '24 Dec 10-14'})
+        self.assertIsNone(self.s5.snapshot('FI-D0017', ['2026-12-24'])['2026-12-24'])
+        self.request(path + '/reply', {'msg': 'yes'})
+        self.assertEqual(self.s5.snapshot('FI-D0017', ['2026-12-24'])['2026-12-24'], '10:00-14:00')
+
+    def test_plain_yes_accepts_initial_suggestion(self):
+        path = '/w/FI-D0017/christmas'
+        self.request(path)
+        self.request(path + '/reply', {'msg': 'yes'})
+        self.assertEqual(self.s5.snapshot('FI-D0017', ['2026-12-24'])['2026-12-24'], 'closed')
+
+    def test_live_read_failure_never_creates_a_proposal(self):
+        with patch.object(self.s5, 'snapshot', side_effect=self.app.YextError(503, 'unavailable')):
+            with self.assertRaises(urllib.error.HTTPError) as err:
+                self.request('/w/FI-D0017/christmas')
+        self.assertEqual(err.exception.code, 503)
+        self.assertNotIn(('FI-D0017', 'christmas'), self.app.PROPOSALS)
+
+    def test_single_day_apply_failure_is_not_presented_as_saved(self):
+        failure = {'items': [{'date': '2026-12-24', 'status': 'FAILED', 'hours': 'closed'}],
+                   'message': 'The update could not be verified.', 'applied': []}
+        with patch.object(self.app, 'apply_via_step5', return_value=failure):
+            html = self.request('/m/FI-D0017/2026-12-24/approve', {})
+        self.assertIn('No saved changes confirmed', html)
+        self.assertIn('The update could not be verified', html)
+        self.assertNotIn('hours saved', html)
+        self.assertEqual(self.app.DECISIONS[('FI-D0017', '2026-12-24')], 'Not saved; review required')
+
+    def test_bundle_confirmation_only_lists_verified_days_as_saved(self):
+        b = self.app.bundle('FI-D0017', 'christmas')
+        items = b[2]
+        failure = {'items': [{'date': x['day'].isoformat(), 'status': 'CONFLICT', 'hours': x['hours']} for x in items],
+                   'message': 'Existing changes were kept.', 'applied': []}
+        html = self.app.bundle_done('FI-D0017', b[1], [(x, x['hours']) for x in items], False, failure)
+        self.assertIn('No saved changes confirmed', html)
+        self.assertNotIn('hours saved', html)
+
+    def test_unconfigured_real_webhook_fails_closed(self):
+        with patch.object(self.app, 'MESSAGING', None):
+            with self.assertRaises(urllib.error.HTTPError) as err:
+                self.request('/messaging/inbound', {'Body': 'YES deadbeef'})
+        self.assertEqual(err.exception.code, 503)
+
+    def test_hero_real_template_fits_provider_limit(self):
+        for eid in ('FI-D0001', 'FI-D0017'):
+            with patch.object(self.app, 'instagram_days', return_value=set()):
+                payload = self.app.messaging_proposal(eid, 'christmas')
+            self.assertEqual(self.app.messaging.template_variables(payload, 'deadbeef')['4'], 'deadbeef')
 
 if __name__=='__main__':unittest.main()

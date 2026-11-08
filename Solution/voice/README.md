@@ -43,3 +43,5 @@ python tests/test_flow.py
 ```
 
 This verifies approval, edit and decline against a local Yext simulator without making an ElevenLabs call. The [conversation evaluator](http://localhost:8000/eval) (requires the voice service and a configured agent) exercises the real agent and uses ElevenLabs credits. Runtime state and logs stay in the ignored `data/` directory.
+
+See the [runtime overview](../../docs/runtime-status.md) for verified services and simulation boundaries. Voice uses seeded unanswered-message history; live calls were not verified in this integration.

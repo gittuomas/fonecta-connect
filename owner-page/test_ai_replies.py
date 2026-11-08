@@ -34,6 +34,7 @@ CASES = [
 
 
 def main():
+    print("Historical exploratory cases: inferred missing hours and regular-hours commands now require clarification. Use --check-services for current readiness.")
     items = app.bundle("FI-D0004", "christmas")[2]
     if not hours_ai.configured():
         sys.exit("OPENSHIFT_AI_URL / OPENSHIFT_AI_TOKEN not set in .env")
@@ -43,7 +44,7 @@ def main():
         ai = hours_ai.read_reply(text, items)
         took = time.time() - t
         ai_found = ai[0] if ai else None
-        pat_found, _ = app.parse_hours_reply(text, items)
+        pat_found, _ = app.parse_hours_pattern(text, items)
         ok_ai, ok_pat = ai_found == want, pat_found == want
         score["ai"] += ok_ai
         score["pattern"] += ok_pat

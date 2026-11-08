@@ -92,6 +92,32 @@ class YextClient:
             "listings", [])
 
 
+def _errors(raw: str) -> list:
+    try:
+        return json.loads(raw).get("meta", {}).get("errors", [])
+    except (ValueError, AttributeError):
+        return []
+
+
+def _retry_after(headers) -> float:
+    """Seconds to wait after a 429 (at least 1). Header values may be epoch seconds or a delta."""
+    for h in ("Rate-Limit-Retry-At", "Rate-Limit-Reset"):
+        val = headers.get(h) if headers else None
+        if val:
+            try:
+                x = float(val)
+            except ValueError:
+                continue
+            wait = x - time.time() if x > 1e9 else x
+            return max(1.0, wait)
+    return 5.0
+
+
+def fatal_or_field_errors(envelope: dict) -> list[dict]:
+    """Errors in a 2xx response that mean something was NOT saved (FATAL_ERROR / NON_FATAL_ERROR, not WARNING)."""
+    return [e for e in envelope.get("meta", {}).get("errors", []) if e.get("type") != "WARNING"]
+
+
 class MappedYextClient:
     """Use synthetic challenge IDs with explicitly paired sandbox entities.
 
@@ -119,28 +145,3 @@ class MappedYextClient:
 
     def listings(self, entity_ids: list[str]) -> list[dict]:
         return self.client.listings([self._target(eid) for eid in entity_ids])
-
-def _errors(raw: str) -> list:
-    try:
-        return json.loads(raw).get("meta", {}).get("errors", [])
-    except (ValueError, AttributeError):
-        return []
-
-
-def _retry_after(headers) -> float:
-    """Seconds to wait after a 429 (at least 1). Header values may be epoch seconds or a delta."""
-    for h in ("Rate-Limit-Retry-At", "Rate-Limit-Reset"):
-        val = headers.get(h) if headers else None
-        if val:
-            try:
-                x = float(val)
-            except ValueError:
-                continue
-            wait = x - time.time() if x > 1e9 else x
-            return max(1.0, wait)
-    return 5.0
-
-
-def fatal_or_field_errors(envelope: dict) -> list[dict]:
-    """Errors in a 2xx response that mean something was NOT saved (FATAL_ERROR / NON_FATAL_ERROR, not WARNING)."""
-    return [e for e in envelope.get("meta", {}).get("errors", []) if e.get("type") != "WARNING"]

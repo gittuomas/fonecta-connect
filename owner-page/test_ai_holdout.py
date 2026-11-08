@@ -84,18 +84,18 @@ def fmt(found):
 
 
 def main():
+    print("Historical exploratory cases: inferred missing hours and regular-hours commands now require clarification. Use --check-services for current readiness.")
     if not hours_ai.configured():
         sys.exit("OPENSHIFT_AI_URL / OPENSHIFT_AI_TOKEN not set in .env")
     rows, score = [], {"ai": 0, "pattern": 0}
     for eid, pid, text, want in CASES:
         items = app.bundle(eid, pid)[2]
-        hours_ai.LAST_AI_PARTS = 0
         t = time.time()
         ai = hours_ai.read_reply(text, items)
         took = time.time() - t
-        used_model = hours_ai.LAST_AI_PARTS > 0
+        used_model = True
         ai_found = ai[0] if ai else None
-        pat_found, _ = app.parse_hours_reply(text, items)
+        pat_found, _ = app.parse_hours_pattern(text, items)
         ok_ai, ok_pat = ai_found == want, pat_found == want
         score["ai"] += ok_ai
         score["pattern"] += ok_pat

@@ -8,13 +8,15 @@ What the owner sees on their phone. The screenshots are from the browser demonst
 |---|---|
 | <img src="images/customer-messages/proposal.jpg" alt="Christmas hours proposal with quick-reply buttons" width="300"> | <img src="images/customer-messages/approval.jpg" alt="Approval confirmation and next-year permission question" width="300"> |
 
-| Edit | Decline |
+| Review the edit | Saved after confirmation |
 |---|---|
-| <img src="images/customer-messages/edit.jpg" alt="Owner enters 24 Dec 10-14 and receives confirmation" width="300"> | <img src="images/customer-messages/decline.jpg" alt="Decline confirmation and future-suggestions preference" width="300"> |
+| <img src="images/customer-messages/edit-draft.jpg" alt="Typed hours become a draft with Save these hours and Cancel buttons" width="300"> | <img src="images/customer-messages/edit.jpg" alt="Only after CONFIRM are the edited opening hours saved" width="300"> |
+
+<img src="images/customer-messages/decline.jpg" alt="Decline confirmation and future-suggestions preference" width="300">
 
 - **Proposal:** a new customer gets all three Christmas days in one message, answered with WhatsApp's quick-reply buttons (the WhatsApp Business API has no polls).
 - **Approval:** the confirmation and the "handle it next year?" question arrive in the same chat, right after the yes.
-- **Edit:** the owner types "24 Dec 10-14"; only that day is saved, the other two stay as they were.
+- **Edit:** the owner types "24 Dec 10-14" and reviews the draft. **Save these hours / CONFIRM** saves only that day; **Cancel** saves nothing. The other two days stay as they were.
 - **Decline:** after a no, Connect asks once whether the owner wants this kind of suggestion in future, so it knows if they declined just this one or the whole kind.
 
 ## 2. Other ideas (examples, not working features yet)
@@ -51,7 +53,7 @@ The owner set hours for this holiday last year, so the message shows them and of
 ```text
 Hi Kahvila Aurora! This is Fonecta Connect.
 
-New Year is coming up. You haven't set special hours for these days, so Google shows your regular hours.
+New Year is coming up. No special hours are saved for these dates yet.
 
 Last year you were open:
 • New Year's Day: closed
@@ -72,7 +74,7 @@ Buttons: **Yes, update all** · **No, keep as it is** · **Other hours**. After 
 Done ✅ Kahvila Aurora:
 • 1 Jan closed
 • 6 Jan open 10–16
-Your new hours show on Google within minutes, and on 8 other sites soon after.
+Publisher timings are estimates: Google usually within minutes, and on 8 other sites soon after.
 Wrong? Reply UNDO and we'll put it back.
 ```
 
@@ -93,7 +95,7 @@ A new customer has no history, so the message says "We suggest" and never claims
 ```text
 Hi Kahvila Kipinä! This is Fonecta Connect.
 
-Christmas is coming up. You haven't set special hours for these days, so Google shows your regular hours.
+Christmas is coming up. No special hours are saved for these dates yet.
 
 We suggest:
 • Thu 24 Dec (Christmas Eve): closed
@@ -114,11 +116,22 @@ Done ✅ Kahvila Kipinä:
 • 24 Dec closed
 • 25 Dec closed
 • 26 Dec closed
-Your new hours show on Google within minutes, and on 8 other sites soon after.
+Publisher timings are estimates: Google usually within minutes, and on 8 other sites soon after.
 Wrong? Reply UNDO and we'll put it back.
 ```
 
-### Edit follow-up: after `24 Dec 10-14`
+### Edit draft: after `24 Dec 10-14`
+
+```text
+Please review these hours:
+• 24 Dec: open 10–14
+
+Other dates stay unchanged. Reply CONFIRM to save or CANCEL to discard.
+```
+
+Buttons: **Save these hours** · **Cancel**. Nothing is written until confirmation.
+
+### Edit follow-up: after confirming the draft
 
 ```text
 Thanks! We saved your hours:
@@ -132,7 +145,7 @@ Wrong? Reply UNDO and we'll put it back.
 ### Decline follow-up
 
 ```text
-OK, we won't change anything. Google keeps showing your regular hours.
+OK, we won't change anything. Your existing hours stay unchanged.
 If something changes, just reply here.
 ```
 

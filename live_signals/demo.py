@@ -97,6 +97,7 @@ def main():
     env = dict(os.environ, CONNECT_LIVE_CHECKS=report['checks_file'], PORT=str(args.port))
     if args.runtime_dir:
         env['CONNECT_RUNTIME_DIR'] = str(args.runtime_dir.resolve())
+    env['CONNECT_APPLY_MODE'] = 'sandbox' if args.sandbox else 'demo'
     if not args.sandbox:
         env['YEXT_SANDBOX_MIRROR'] = 'disabled'
     return subprocess.call([sys.executable, str(ROOT/'owner-page/app.py')], cwd=ROOT, env=env)

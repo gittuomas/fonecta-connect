@@ -83,7 +83,7 @@ class Handler(BaseHTTPRequestHandler):
         s5 = STEP5
         if p in ("", "/health"):
             a = s5.applier
-            return self._send(200, {"ok": True, "primary": a.primary.base,
+            return self._send(200, {"ok": True, "primary": a.primary.base, "mode": a.primary.name, "selection_reason": s5.selection_reason,
                                     "sandbox": a.sandbox.base if a.sandbox else None, "mirror": a.mirror_map})
         eid = q.get("entity_id")
         if p == "/audit":

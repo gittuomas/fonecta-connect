@@ -62,9 +62,43 @@ class SandboxMode(unittest.TestCase):
             mapped.update_entity("B", {"hours": {}})
         self.assertEqual(client.calls, [])
 
+    def test_auto_uses_local_demo_without_credentials_or_mirror(self):
+        fixture = SimpleNamespace(url="http://offline-test", stop=lambda: None)
+        with patch.dict(os.environ, {"YEXT_API_KEY": ""}), patch("step5_apply.api.start_mock", return_value=fixture):
+            s5 = Step5.from_env(mode="auto", runtime_dir=self.tmp.name)
+        self.assertIs(s5.mock, fixture)
+        self.assertIsNone(s5.applier.sandbox)
+        self.assertEqual(s5.applier.primary.name, "mock")
 
+    def test_auto_prefers_available_sandbox_and_separates_state(self):
+        client = SandboxDouble()
+        with patch("step5_apply.api.YextClient", return_value=client):
+            s5 = Step5.from_env(mode="auto", runtime_dir=self.tmp.name)
+        self.assertIsNone(s5.mock)
+        self.assertEqual(client.calls, [("GET", "Sandbox test entity")])
+        self.assertEqual((client.timeout, client.max_retries), (30, 3))
+        self.assertEqual(s5.applier.audit.path.parent.name, "sandbox")
 
+    def test_auto_falls_back_on_read_only_startup_failure(self):
+        client = SandboxDouble()
+        fixture = SimpleNamespace(url="http://offline-test", stop=lambda: None)
+        with patch("step5_apply.api.YextClient", return_value=client), \
+             patch.object(client, "get_entity", side_effect=YextError(503, "offline")), \
+             patch("step5_apply.api.start_mock", return_value=fixture):
+            s5 = Step5.from_env(mode="auto", runtime_dir=self.tmp.name)
+        self.assertIs(s5.mock, fixture)
+        self.assertIsNone(s5.applier.sandbox)
+        self.assertEqual(client.calls, [])  # No external write was attempted.
 
+    def test_auto_never_changes_target_after_write_failure(self):
+        client = SandboxDouble()
+        with patch("step5_apply.api.YextClient", return_value=client):
+            s5 = Step5.from_env(mode="auto", runtime_dir=self.tmp.name, today=date(2026, 11, 6))
+        with patch.object(client, "update_entity", side_effect=YextError(503, "outcome unknown")):
+            result = s5.apply({"entity_id": "FI-D0001", "date": "2026-12-24", "hours": "closed"})
+        self.assertEqual(result["items"][0]["status"], "FAILED")
+        self.assertEqual(result["apply_target"], "sandbox")
+        self.assertIsNone(s5.mock)
 
     def test_approval_conflict_undo_use_real_target_contract(self):
         client = SandboxDouble()
@@ -76,6 +110,10 @@ class SandboxMode(unittest.TestCase):
             {"date": "2026-12-24", "hours": "closed", "decision": "ACCEPTED", "seen_before": seen["2026-12-24"]}]}
         result = s5.apply(decision)
         self.assertEqual(result["items"][0]["status"], "APPLIED")
+        self.assertEqual(result["apply_target"], "sandbox")
+        self.assertFalse(result["publication_verified"])
+        self.assertIn("Yext sandbox only", result["message"])
+        self.assertNotIn("Live on", result["message_short"])
         self.assertTrue(all(eid == "Sandbox test entity" for _, eid in client.calls))
         repeat = s5.apply(decision)
         self.assertTrue(repeat["items"][0]["duplicate"])

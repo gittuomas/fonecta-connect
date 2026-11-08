@@ -10,15 +10,17 @@
 
 **Before evaluating free-text replies, configure OpenShift AI.** The WhatsApp-style browser demo uses a real OpenShift AI model to interpret natural-language opening-hour replies. Add a valid `OPENSHIFT_AI_TOKEN`, a reachable `OPENSHIFT_AI_URL` and the matching `OPENSHIFT_AI_MODEL` to the repository-root `.env` (copy [.env.example](.env.example) if needed). The model deployment must be running. No WhatsApp delivery credentials are needed for this browser demo.
 
-**Without a working OpenShift connection, the demo still opens, but free-text interpretation is limited.** Buttons, commands such as `UNDO`, and simple edits such as `24 Dec 10-14` work through local rules. More conversational replies may not be understood or may trigger clarification. This fallback does not demonstrate the AI reply reader; configure and check the connection before evaluating that feature.
+**Without credentials, the browser demo remains usable.** Leave both `OPENSHIFT_AI_URL` and `OPENSHIFT_AI_TOKEN` empty to use the clearly labelled exact-format reader (`24 Dec 10-14`). Buttons and `UNDO` also work. Configuring either AI setting selects the real adapter: incomplete setup, network errors or invalid model output ask for clarification and save nothing. Typed edits always produce a draft; **Save these hours / CONFIRM** performs the write.
 
-Check the connection from the repository root:
+Check the actual inference and Yext paths from the repository root:
 
 ```sh
-python -c "import sys; sys.path.insert(0, 'owner-page'); import hours_ai; print(hours_ai.status())"
+python owner-page/app.py --check-services
 ```
 
-The result should be **`up`**. **`off`** means the URL or token is missing; **`down`** means the endpoint is not answering successfully (check the token, URL and running deployment). Then run `python owner-page/test_ai_replies.py` to check actual reply interpretation. See [AI reply-reader setup and troubleshooting](owner-page/README.md#how-it-works).
+This sends one synthetic parsing request and reads Yext; it sends no WhatsApp message and writes no hours. A nonzero exit means one or both live services are unverified. Credentials are not bundled, and evaluators must supply them in their environment.
+
+**Current implementation and remaining simulations:** [runtime overview](docs/runtime-status.md). [Real WhatsApp setup](owner-page/MESSAGING.md) is separate from the browser preview.
 
 Use **Python 3.12+**, from the repository root:
 
@@ -27,7 +29,7 @@ python -m pip install -r requirements.txt
 python owner-page/app.py
 ```
 
-Open the **[WhatsApp demo: Kahvila Kipinä](http://localhost:8000/w/FI-D0017/christmas)** (requires the demo to be running locally on your computer). On Windows, use `py -3.12 owner-page/app.py`. The checked-in C13 exports are sufficient; no model training is required at startup. Keep the supplied challenge data and engine outputs in their repository locations.
+Open the **[WhatsApp demo: Kahvila Kipinä](http://localhost:8000/w/FI-D0017/christmas)** (requires the demo to be running locally on your computer). On Windows, use `py -3.12 owner-page/app.py`. For this no-history walkthrough, select `CONNECT_APPLY_MODE=demo` in `.env`. The checked-in C13 exports are sufficient; no model training is required at startup. Keep the supplied challenge data and engine outputs in their repository locations.
 
 **The connected services require credentials.** Copy [.env.example](.env.example) to an ignored `.env` if one does not already exist, then configure the services you intend to use:
 
@@ -35,7 +37,7 @@ Open the **[WhatsApp demo: Kahvila Kipinä](http://localhost:8000/w/FI-D0017/chr
 |---|---|---|
 | Real WhatsApp delivery | Twilio account/token, WhatsApp sender, approved template, opted-in recipient and public HTTPS webhooks. See [messaging setup](owner-page/MESSAGING.md). | The browser preview remains available; no external message is sent. |
 | Ticketmaster events | `TICKETMASTER_API_KEY` (Consumer Key). | Ticketmaster is skipped; public city feeds and weather remain available. |
-| **OpenShift AI free-text interpretation (required to evaluate conversational replies)** | `OPENSHIFT_AI_URL`, `OPENSHIFT_AI_TOKEN`, `OPENSHIFT_AI_MODEL`, and a running model deployment. | Limited rule-based parsing only; natural-language replies may not be understood. |
+| **OpenShift AI free-text interpretation (required to evaluate conversational replies)** | `OPENSHIFT_AI_URL`, `OPENSHIFT_AI_TOKEN`, `OPENSHIFT_AI_MODEL`, and a running model deployment. | Exact-format parsing when both URL and token are absent; configured service failures save nothing. |
 | Yext sandbox writes | `YEXT_API_KEY`, `YEXT_BASE_URL`, `YEXT_SANDBOX_MIRROR` for the owner app; `YEXT_SANDBOX_ENTITY_ID` for voice. | The owner demo uses local simulator writes. |
 | ElevenLabs browser voice | An accessible `ELEVENLABS_AGENT_ID`; private-agent conversation tokens also require `ELEVENLABS_API_KEY`. | No real voice conversation without an accessible agent. Public agents can connect by ID without a local API key. |
 | ElevenLabs outbound calls | `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`, `ELEVENLABS_PHONE_NUMBER_ID`, and test destination `DEMO_OWNER_PHONE`. | No outbound phone call. |
@@ -56,10 +58,12 @@ Omit `--sandbox` for local-only writes. See [live-source setup](live_signals/REA
 
 1. Open the [WhatsApp chat for Kahvila Kipinä](http://localhost:8000/w/FI-D0017/christmas) (requires the demo to be running locally on your computer), the customer with no previous hours history or owner decisions.
 2. Choose **Yes, update all**, read the confirmation, then reply `UNDO` to restore the previous hours.
-3. Reset the chat, choose **Other hours**, and type `24 Dec 10-14`. Only the named day changes.
+3. Reset the chat, choose **Other hours**, and type `24 Dec 10-14`. Review the draft and press **Save these hours**. Only the named day changes.
 4. Reset the chat and choose **No, keep as it is**. Existing hours stay unchanged; the owner can also choose whether to receive future suggestions.
 
-Chat reset clears the conversation. Use UNDO to restore hours before resetting.
+Chat reset clears the conversation; already-saved suggestions are omitted. Use UNDO to restore hours before resetting.
+
+For the **real sandbox submission**, use `FI-D0001` (Kahvila Aurora), mapped one-to-one to the sandbox entity in `.env`. Set `CONNECT_APPLY_MODE=sandbox` and open `/w/FI-D0001/christmas`; missing/broken Yext setup then fails closed. `auto` prefers a read-verified sandbox but otherwise selects labelled local simulation. `demo` is the local preview. FI-D0017 above is a simulated new-customer example, not the selected real sandbox business. Sample Instagram captions do not replace the sandbox holiday proposal.
 
 ## The five steps
 
@@ -68,7 +72,7 @@ Chat reset clears the conversation. Use UNDO to restore hours before resetting.
 | **1. Detect** | C13 identifies business/date pairs needing attention. `NO_ACTION` stays quiet; `FLAG` requires review. |
 | **2. Suggest** | Exported hours are grouped into a holiday bundle. The owner's history is named only when recorded hours match the proposal. |
 | **3. Contact** | WhatsApp through Twilio when configured, plus browser previews for SMS, email and push. ElevenLabs demonstrates voice escalation. |
-| **4. Decide** | Approve, edit or decline without a separate login. Owners can type different hours and control future suggestions. |
+| **4. Decide** | Approve, edit or decline without a separate login. Typed changes are reviewed and confirmed before saving; owners control future suggestions. |
 | **5. Apply and confirm** | Check for intervening changes, write approved hours, read them back, record an audit and confirm. UNDO restores the recorded previous state. |
 
 ## Data sources that mattered most
@@ -111,7 +115,7 @@ The owner set hours for this holiday last year, so the message shows them and of
 ```text
 Hi Kahvila Aurora! This is Fonecta Connect.
 
-New Year is coming up. You haven't set special hours for these days, so Google shows your regular hours.
+New Year is coming up. No special hours are saved for these dates yet.
 
 Last year you were open:
 • New Year's Day: closed
@@ -132,7 +136,7 @@ Buttons: **Yes, update all** · **No, keep as it is** · **Other hours**. After 
 Done ✅ Kahvila Aurora:
 • 1 Jan closed
 • 6 Jan open 10–16
-Your new hours show on Google within minutes, and on 8 other sites soon after.
+Publisher timings are estimates: Google usually within minutes, and on 8 other sites soon after.
 Wrong? Reply UNDO and we'll put it back.
 ```
 
@@ -153,7 +157,7 @@ A new customer has no history, so the message says "We suggest" and never claims
 ```text
 Hi Kahvila Kipinä! This is Fonecta Connect.
 
-Christmas is coming up. You haven't set special hours for these days, so Google shows your regular hours.
+Christmas is coming up. No special hours are saved for these dates yet.
 
 We suggest:
 • Thu 24 Dec (Christmas Eve): closed
@@ -174,11 +178,22 @@ Done ✅ Kahvila Kipinä:
 • 24 Dec closed
 • 25 Dec closed
 • 26 Dec closed
-Your new hours show on Google within minutes, and on 8 other sites soon after.
+Publisher timings are estimates: Google usually within minutes, and on 8 other sites soon after.
 Wrong? Reply UNDO and we'll put it back.
 ```
 
-### Edit follow-up: after `24 Dec 10-14`
+### Edit draft: after `24 Dec 10-14`
+
+```text
+Please review these hours:
+• 24 Dec: open 10–14
+
+Other dates stay unchanged. Reply CONFIRM to save or CANCEL to discard.
+```
+
+Buttons: **Save these hours** · **Cancel**. Nothing is written until confirmation.
+
+### Edit follow-up: after confirming the draft
 
 ```text
 Thanks! We saved your hours:
@@ -192,7 +207,7 @@ Wrong? Reply UNDO and we'll put it back.
 ### Decline follow-up
 
 ```text
-OK, we won't change anything. Google keeps showing your regular hours.
+OK, we won't change anything. Your existing hours stay unchanged.
 If something changes, just reply here.
 ```
 
@@ -214,6 +229,8 @@ python -m unittest live_signals.test_live_signals live_signals.test_checks live_
 ```
 
 These checks cover exported decisions, approval/edit/decline, undo, conflicts, contact preferences and live-source selection. Voice has its own [test commands](Solution/voice/README.md#tests).
+
+See the [runtime overview](docs/runtime-status.md) for the verification record, service setup and simulation boundaries.
 
 **Demo scope:** Business records, publisher names and update estimates come from challenge-provided demo data. Browser messages, social-post publication and Instagram examples are simulated. A real Twilio WhatsApp send/reply integration is included and tested offline; live delivery requires provider setup. Configured Yext sandbox writes use real APIs and read-back verification. Google publication is not independently checked. Voice connects to ElevenLabs from a seeded unanswered-text scenario.
 

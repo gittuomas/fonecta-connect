@@ -101,7 +101,7 @@ class Language(MockTestCase):
                                                        DecisionItem("2026-12-31", "10:00-14:00")]))
         self.assertNotIn(chr(10), res.message_short)          # one line
         self.assertIn("Kahvila Aurora: 24 Dec closed, 31 Dec open 10–14", res.message_short)
-        self.assertIn("Live on Google ~2 min + 8 more", res.message_short)
+        self.assertIn("Expected on Google ~2 min + 8 more", res.message_short)
         self.assertIn("UNDO", res.message_short)
         self.assertLess(len(res.message_short), 160)
 

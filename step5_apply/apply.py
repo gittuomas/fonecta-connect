@@ -520,8 +520,12 @@ class Applier:
         applied = [(r.date, r.hours) for r in items if r.status == APPLIED]
         if applied:
             parts.append(C.applied_message(name, applied, d.entity_id, lang, auto=d.actor == "standing_permission"))
+        already = [r for r in items if r.status == ALREADY_SET and not r.duplicate]
+        if already and lang == 'en':
+            parts.append("These hours are already up to date. No new changes were needed:\n" +
+                         '\n'.join(f"• {C.day_label(r.date, lang)}: {C.hours_label(r.hours, lang)}" for r in already))
         for r in items:
-            if r.status == ALREADY_SET and not r.duplicate:
+            if r.status == ALREADY_SET and not r.duplicate and lang != 'en':
                 parts.append(C.status_message("already", name, r.date, r.hours, lang))
             elif r.status == CONFLICT:
                 parts.append(C.status_message("conflict", name, r.date, r.before, lang))

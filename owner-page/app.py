@@ -19,7 +19,7 @@ import re
 import sys
 import time
 import urllib.parse
-from datetime import date
+from datetime import date, datetime
 from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from zoneinfo import ZoneInfo
@@ -33,16 +33,24 @@ os.environ.setdefault("MOCK_QUIET", "1")
 from baseline import Baseline  # noqa: E402
 from quickstart import TXT, WD, day_key_for, eta  # noqa: E402
 sys.path.insert(0, os.path.dirname(HERE))   # repository root, for the team's step5_apply package
+from step5_apply import hours as H
+from step5_apply.yext import YextError
 from step5_apply.api import Step5  # noqa: E402
 from step5_apply import special_days as SD  # noqa: E402
 import search_value  # noqa: E402  (one short line from the business's own Google numbers)
+import messaging
 import hours_ai  # noqa: E402  (the AI model on Red Hat OpenShift AI that reads owners' replies)
-import learning  # noqa: E402  (learns which reasons each owner wants)
+import learning  # noqa: E402  (learns which reasons each owner wants: docs/new-customer-plan.md)
 import proactive  # noqa: E402  (weather and season checks: who benefits comes from the challenge data)
 from predictions import SelectedPredictions  # noqa: E402
 from live_signals.owner import CheckFeed, suggestion as live_suggestion  # noqa: E402
 import posts  # noqa: E402  (post suggestions on WhatsApp: holiday hours, events, Fonecta's monthly post)
 import social_hours  # noqa: E402  (special hours from the owner's own Instagram posts)
+
+MESSAGING = None
+PROPOSALS = {}
+PENDING_HOURS = {}
+CHAT_TIMES = {}
 
 READER = {}   # (channel, eid, pid) -> which reader understood the owner's last reply (shown on the panel)
 
@@ -190,7 +198,7 @@ CHECK_SESSIONS = {}   # freeze a weather/season question once answered, so feedb
 # sandbox when .env says so), reads the change back, keeps an audit log, writes the confirmation
 # message and handles UNDO. Its saved state is in step5_apply/.runtime/ (delete it for a fresh demo).
 S5 = Step5.from_env()
-LIVE = CheckFeed(os.environ.get('CONNECT_LIVE_CHECKS'), sandbox=bool(S5.applier.sandbox),
+LIVE = CheckFeed(os.environ.get('CONNECT_LIVE_CHECKS'), sandbox=bool(S5.applier.sandbox or S5.applier.primary.name == 'sandbox'),
                  state_path=S5.applier.audit.path.parent / 'live_checks_seen.json')
 SEEN = {}   # (eid, pid) -> step 5 snapshot of the dates when the message was first shown ("seen_before")
 
@@ -227,6 +235,10 @@ def apply_via_step5(eid, pid, channel, decisions, remember=False):
             'event_ids': [s['live_check']['event_id'] for s, _, _ in decisions],
             'owner_decisions': [{'date': s['day'].isoformat(), 'decision': decision, 'hours': hrs}
                                 for s, decision, hrs in decisions]})
+    for item in res.get('items', []):
+        if item['status'] in ('APPLIED', 'ALREADY_SET'):
+            SEEN[(eid, pid)][item['date']] = item.get('hours')
+    res = browser_result(res)
     DELIVERY[(eid, pid)] = res
     return res
 
@@ -234,6 +246,13 @@ def apply_via_step5(eid, pid, channel, decisions, remember=False):
 def delivery_status(eid, pid):
     """Keep real Yext verification distinct from the mock and publisher estimates."""
     result = DELIVERY.get((eid, pid))
+    if S5.applier.primary.name == 'sandbox':
+        target = S5.applier.primary.mapping.get(eid)
+        if not target:
+            return 'No Yext sandbox mapping for this business'
+        if result and any(r['status'] in ('APPLIED', 'UNDONE', 'ALREADY_SET') for r in result['items']):
+            return f'Yext sandbox read-back verified: {target}. Public publication unverified.'
+        return f'Real Yext sandbox: {target}. Public publication unverified.'
     target = S5.applier.mirror_map.get(eid) if S5.applier.sandbox else None
     if result:
         mirror = result.get('mirror')
@@ -270,12 +289,12 @@ def _when(sec):
 
 def short_where(eid):
     """Team decision: one short line instead of the list of every site and its timing, e.g.
-    'Your new hours show on Google within minutes, and on 8 other sites soon after.'"""
+    'Publisher timings are estimates: Google usually within minutes, and on 8 other sites soon after.'"""
     pubs = where_it_shows(eid)
     if not pubs:
         return ""
     others = len(pubs) - 1
-    return ("Your new hours show on Google within minutes"
+    return ("Publisher timings are estimates: Google usually within minutes"
             + (f", and on {others} other site{'s' if others > 1 else ''} soon after." if others else "."))
 
 
@@ -440,10 +459,30 @@ def intro(pid, title, items):
     return f"{title} is on {when}."
 
 
-def bundles_for(eid):
+def bundles_for(eid, source=None):
     """All messages for one business: holiday periods from the engine, plus the proactive weather and season
     checks (recomputed every time, because how proactive they are depends on what the owner has done)."""
+    source = source or S5
+    if source.applier.primary.name == 'sandbox' and eid not in source.applier.primary.mapping:
+        return []
     out = {pid: (pid, title, list(items)) for pid, title, items in _calendar_bundles(eid)}
+    candidates = [s for _, _, items in out.values() for s in items if not s.get('live_check') and not s.get('check')]
+    current = source.snapshot(eid, [s['day'].isoformat() for s in candidates]) if candidates else {}
+    for pid, title, items in list(out.values()):
+        kept = []
+        for item in items:
+            if item.get('live_check') or item.get('check'):
+                kept.append(item)
+                continue
+            saved = current[item['day'].isoformat()]
+            if saved == item['hours']:
+                continue
+            kept.append(dict(item, seen_before=saved, has_exception=saved is not None,
+                             shown=saved if saved not in (None, 'regular') else item['shown']))
+        if kept:
+            out[pid] = (pid, title, kept)
+        else:
+            del out[pid]
     if opted_out(eid) or LEARN.mode(eid) == "stopped" or eid in REVIEW_BUSINESSES or BL.ents[eid].get('closed'):
         return sorted(out.values(), key=lambda b: b[2][0]["day"])
     ent, scores = BL.ents[eid], LEARN.owner(eid)["scores"]
@@ -553,6 +592,8 @@ def value(eid, pid, title, items):
 
 
 def bundle(eid, pid):
+    if (eid, pid) in PROPOSALS:
+        return PROPOSALS[(eid, pid)]
     if (eid, pid) in CHECK_SESSIONS and any((ch, eid, pid) in WA for ch in ('w', 's', 'e', 'p')):
         return CHECK_SESSIONS[(eid, pid)]
     if (eid, pid) in LIVE.rows and not any((ch, eid, pid) in WA for ch in ('w', 's', 'e', 'p')):
@@ -561,6 +602,9 @@ def bundle(eid, pid):
     result = next((b for b in bundles_for(eid) if b[0] == pid), None)
     if result and result[2][0].get('check'):
         CHECK_SESSIONS[(eid, pid)] = result
+    elif result and not result[2][0].get('live_check'):
+        PROPOSALS[(eid, pid)] = result
+        SEEN[(eid, pid)] = {x['day'].isoformat(): x['seen_before'] for x in result[2]}
     return result
 
 
@@ -587,6 +631,9 @@ PREDICTIONS = SelectedPredictions(
         'demo_suggestions.json'),
     DEMO_TARGETS, BL.ents, BL.hol, BL.reg, BL.cal,
 )
+if S5.applier.primary.name == 'sandbox':
+    DEMO = [eid for eid in DEMO if eid in S5.applier.primary.mapping]
+
 REVIEW_BUSINESSES = {eid for (eid, _), row in (ENGINE[0] if ENGINE else {}).items() if row['action'] == 'FLAG'}
 
 # ---------------------------------------------------------------- HTML
@@ -855,18 +902,20 @@ def connect_index():
                     f"Simulate: no reply</button></form>"
                     f"<br><span class='muted' style='font-size:12px'>{h(LEARN.summary(eid))}</span></td>"
                     f"<td>{''.join(msgs)}</td></tr>")
-    target = "local Yext mock and configured Yext sandbox" if S5.applier.sandbox else "local Yext mock"
+    target = ("real Yext sandbox" if S5.applier.primary.name == 'sandbox' else
+              "local Yext mock and configured Yext sandbox" if S5.applier.sandbox else "local Yext mock")
     body = (f"<div class='brand'><span class='dot'></span>Connect · demo control panel</div>"
             f"<div class='card'><h1>Messages ready to send</h1>"
-            f"<p class='muted'>The 17 demo businesses from the challenge. Suggestions are grouped into one message per "
+            f"<p class='muted'>Browser demo ready. Showing {len(DEMO)} challenge businesses available for this target. Suggestions are grouped into one message per "
             f"holiday period (Christmas 21–30 Dec and New Year 31 Dec–8 Jan, including school-holiday days; every other holiday, special day or local event on its own). They come from the "
             f"team's C13 engine{'' if ENGINE else ' (output missing: challenge baseline)'}. Approved changes are written to the {target}.</p>"
             + ai_status_line() +
+            f"<p class='muted'><b>Apply target:</b> {h(target)}. {h(S5.selection_reason)}. Browser channels are previews; this page sends no real messages.</p>"
             f"<p class='muted'>Yext sandbox write/read-back status is shown per message below. Publisher timings are estimates from the challenge data; they do not verify publication on Google or other sites.</p>"
             + (f"<p class='muted'><b>Live hours checks:</b> {len(LIVE.rows)} selected checks using real event listings and synthetic businesses. "
                f"Mode: {h(LIVE.mode)}. Current hours are offered for owner confirmation; the event does not predict new hours. "
                f"Checks are limited to one per business in 14 days, with no reminders or calls.</p>" if LIVE.rows else '') +
-            f"<p class='muted'>Each message can be opened as WhatsApp, SMS, email or app push. <b>★</b> marks where Connect sends it: "
+            f"<p class='muted'>Each message can be opened as WhatsApp, SMS, email or app push. <b>★</b> marks the proposed channel: "
             f"the owner's preferred channel (from <code>customer_contacts.csv</code>) at first, then learned from replies. "
             f"No reply → the next message tries WhatsApp, then SMS (at most 3 channels; a new customer moves on after 1 "
             f"unanswered message, others after 2). Quiet mode only once every channel was tried.</p>"
@@ -919,8 +968,7 @@ def bundle_page(eid, pid, title, items, form=None, bad=None, via="WEB"):
             f"{'<p class=err>Closing time has to be after opening time.</p>' if k in bad else ''}"
             f"</details></div>")
     n = len(items)
-    intro_txt = (f"{intro(pid, title, items)} You haven't set special hours for {'these days' if n > 1 else 'this day'} yet, "
-                 f"so Google shows your regular hours. Here's what we suggest:")
+    intro_txt = f"{intro(pid, title, items)} {proposal_context(items)} Here's what we suggest:"
     if live:
         intro_txt = intro(pid, title, items) + ' Are your listed hours right for that day?'
     if c0.get('check'):
@@ -1086,7 +1134,7 @@ def welcome_page(eid):
 CH_API = {"w": "WHATSAPP", "s": "SMS", "e": "EMAIL", "p": "APP_PUSH"}
 LABEL = {"WHATSAPP": "WhatsApp", "SMS": "SMS", "EMAIL": "Email",
          "APP_PUSH": "App push", "WEB": "Web page"}
-NO_TEXT = "OK, we won't change anything. Google keeps showing your regular hours."
+NO_TEXT = "OK, we won't change anything. Your existing hours stay unchanged."
 
 # Team decision: a polite reply ("thanks", "kiitos", "ok", "tack") gets a polite answer, not "I didn't catch that".
 POLITE = {"thanks", "thank you", "thanks a lot", "thx", "ty", "kiitos", "kiitti", "kiitos paljon", "tack", "tack så mycket",
@@ -1169,15 +1217,7 @@ def watch_ai():
 
 
 def ai_status_line():
-    st = AI_STATUS["state"]
-    text = {"up": "connected. Owners' typed WhatsApp and SMS replies are read by the model, then saved to Yext by step 5.",
-            "down": "configured but not answering (the free sandbox may have switched it off: Stop, then Start, in the "
-                    "OpenShift AI dashboard). Typed replies use the simple pattern reader for now.",
-            "off": "not set up (no OPENSHIFT_AI_TOKEN in .env, see owner-page/README.md). Typed replies use the simple "
-                   "pattern reader.",
-            "checking": "checking…"}[st]
-    colour = {"up": "#1a7f37", "down": "#b35900", "off": "#b35900"}.get(st, "inherit")
-    return f"<p class='muted'><b style='color:{colour}'>AI reply reader (Red Hat OpenShift AI):</b> {h(text)}</p>"
+    return f"<p class='muted'><b>AI reply reader (Red Hat OpenShift AI):</b> {h(hours_ai.status())}</p>"
 
 
 def wa_answer(eid, pid, b, ans, typed=False):
@@ -1209,7 +1249,7 @@ def wa_answer(eid, pid, b, ans, typed=False):
     elif ans == "no":
         apply_via_step5(eid, pid, "WHATSAPP", [(x, "REJECTED", None) for x in items])
         chat.append(("them", (items[0]['check']['no_reply'] if items[0].get('check') else
-                              "OK, we won't change anything. Google keeps showing your regular hours.")
+                              "OK, we won't change anything. Your existing hours stay unchanged.")
                      + "\nIf something changes, just reply here."))
         DECISIONS[(eid, pid)] = "WhatsApp: declined"
         LEARN.record(eid, day_keys(items), "NO", pid, "WHATSAPP")
@@ -1246,7 +1286,7 @@ TYPED_NO = ("no", "n", "no thanks", "no, thanks", "keep it", "no keep as it is",
 MONTHS = {m: i for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"], 1)}
 
 
-def parse_hours_reply(text, items):
+def parse_hours_pattern(text, items):
     """Read an owner's free-text reply like '24 Dec 10-14' / '25.12 closed' into {date: hours}.
     Returns (found, problems). Only days in this message's holiday period are accepted."""
     import re
@@ -1256,11 +1296,11 @@ def parse_hours_reply(text, items):
         chunk = chunk.strip()
         if not chunk:
             continue
-        m = re.search(r"\b(\d{1,2})\s*(?:\.|th|st|nd|rd)?\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?", chunk)
+        m = re.match(r"(\d{1,2})\s*(?:\.|th|st|nd|rd)?\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?", chunk)
         if m:
             dm = (int(m.group(1)), MONTHS[m.group(2)])
         else:
-            m = re.search(r"\b(\d{1,2})[./](\d{1,2})\b\.?", chunk)
+            m = re.match(r"(\d{1,2})[./](\d{1,2})\b\.?", chunk)
             dm = (int(m.group(1)), int(m.group(2))) if m else None
         rest = chunk[m.end():] if m else chunk
         if dm is None:
@@ -1273,20 +1313,90 @@ def parse_hours_reply(text, items):
         if s is None:
             problems.append(chunk)
             continue
-        if "clos" in rest:
+        if re.fullmatch(r"\s*(?:closed|shut)\s*[.!]?", rest):
+            if s['day'] in found:
+                problems.append(chunk)
             found[s["day"]] = "closed"
             continue
-        t = re.search(r"(\d{1,2})(?:[:.](\d{2}))?\s*(?:-|–|to)\s*(\d{1,2})(?:[:.](\d{2}))?", rest)
+        t = re.fullmatch(r"\s*(\d{1,2})(?:[:.](\d{2}))?\s*(?:-|–|to)\s*(\d{1,2})(?:[:.](\d{2}))?\s*", rest)
         if not t:
             problems.append(chunk)
             continue
         o = f"{int(t.group(1)):02d}:{t.group(2) or '00'}"
         c = f"{int(t.group(3)):02d}:{t.group(4) or '00'}"
-        if not (o < c <= "24:00"):
+        if H.validate(f"{o}-{c}") or s['day'] in found:
             problems.append(chunk)
             continue
         found[s["day"]] = f"{o}-{c}"
-    return found, problems
+    return ({}, problems) if problems else (found, [])
+
+
+def browser_result(result):
+    """Keep demo product copy natural; scope remains visible in the operator panel."""
+    if result is not None and result.get("apply_target") == "demo":
+        return {**result, "message": result.get("owner_message", result.get("message"))}
+    return result
+
+
+def initialize_messaging():
+    """Missing/broken setup must not prevent the credential-free browser demo."""
+    cfg = messaging.configuration()
+    if not cfg["configured"]:
+        return None, {**cfg, "mode": "demo", "reason": "messaging configuration unavailable"}
+    try:
+        service = messaging.from_env(messaging_proposal, messaging_hours)
+    except (ValueError, RuntimeError, ImportError, OSError):
+        return None, {**cfg, "mode": "demo", "reason": "messaging setup unavailable; browser demo remains ready"}
+    return service, {**cfg, "mode": "real", "reason": "real transport configured; delivery requires provider confirmation"}
+
+
+def proposal_context(items):
+    if all(not s.get('has_exception') for s in items):
+        return "No special hours are saved for these dates yet."
+    return "Please review these suggested changes to your saved special hours."
+
+
+def no_pending_proposal(eid):
+    return page(BL.ents[eid]['name'], "<div class='brand'><span class='dot'></span>Fonecta Connect</div>"
+                "<div class='card'><span class='tag'>No pending proposal</span><h1 style='margin-top:14px'>No update needed</h1>"
+                f"<p>{h(BL.ents[eid]['name'])} has no pending suggested changes for this period.</p>"
+                "<p class='muted'>Your saved hours are kept as they are. Resetting a conversation doesn't undo an approved update.</p>"
+                "<a class='btn primary' href='/'>Back to businesses</a></div>")
+
+
+def messaging_proposal(eid, pid, source=None):
+    """Freeze the selected proposal as text and data for a real WhatsApp template."""
+    b = next((b for b in bundles_for(eid, source=source) if b[0] == pid), None) if eid in BL.ents else None
+    if not b:
+        raise messaging.MessagingError("No eligible suggestion for this business/period")
+    _, title, items = b
+    known = [s for s in items if s["last_hours"]]
+    new = [s for s in items if not s["last_hours"]]
+    parts = [intro(pid, title, items), proposal_context(items)]
+    def line(s, hours):
+        return f"{s['weekday'][:3]} {s['dm']} ({s['day_name']}): " + ("closed" if hours == "closed" else nice(hours))
+    if known:
+        parts.append("Last year you were open: " + "; ".join(line(s, s["last_hours"]) for s in known) + ". We'd use the same hours this year.")
+    if new:
+        parts.append(("For the other days we suggest: " if known else "We suggest: ") + "; ".join(line(s, s["hours"]) for s in new))
+    question = "Shall we use the same hours this year?" if known and not new else f"Shall we update your {title} hours?"
+    detail = " ".join(parts)
+    # Template variables cannot contain newlines; fail instead of silently truncating proposed dates.
+    if len(detail) > 1200 or "\n" in detail:
+        raise messaging.MessagingError("Proposal is too long for the approved template; split/review it before sending")
+    return {"name": items[0]["name"], "detail": detail, "question": question,
+            "items": [{"date": s["day"].isoformat(), "hours": s["hours"], 'day_name': s['day_name']} for s in items]}
+
+
+def messaging_hours(text, frozen_items):
+    found, problems = parse_hours_reply(text, [{"day": date.fromisoformat(x["date"]), 'day_name': x.get('day_name', '')} for x in frozen_items])
+    return {d.isoformat(): hrs for d, hrs in found.items()}, problems
+
+
+def parse_hours_reply(text, items):
+    if hours_ai.configured():
+        return hours_ai.read_reply(text, items)
+    return parse_hours_pattern(text, items)
 
 WA_CSS = """
 .wa{max-width:420px;margin:0 auto;min-height:100vh;background:#efe7de;font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#111b21}
@@ -1318,9 +1428,16 @@ WA_CSS = """
 """
 
 
+with open(os.path.join(HERE, 'chat.css'), encoding='utf-8') as style_file:
+    WA_CSS += style_file.read()
+
+
 def wa_page(eid, pid, title, items, ch="w"):
     """Contact plan: the WhatsApp message (a Business template with three quick-reply buttons)."""
+    fb = False
     name = items[0]["name"]
+    times = CHAT_TIMES.setdefault((ch, eid, pid), {})
+    sent_at = times.setdefault('sent', datetime.now().strftime('%H:%M'))
     def bare(hrs):
         return "closed" if hrs == "closed" else nice(hrs)
 
@@ -1339,8 +1456,7 @@ def wa_page(eid, pid, title, items, ch="w"):
         parts.append(("For the other days we suggest:\n" if known else "We suggest:\n") + "\n".join(
             f"• {s['weekday'][:3]} {s['dm']} ({s['day_name']}): {bare(s['hours'])}" for s in new))
     msg = (f"Hi {name}! This is Fonecta Connect.\n\n"
-           f"{intro(pid, title, items)} You haven't set special hours for {'these days' if n > 1 else 'this day'}, "
-           f"so Google shows your regular hours.\n\n" + "\n\n".join(parts))
+           f"{intro(pid, title, items)} {proposal_context(items)}\n\n" + "\n\n".join(parts))
     footer = "We never ask for logins or passwords."
     question = question_for(pid, title, items)
     seen_for(eid, pid, items)          # step 5: remember what Yext showed when the message went out
@@ -1363,11 +1479,11 @@ def wa_page(eid, pid, title, items, ch="w"):
         msg = f"Hi {name}! This is Fonecta Connect.\n\n{body}"
         opts = list(chk['labels'].items())
     # WhatsApp message template: body text + grey footer + three quick-reply buttons under the bubble.
-    btns = "".join(f"<button class='qb{' on' if ans == k else ''}' name='a' value='{k}' {'disabled' if ans else ''}>"
+    btns = "" if ans else "".join(f"<button class='qb{' on' if ans == k else ''}' name='a' value='{k}' {'disabled' if ans else ''}>"
                    f"<span aria-hidden='true'>↩</span> {h(label)}</button>" for k, label in opts)
-    chat = (f"<form method='post' action='/w/{eid}/{pid}' class='tpl'>"
+    chat = (f"<form method='post' action='/w/{eid}/{pid}' class='tpl{' answered' if ans else ''}'>"
             f"<div class='b'>{h(msg)}\n\n<b>{h(question)}</b><span class='ft'>{h(footer)}</span>"
-            f"<span class='t'>16:05</span></div>{btns}</form>")
+            f"<span class='t'>{sent_at}</span></div>{btns}</form>")
     if (ch, eid, pid) in REMIND:
         # Team decision: the "why it matters" number is only in the reminder, sent once after 24 h
         # without a reply (same channel, same three buttons).
@@ -1379,16 +1495,17 @@ def wa_page(eid, pid, title, items, ch="w"):
         chat += (f"<div class='wa-day'><span>Tomorrow</span></div>"
                  f"<form method='post' action='/w/{eid}/{pid}' class='tpl'>"
                  f"<div class='b'>{h(reminder)}\n\n<b>{h(question)}</b><span class='ft'>{h(footer)}</span>"
-                 f"<span class='t'>16:05</span></div>{btns}</form>")
+                 f"<span class='t'>{sent_at}</span></div>{btns}</form>")
     auto = WA_AUTO.get((ch, eid, pid), {})
-    for who, text in WA_CHAT.get((ch, eid, pid), []):
+    for idx, (who, text) in enumerate(WA_CHAT.get((ch, eid, pid), [])):
+        stamp = times.setdefault(idx, datetime.now().strftime('%H:%M'))
         if who == "more":      # "suggestions like this in the future?" with two quick-reply buttons
             more = WA_MORE.get((ch, eid, pid), {})
             btns = "".join(f"<button class='qb{' on' if more.get('state') == k else ''}' name='a' value='{k}' "
                            f"{'disabled' if more.get('state') != 'asked' else ''}><span aria-hidden='true'>↩</span> "
                            f"{h(label)}</button>" for k, label in (("yes", MORE_YES), ("no", MORE_NO)))
             chat += (f"<form method='post' action='/{ch}/{eid}/{pid}/more' class='tpl'><div class='b'>{h(text)}"
-                     f"<span class='t'>16:14</span></div>{btns}</form>")
+                     f"<span class='t'>{stamp}</span></div>{btns}</form>")
             continue
         if who == "ask":       # "handle it for you next year?" with two quick-reply buttons
             done = auto.get("state") != "asked"
@@ -1396,24 +1513,61 @@ def wa_page(eid, pid, title, items, ch="w"):
                            f"{'disabled' if done else ''}><span aria-hidden='true'>↩</span> {h(label)}</button>"
                            for k, label in (("yes", AUTO_YES), ("no", AUTO_NO)))
             chat += (f"<form method='post' action='/{ch}/{eid}/{pid}/auto' class='tpl'><div class='b'>{h(text)}"
-                     f"<span class='t'>16:14</span></div>{btns}</form>")
+                     f"<span class='t'>{stamp}</span></div>{btns}</form>")
             continue
-        chat += f"<div class='b{' me' if who == 'me' else ''}'>{h(text)}<span class='t'>16:1{'4 ✓✓' if who == 'me' else '4'}</span></div>"
+        chat += f"<div class='b{' me' if who == 'me' else ''}'>{h(text)}<span class='t'>{stamp}{' ✓✓' if who == 'me' else ''}</span></div>"
     hp = posts.POSTS.get(f"{eid}~{pid}~hours") if ch == "w" else None
     if hp and auto.get("state") != "asked":        # one question at a time: after "handle it next year?"
         chat += posts.chat_html(hp, name, f"/wp/{urllib.parse.quote(hp['id'])}?back=/w/{eid}/{pid}")
-    if ans or ch == "w":       # WhatsApp: the owner can also just type, before or after the buttons
-        chat += (f"<form method='post' action='/{ch}/{eid}/{pid}/reply' class='wa-in'>"
-                 f"<input name='msg' placeholder='Message' autocomplete='off' required aria-label='Reply'>"
-                 f"<button aria-label='Send'>➤</button></form>")
-    top = (f"<div class='wa-top'><div class='wa-av'>FC</div><div><b>Fonecta Connect</b>"
-           f"<small>Business account</small></div></div>")
-    body = (f"<div class='wa'>{top}<div class='wa-body'><div class='wa-day'><span>Today 16:05</span></div>"
-            f"{chat}<div id='end'></div></div></div><p class='muted' style='text-align:center'><a href='/'>← Connect demo panel</a> · "
-            f"<a href='/{ch}/{eid}/{pid}/reset'>Reset this chat</a></p>")
+    if (ch, eid, pid) in PENDING_HOURS:
+        chat += (f"<form method='post' action='/{ch}/{eid}/{pid}/reply' class='review-actions'>"
+                 "<button class='qb' name='msg' value='CONFIRM'>Save these hours</button>"
+                 "<button class='qb' name='msg' value='CANCEL'>Cancel</button></form>")
+    composer = (f"<form method='post' action='/{ch}/{eid}/{pid}/reply' class='wa-in'>"
+                "<textarea name='msg' rows='1' placeholder='Type your reply…' autocomplete='off' required aria-label='Reply'></textarea>"
+                "<button aria-label='Send reply'>➤</button></form>")
+    top = (f"<div class='wa-top'><a href='/' class='wa-back' aria-label='Back to businesses'>‹</a><div class='wa-av'>FC</div>"
+           f"<div><b>Fonecta Connect</b><small>Business account · {h(name)}</small></div></div>")
+    ai_ready = all(os.environ.get(k) for k in ('OPENSHIFT_AI_URL', 'OPENSHIFT_AI_TOKEN'))
+    ai_title = 'OpenShift AI configured' if ai_ready else 'AI parsing not configured'
+    ai_notice = ('Natural-language replies are sent to OpenShift. You review the interpreted hours before saving.' if ai_ready else
+                 'Quick replies work. For typed hours, use the exact format below. Natural-language parsing needs OpenShift credentials.')
+    if hours_ai.configured() and not ai_ready:
+        ai_title = 'AI configuration incomplete'
+        ai_notice = 'Quick replies work. Finish setting both OpenShift credentials to enable typed replies, or remove both settings to use the exact-format preview.'
+    example = f"{items[0]['dm']} 10-14"
+    example2 = f"{items[-1]['dm']} closed"
+    target_notice = ('Writes go to the Yext sandbox. Live publication is not verified.' if S5.applier.primary.name == 'sandbox' else
+                     'Local simulation. No WhatsApp messages are sent and no public listings are changed.' if not S5.applier.sandbox else
+                     'Local simulation with a configured Yext sandbox mirror. No WhatsApp messages are sent.')
+    sidebar = ("<aside class='preview-info'><div class='preview-brand'><span class='preview-mark'>FC</span> Fonecta Connect</div>"
+               "<p class='preview-eyebrow'>Interactive owner experience</p><h1>Your holiday hours.<br>One conversation.</h1>"
+               "<p class='preview-lead'>Approve the suggestion, choose different hours, or leave things as they are. You're in control of every update.</p>"
+               f"<div class='preview-status' role='status'><strong>{h(ai_title)}</strong><p>{h(ai_notice)}</p>"
+               f"<button type='button' class='preview-example' data-example='{h(example)}'>{h(example)} <span aria-hidden='true'>↗</span></button>"
+               f"<button type='button' class='preview-example' data-example='{h(example2)}'>{h(example2)} <span aria-hidden='true'>↗</span></button>"
+               "<details><summary>Connect real AI parsing</summary><p>Set <code>OPENSHIFT_AI_URL</code> and <code>OPENSHIFT_AI_TOKEN</code> in <code>.env</code>, then restart. "
+               "Verify with <code>python owner-page/app.py --check-services</code>.</p></details>"
+               f"<p class='target-status' style='margin-top:14px'>{h(target_notice)}</p></div>"
+               f"<nav class='preview-links'><a href='/'>All businesses</a><a href='/{ch}/{eid}/{pid}/reset'>Reset this chat</a><span>Demo preview</span></nav></aside>")
+    body = (f"<main class='preview-layout'>{sidebar}<section class='wa{' fb' if fb else ''}' aria-label='WhatsApp conversation'>{top}"
+            f"<div class='wa-body' role='log' aria-label='Conversation'><div class='wa-day'><span>Today</span></div>{chat}<div id='end'></div></div>"
+            "<div class='busy-note' role='status'>Reading your reply…</div>" + composer +
+            "<div class='wa-help'>Enter to send · Shift + Enter for a new line</div></section></main>")
+    script = """<script>
+    const reply=document.querySelector('textarea[name=msg]'), log=document.querySelector('.wa-body');
+    if(location.hash==='#end') log.scrollTop=log.scrollHeight;
+    window.addEventListener('resize',()=>{if(location.hash==='#end') log.scrollTop=log.scrollHeight;});
+    document.querySelectorAll('[data-example]').forEach(button=>button.addEventListener('click',()=>{reply.value=button.dataset.example;reply.focus();}));
+    reply.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();reply.form.requestSubmit();}});
+    document.querySelectorAll('.wa form').forEach(form=>form.addEventListener('submit',()=>{
+      document.querySelector('.wa').classList.add('busy');
+      document.querySelector('.busy-note').textContent=form.classList.contains('wa-in')?'Reading your reply…':'Checking your decision…';
+    }));
+    </script>"""
     return (f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' "
-            f"content='width=device-width,initial-scale=1'><title>WhatsApp · {h(name)}</title>"
-            f"<style>{CSS}{WA_CSS}body{{background:#d1d7db}}</style></head><body>{body}</body></html>")
+            f"content='width=device-width,initial-scale=1'><title>{'Messenger' if fb else 'WhatsApp'} · {h(name)}</title>"
+            f"<style>{CSS}{WA_CSS}body{{background:#edf3ee}}</style></head><body>{body}{script}</body></html>")
 
 
 # ---------------------------------------------------------------- SMS, email and app push
@@ -1601,8 +1755,7 @@ def email_page(eid, pid, title, items):
             f"<div class='mb'><div class='bar'>Fonecta Connect</div><div class='in'>"
             f"{'<div class=answered>' + h(done) + '</div>' if done else ''}"
             f"<p><b>Hi {h(name)}!</b></p>"
-            f"<p>{h(intro(pid, title, items))} You haven't set special hours for {'these days' if n > 1 else 'this day'}, "
-            f"so Google shows your regular hours.</p>{lists}"
+            f"<p>{h(intro(pid, title, items))} {h(proposal_context(items))}</p>{lists}"
             f"<p class='q'>{h(question_for(pid, title, items))}</p>"
             f"<p class='muted' style='margin:0'>One tap, no login needed.</p>{'' if ans else buttons}</div></div>"
             f"<p class='mf'>We never ask for logins or passwords. You get this email because {h(name)} uses "
@@ -1626,7 +1779,7 @@ def email_confirm(eid, pid, title, items, act):
                  f"{'Yes, confirm hours' if live else 'Yes, update all ' + str(n) + ' days' if n > 1 else 'Yes, update'}</button></form>"
                  f"<a class='btn plain' href='/b/{eid}/{pid}?via=EMAIL'>Change a day instead</a>")
     elif act == "no":
-        inner = (f"<h2>Keep your hours as they are?</h2><p class='muted'>Google keeps showing your regular hours.</p>"
+        inner = (f"<h2>Keep your hours as they are?</h2><p class='muted'>Your existing hours stay unchanged.</p>"
                  f"<form method='post' action='/e/{eid}/{pid}'><button class='btn primary' name='a' value='no'>"
                  f"No, keep as it is</button></form><a class='btn plain' href='/e/{eid}/{pid}'>Back</a>")
     else:
@@ -1709,22 +1862,28 @@ def declined_page(eid, title):
 
 
 def bundle_done(eid, title, results, always, res=None):
-    notes = "".join(f"<p class='muted'>{h(x)}</p>" for x in problems_text(res or {}))
-    changed = [r for r in results if r[1] is not None]
-    lines = "".join(f"<li>{s['weekday'][:3]} {h(s['dm'])}: <b>{h(state(hrs, 'en'))}</b></li>" if hrs is not None else
-                    f"<li class='muted'>{s['weekday'][:3]} {h(s['dm'])}: left as it is</li>" for s, hrs in results)
-    # Team decision: one short line about where the hours show, not the full list.
-    tail = f"<p>{h(short_where(eid))}</p>" if changed else "<p class='muted'>Nothing was changed.</p>"
+    res = res or {}
+    by_date = {x["date"]: x for x in res.get("items", [])}
+    verified = {dt for dt, x in by_date.items() if x["status"] in ("APPLIED", "ALREADY_SET")}
+    lines = []
+    for s, hrs in results:
+        dt = s["day"].isoformat()
+        item = by_date.get(dt, {})
+        label = state(item.get("hours", hrs), 'en') if dt in verified else "left as it is" if hrs is None else "not saved"
+        lines.append(f"<li>{h(s['dm'])}: <b>{h(label)}</b></li>")
+    message = res.get("message") or "No hours were changed."
+    scope = "Real Yext sandbox; public listings are unverified." if S5.applier.primary.name == "sandbox" else ""
+    heading = f"Done! {title} hours saved." if verified else "No saved changes confirmed"
     body = (f"<div class='brand'><span class='dot'></span>Fonecta Connect</div><div class='card'>"
-            f"<div class='ok'>Done! {h(title)} hours saved.</div><ul class='res'>{lines}</ul>{notes}{tail}"
-            f"{'<p class=muted style=margin-top:14px>' + UI['en']['always_on'] + '</p>' if always else ''}</div>"
+            f"<h2>{h(heading)}</h2><ul class='res'>{''.join(lines)}</ul><p style='white-space:pre-line'>{h(message)}</p><p class='muted'>{h(scope)}</p>"
+            f"{'<p class=muted style=margin-top:14px>' + UI['en']['always_on'] + '</p>' if always and verified else ''}</div>"
             f"<p class='muted' style='text-align:center;margin-top:14px'><a href='/'>← Connect demo panel</a></p>")
     return page(BL.ents[eid]["name"], body)
 
 
 def no_message(c):
-    why = {"FLAG": "Signals say this business may have closed for good, so a Fonecta person checks it instead.",
-           "NO_ACTION": "Google already shows the right hours, or Connect has no reliable suggestion yet."}[c["action"]]
+    why = {"FLAG": "Signals say this business may have closed for good. A Fonecta person must review it; no review ticket has been created.",
+           "NO_ACTION": "The supplied listing snapshot already has suitable hours, or Connect has no reliable suggestion yet."}[c["action"]]
     body = (f"<div class='brand'><span class='dot'></span>Connect · demo control panel</div><div class='card'>"
             f"<h2>No message for {h(c['name'])}</h2><p class='muted'>{h(c['day_name'])} {h(c['dm'])}. {why}</p>"
             f"<p class='muted'>Google shows: {h(state(c['shown'], c['lang']))}</p></div>"
@@ -1773,14 +1932,8 @@ def owner_edit(c, err=""):
     return page(c["name"], body)
 
 
-def owner_done(c, hours, always):
-    u = UI[c["lang"]]
-    body = (f"<div class='brand'><span class='dot'></span>{u['from_c']}</div><div class='card'>"
-            f"<div class='ok'>{h(c['day_name'])} {h(c['dm'])}: {h(state(hours, c['lang']))}</div>"
-            f"<p>Done! Your new hours are saved. {h(short_where(c['eid']))}</p>"
-            f"{'<p class=muted style=margin-top:14px>' + u['always_on'] + '</p>' if always else ''}</div>"
-            f"<p class='muted' style='text-align:center;margin-top:14px'><a href='/'>← Connect demo panel</a></p>")
-    return page(c["name"], body)
+def owner_done(c, hours, always, res):
+    return bundle_done(c["eid"], c["day_name"], [(c, hours)], always, res)
 
 
 def owner_declined(c):
@@ -2056,7 +2209,7 @@ IG_REPLACED = {}   # (eid, pid) -> (title, days left out, days left): holiday me
 
 def instagram_days(eid):
     """Every day the owner announced on their own Instagram (whether or not Google already matches)."""
-    if eid not in social_hours.SAMPLES or not post_ok(eid):
+    if S5.applier.primary.name == 'sandbox' or eid not in social_hours.SAMPLES or not post_ok(eid):
         return set()
     ig_state(eid)          # the Instagram message goes out with them
     days = set()
@@ -2171,7 +2324,7 @@ def ig_reply(eid, text):
 def ig_card():
     rows = []
     for eid in DEMO:
-        if eid not in social_hours.SAMPLES or not post_ok(eid):
+        if S5.applier.primary.name == 'sandbox' or eid not in social_hours.SAMPLES or not post_ok(eid):
             continue
         st = ig_state(eid)
         p = social_hours.SAMPLES[eid][-1]
@@ -2225,6 +2378,12 @@ class App(BaseHTTPRequestHandler):
         return None if s['action'] == 'SUGGEST' and not s['contact_eligible'] else s
 
     def do_GET(self):
+        try:
+            return self.handle_get()
+        except YextError:
+            return self.send(page('Service unavailable', '<h1>Could not verify saved hours</h1><p>No successful update is confirmed. Please try again when Yext is available.</p>'), 503)
+
+    def handle_get(self):
         parts = [p for p in urllib.parse.urlparse(self.path).path.split("/") if p]
         if not parts:
             return self.send(connect_index())
@@ -2252,8 +2411,12 @@ class App(BaseHTTPRequestHandler):
             if is_check(eid, pid) and ch != 'w':
                 return self.redirect(f'/b/{eid}/{pid}')
 
+            if len(parts) == 4 and parts[3] == 'reset':
+                PROPOSALS.pop((eid, pid), None)
+                PENDING_HOURS.pop((ch, eid, pid), None)
+                CHAT_TIMES.pop((ch, eid, pid), None)
             b = bundle(eid, pid)
-            if b and len(parts) == 4:
+            if len(parts) == 4:
                 if parts[3] == "reset":
                     k = (ch, eid, pid)
                     REMIND.discard(k)
@@ -2263,8 +2426,9 @@ class App(BaseHTTPRequestHandler):
                     for store in (WA, WA_CHAT, WA_DONE, WA_AUTO, WA_MORE):
                         store.pop(k, None)
                     SEEN.pop((eid, pid), None)
+                    PROPOSALS.pop((eid, pid), None)
                     return self.redirect(f"/{ch}/{eid}/{pid}")
-                if ch == "e" and parts[3] in ("yes", "no", "stop"):
+                if b and ch == "e" and parts[3] in ("yes", "no", "stop"):
                     return self.send(email_confirm(eid, *b, parts[3]))
             elif b:
                 if ch == "w":
@@ -2274,6 +2438,8 @@ class App(BaseHTTPRequestHandler):
                 if ch == "e":
                     return self.send(email_page(eid, *b))
                 return self.send(push_page(eid, *b))
+            if not b and (eid, pid) not in LIVE.rows:
+                return self.send(no_pending_proposal(eid))
         if parts[0] == "ig" and len(parts) in (2, 3) and parts[1] in social_hours.SAMPLES:   # Instagram hours
             if len(parts) == 3 and parts[2] == "reset":
                 IG.pop(parts[1], None)
@@ -2348,9 +2514,14 @@ class App(BaseHTTPRequestHandler):
         self.send(bundle_done(eid, title, [(x, hrs) for x, hrs, _ in results], always, res))
 
     def do_POST(self):
-        if urllib.parse.urlsplit(self.path).path in ("/messaging/inbound", "/messaging/status"):
-            from messaging_bridge import webhook
-            return webhook(self, globals().get("MESSAGING"))
+        try:
+            return self.handle_post()
+        except YextError:
+            return self.send(page('Service unavailable', '<h1>Could not verify saved hours</h1><p>No successful update is confirmed. Please try again when Yext is available.</p>'), 503)
+
+    def handle_post(self):
+        if urllib.parse.urlparse(self.path).path in ('/messaging/inbound', '/messaging/status'):
+            return self.messaging_webhook()
         parts = [p for p in urllib.parse.urlparse(self.path).path.split("/") if p]
         n = int(self.headers.get("Content-Length") or 0)
         form = {k: v[0] for k, v in urllib.parse.parse_qs(self.rfile.read(n).decode("utf-8")).items()}
@@ -2456,6 +2627,9 @@ class App(BaseHTTPRequestHandler):
             def say(msg):                                   # SMS: keep to the plain GSM alphabet
                 chat.append(("them", sms_safe(msg) if ch == "s" else msg))
             word = text.lower().strip(" .!")
+            if k in PENDING_HOURS and word in TYPED_YES + TYPED_NO:
+                word = 'confirm' if word in TYPED_YES else 'cancel'
+                text = word.upper()
             # Polite replies get a polite answer. (On SMS, an "OK" before answering still means yes.)
             if is_polite(text) and not (ch == "s" and k not in WA and word in ("ok", "okay")):
                 say(POLITE_REPLY)
@@ -2484,6 +2658,10 @@ class App(BaseHTTPRequestHandler):
                 return self.redirect(f"/{ch}/{eid}/{pid}#end")
             undo = S5.handle_reply(eid, text, language="en")      # "UNDO" -> step 5 puts the latest change back
             if undo is not None:
+                PENDING_HOURS.pop(k, None)
+                undo = browser_result(undo)
+                if any(x['status'] == 'UNDONE' for x in undo.get('items', [])):
+                    SEEN[(eid, pid)] = S5.snapshot(eid, [x['day'].isoformat() for x in b[2]])
                 DELIVERY[(eid, pid)] = undo
                 msg = undo["message"] or "There's nothing to undo."
                 if undo["message"] and revoke_auto(k, eid):    # the hours were wrong: don't repeat them next year
@@ -2493,20 +2671,27 @@ class App(BaseHTTPRequestHandler):
                 say(msg)
                 DECISIONS[(eid, pid)] = f"{label}: undone"
                 return self.redirect(f"/{ch}/{eid}/{pid}#end")
-            # First the AI model on Red Hat OpenShift AI; if it isn't reachable, the simple pattern reader.
-            ai = hours_ai.read_reply(text, b[2])
-            unclear = ""
-            if ai is not None:
-                found, unclear = ai
-                problems = []
-                READER[k] = "AI model (OpenShift AI)"
+            if word == 'cancel':
+                PENDING_HOURS.pop(k, None)
+                say('Cancelled. Your existing hours stay unchanged.')
+                return self.redirect(f"/{ch}/{eid}/{pid}#end")
+            if word == 'confirm':
+                found = PENDING_HOURS.pop(k, None)
+                if not found:
+                    say('There is no draft to confirm. Send the dates and hours you want to change.')
+                    return self.redirect(f"/{ch}/{eid}/{pid}#end")
             else:
+                PENDING_HOURS.pop(k, None)
                 found, problems = parse_hours_reply(text, b[2])
-                READER[k] = "pattern reader (AI model not reachable)"
-            if not found:
-                say(unclear or "Sorry, I didn't catch that. Please write one day per line, "
-                               "for example \"24 Dec 10-14\" or \"25 Dec closed\"."
-                    + (" Or reply YES or NO." if ch == "s" else ""))
+                READER[k] = 'OpenShift AI' if hours_ai.configured() else 'exact date/time pattern reader (AI not configured)'
+                if problems or not found:
+                    say('Nothing has been saved. ' + ('; '.join(problems) if problems else
+                        'Please write one day per line, for example "24 Dec 10-14" or "25 Dec closed".'))
+                    return self.redirect(f"/{ch}/{eid}/{pid}#end")
+                PENDING_HOURS[k] = found
+                WA.setdefault(k, "other")
+                lines = '\n'.join(f"• {d.day} {d:%b}: {state(hrs, 'en')}" for d, hrs in sorted(found.items()))
+                say(f"Please review these hours:\n{lines}\n\nOther dates stay unchanged. Reply CONFIRM to save or CANCEL to discard.")
                 return self.redirect(f"/{ch}/{eid}/{pid}#end")
             by_day = {x["day"]: x for x in b[2]}
             res = apply_via_step5(eid, pid, CH_API[ch], [(by_day[d], "EDITED", hrs) for d, hrs in sorted(found.items())])
@@ -2520,10 +2705,6 @@ class App(BaseHTTPRequestHandler):
                 msg += f"\n\nThe other {rest} days stay as they are." if rest > 1 else "\n\nThe other day stays as it is."
             for note in problems_text(res):
                 msg += "\n\n" + note
-            if problems:
-                msg += "\n\nI couldn't read: " + "; ".join(problems) + ". Send it again if you want to change it."
-            if unclear:
-                msg += "\n\n" + unclear
             if saved:
                 msg += "\n\nWrong? Reply UNDO and we'll put it back."
             say(msg)
@@ -2532,7 +2713,7 @@ class App(BaseHTTPRequestHandler):
                 EDIT_LEARNED.add(k)
                 LEARN.record(eid, day_keys(b[2]), "EDIT", pid, CH_API[ch])
             DECISIONS[(eid, pid)] = (f"{label}: own hours for {len(ok)} day{'s' if len(ok) != 1 else ''}"
-                                     f" · read by {READER[k]}")
+                                     f" · read by {READER.get(k, 'confirmed draft')}")
             return self.redirect(f"/{ch}/{eid}/{pid}#end")
         if parts and parts[0] in ("e", "p") and len(parts) == 3 and parts[1] in BL.ents:
             ch, eid, pid, ans = parts[0], parts[1], parts[2], form.get("a")
@@ -2613,16 +2794,93 @@ class App(BaseHTTPRequestHandler):
             return self.send(page("Not found", "<p>Not found.</p>"), 404)
         if always:
             DECISIONS[k] += " · remember every year"
-        apply_via_step5(c["eid"], c["day"].isoformat(), "WEB",
+        res = apply_via_step5(c["eid"], c["day"].isoformat(), "WEB",
                         [(c, "ACCEPTED" if parts[3] == "approve" else "EDITED", hours)], remember=always)
-        self.send(owner_done(c, hours, always))
+        verified = any(x['status'] in ('APPLIED', 'ALREADY_SET') for x in res.get('items', []))
+        DECISIONS[k] = ('Verified approval' if parts[3] == 'approve' else 'Verified edit') if verified else 'Not saved; review required'
+        self.send(owner_done(c, hours, always, res))
 
+
+    def messaging_webhook(self):
+        code = 200
+        try:
+            size = int(self.headers.get("Content-Length", "0"))
+            if not 0 < size <= 65536 or self.headers.get_content_type() != "application/x-www-form-urlencoded":
+                raise ValueError("Invalid webhook body")
+            raw_body = self.rfile.read(size)
+            if MESSAGING is None:
+                code = 503
+            else:
+                MESSAGING.webhook(self.path, raw_body, self.headers.get("X-Twilio-Signature", ""))
+        except PermissionError:
+            code = 403
+        except (ValueError, UnicodeError):
+            code = 400
+        except Exception:
+            code = 503  # Twilio can retry; no message is acknowledged before durable storage.
+        raw = b"<Response></Response>" if code == 200 else b"Webhook unavailable or invalid"
+        self.send_response(code)
+        self.send_header("Content-Type", "text/xml; charset=utf-8" if code == 200 else "text/plain")
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
 
 if __name__ == "__main__":
-    from messaging_bridge import launch
-    MESSAGING = launch(sys.modules[__name__])
+    import argparse
+    import json
     import threading
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--send-whatsapp", nargs=2, metavar=("BUSINESS", "PERIOD"))
+    parser.add_argument("--messaging-status", action="store_true")
+    parser.add_argument('--check-services', action='store_true', help='Read-only Yext and synthetic OpenShift inference check; never sends WhatsApp or writes hours')
+    args = parser.parse_args()
+    MESSAGING, cfg = initialize_messaging()
+    if args.check_services:
+        ai = {'configured': hours_ai.configured(), 'verified': False, 'status': hours_ai.status()}
+        if ai['configured']:
+            found, problems = hours_ai.read_reply('On Christmas Eve we open at noon and close at 6pm',
+                                                 [{'day': date(2026, 12, 24), 'day_name': 'Christmas Eve'}])
+            ai['verified'] = not problems and found == {date(2026, 12, 24): '12:00-18:00'}
+        sandbox = S5.applier.primary.name == 'sandbox'
+        sandbox_verified = False
+        if sandbox:
+            try:
+                for eid in S5.applier.primary.mapping:
+                    S5.snapshot(eid, [])
+                sandbox_verified = True
+            except (YextError, OSError, ValueError):
+                pass
+        print(json.dumps({'ai': ai, 'apply_target': 'sandbox' if sandbox else 'demo',
+                          'sandbox_read_verified': sandbox_verified,
+                          'apply_status': S5.selection_reason, 'messaging': cfg,
+                          'prediction_source': str(PREDICTIONS.path),
+                          'prediction_sha256': PREDICTIONS.sha256}, indent=2))
+        S5.close()
+        raise SystemExit(0 if ai['verified'] and sandbox_verified else 2)
+    if args.messaging_status:
+        print(json.dumps({"configuration": cfg, "state": MESSAGING.status() if MESSAGING else None}, indent=2))
+        S5.close()
+        raise SystemExit(0)
+    if args.send_whatsapp:
+        if MESSAGING is None:
+            eid, pid = args.send_whatsapp
+            print(json.dumps({"mode": "demo", "status": "preview_ready", "sent": False,
+                              "preview_url": f"http://localhost:{PORT}/w/{urllib.parse.quote(eid)}/{urllib.parse.quote(pid)}",
+                              "reason": cfg["reason"]}))
+            S5.close()
+            raise SystemExit(0)
+        try:
+            print(json.dumps(MESSAGING.send_proposal(*args.send_whatsapp)))
+        except Exception:
+            print("Message was not confirmed as submitted. Check --messaging-status and operator setup; do not blindly resend.", file=sys.stderr)
+            raise SystemExit(2)
+        finally:
+            S5.close()
+        raise SystemExit(0)
+    if MESSAGING:
+        threading.Thread(target=MESSAGING.run, name="real-whatsapp", daemon=True).start()
+    else:
+        print("Real WhatsApp is unconfigured; browser chats are local previews.")
     threading.Thread(target=lambda: search_value._load(MAT), daemon=True).start()
-    threading.Thread(target=watch_ai, daemon=True).start()   # is the OpenShift AI model answering? (panel line)   # load search data early
     print(f"Owner page running: http://localhost:{PORT}")
     ThreadingHTTPServer(("127.0.0.1", PORT), App).serve_forever()

@@ -54,6 +54,8 @@ class LiveOwnerFlow(unittest.TestCase):
         self.request(self.path)
         self.request(self.path, {'a': 'other'})
         self.request(self.path+'/reply', {'msg': '14 Nov 10-20'})
+        self.assertIsNone(self.s5.snapshot(self.eid, [self.day])[self.day])
+        self.request(self.path+'/reply', {'msg': 'CONFIRM'})
         self.assertEqual(self.s5.snapshot(self.eid, [self.day])[self.day], '10:00-20:00')
         self.assertEqual(self.app.LEARN.owner(self.eid)['history'][-1]['outcome'], 'EDIT')
 
